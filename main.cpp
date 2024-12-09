@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "sql.h"
-
+#include <QDir>
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -14,9 +14,34 @@ int main(int argc, char *argv[])
     //     return -1;
     // }
 
+
+    // 获取当前工作目录
+    QString currentDir = QDir::currentPath();
+    qDebug() << "当前工作目录是：" << currentDir;
+
+    //从build下的目录跳到项目目录中
+
+
+    // 获取上一级目录
+    QDir dir1(currentDir);
+
+    if (dir1.cdUp()) { // 切换到上一级目录
+        if (dir1.cdUp()) {
+            QDir::setCurrent(dir1.path()); // 设置为当前工作目录
+            qDebug() << "切换到上一级目录，现在的工作目录是：" << QDir::currentPath();
+        }
+        else {
+            qDebug() << "无法切换到上一级目录！";
+        }
+
+
+    } else {
+        qDebug() << "无法切换到上一级目录！";
+    }
+
     // 1. 打开 SQLite 数据库
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("database.db"); // 数据库文件路径
+    db.setDatabaseName("/resources/database.db"); // 数据库文件路径
 
     if (!db.open()) {
         qDebug() << "无法打开数据库：" << db.lastError().text();
