@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     //停止
-    m.stop();
+    // m.stop();
 
         return a.exec();
 }

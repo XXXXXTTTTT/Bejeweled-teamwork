@@ -6,6 +6,7 @@
 #include <QAudioOutput>
 #include <QUrl>
 #include <iostream>
+#include <QDir>
 
 // 音源位置:
 // Bejeweled-teamwork\Bejeweled_Client\build\Desktop_Qt_6_5_3_MinGW_64_bit-Debug\debug\sound
@@ -20,15 +21,11 @@ music::music()
     // 设置音频输出
     m_mediaPlayer->setAudioOutput(m_audioOutput);
 
-    // 获取当前应用程序的目录
-    QString appDir = QCoreApplication::applicationDirPath();
-
-    // 使用相对路径（假设 bgm.mp3 在应用程序同级目录下）
-    QString audioFilePath = appDir + "/sound/3.mp3";
-
-
     // 设置音乐文件路径
-    m_mediaPlayer->setSource(QUrl::fromLocalFile(audioFilePath));
+    qDebug() << "Resource URL: " << QUrl("qrc:/resources/sound/3.mp3").toString();
+    m_mediaPlayer->setSource(QUrl("qrc:/resources/sound/3.mp3"));
+
+
 
     // 播放音乐
     m_mediaPlayer->play();
@@ -51,11 +48,11 @@ void music::sound(QString string)
     m_mediaPlayer->setAudioOutput(m_audioOutput);
 
     // 获取当前应用程序的目录
-    QString appDir = QCoreApplication::applicationDirPath();
-    QString audioFilePath = appDir +"/sound/"+ string;
+
+    QString audioFilePath = "qrc:/resources/sound/"+ string;
 
     // 设置音乐文件路径
-    m_mediaPlayer->setSource(QUrl::fromLocalFile(audioFilePath));
+    m_mediaPlayer->setSource(QUrl(audioFilePath));
 
     // 播放音乐
     m_mediaPlayer->play();
