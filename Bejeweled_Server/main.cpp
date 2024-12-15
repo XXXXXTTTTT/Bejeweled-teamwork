@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "server.h"
 #include "sql.h"
 #include <QDir>
 #include <QApplication>
@@ -10,17 +11,12 @@ int main(int argc, char *argv[])
 
 
 
-    // 连接数据库
-    sql* mysql = new sql();
-    if (!mysql->connectToDatabase()) {
-        return -1;
-    }
 
 
-    //测试数据库
-    // mysql->canRegisterOrNot("XXXTTT", "123456");
 
-    // mysql->canLoginOrNot("XXXTTT", "345678");
+    Server server;
+    server.startServer(12345);
+
 
     w.show();
     return a.exec();

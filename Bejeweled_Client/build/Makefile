@@ -271,6 +271,7 @@ Makefile: ../Bejeweled_Client.pro ../../../../QT/6.7.2/mingw_64/mkspecs/win32-g+
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/resolve_config.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/exclusive_builds_post.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/default_post.prf \
+		../../../../QT/6.7.2/mingw_64/mkspecs/features/win32/console.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/qml_debug.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/precompile_header.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/warn_on.prf \
@@ -283,7 +284,6 @@ Makefile: ../Bejeweled_Client.pro ../../../../QT/6.7.2/mingw_64/mkspecs/win32-g+
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/uic.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/qmake_use.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/file_copies.prf \
-		../../../../QT/6.7.2/mingw_64/mkspecs/features/win32/windows.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/testcase_targets.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/exceptions.prf \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/yacc.prf \
@@ -292,8 +292,8 @@ Makefile: ../Bejeweled_Client.pro ../../../../QT/6.7.2/mingw_64/mkspecs/win32-g+
 		../../../../QT/6.7.2/mingw_64/lib/Qt6Widgets.prl \
 		../../../../QT/6.7.2/mingw_64/lib/Qt6Gui.prl \
 		../../../../QT/6.7.2/mingw_64/lib/Qt6Sql.prl \
+		../../../../QT/6.7.2/mingw_64/lib/Qt6Network.prl \
 		../../../../QT/6.7.2/mingw_64/lib/Qt6Core.prl \
-		../../../../QT/6.7.2/mingw_64/lib/Qt6EntryPoint.prl \
 		../../../../QT/6.7.2/mingw_64/mkspecs/features/build_pass.prf \
 		../resource.qrc
 	$(QMAKE) -o Makefile ..\Bejeweled_Client.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
@@ -498,6 +498,7 @@ Makefile: ../Bejeweled_Client.pro ../../../../QT/6.7.2/mingw_64/mkspecs/win32-g+
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/resolve_config.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/exclusive_builds_post.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/default_post.prf:
+../../../../QT/6.7.2/mingw_64/mkspecs/features/win32/console.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/qml_debug.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/precompile_header.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/warn_on.prf:
@@ -510,7 +511,6 @@ Makefile: ../Bejeweled_Client.pro ../../../../QT/6.7.2/mingw_64/mkspecs/win32-g+
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/uic.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/qmake_use.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/file_copies.prf:
-../../../../QT/6.7.2/mingw_64/mkspecs/features/win32/windows.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/testcase_targets.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/exceptions.prf:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/yacc.prf:
@@ -519,8 +519,8 @@ Makefile: ../Bejeweled_Client.pro ../../../../QT/6.7.2/mingw_64/mkspecs/win32-g+
 ../../../../QT/6.7.2/mingw_64/lib/Qt6Widgets.prl:
 ../../../../QT/6.7.2/mingw_64/lib/Qt6Gui.prl:
 ../../../../QT/6.7.2/mingw_64/lib/Qt6Sql.prl:
+../../../../QT/6.7.2/mingw_64/lib/Qt6Network.prl:
 ../../../../QT/6.7.2/mingw_64/lib/Qt6Core.prl:
-../../../../QT/6.7.2/mingw_64/lib/Qt6EntryPoint.prl:
 ../../../../QT/6.7.2/mingw_64/mkspecs/features/build_pass.prf:
 ../resource.qrc:
 qmake: FORCE
