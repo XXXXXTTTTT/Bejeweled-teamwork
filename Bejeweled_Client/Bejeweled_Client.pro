@@ -1,5 +1,7 @@
-QT       += core gui
+QT       += core gui multimedia multimediawidgets
 QT    += sql
+QT += multimedia multimediawidgets
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Bejeweled_Client
@@ -12,10 +14,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    music.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    music.h
 
 FORMS += \
     mainwindow.ui
@@ -24,9 +28,13 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+RESOURCES += resources.qrc \
+    resource.qrc
 
 RESOURCES += \
-    resource.qrc
+
+    resource.qrc \
+
 
 DISTFILES += \
     resources/database.db
