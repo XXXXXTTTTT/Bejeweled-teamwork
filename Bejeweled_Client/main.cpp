@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "clientThread.h"
 #include <QApplication>
 #include <music.h>
 #include <thread>
@@ -6,6 +7,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+
+
+    ClientThread clientThread("127.0.0.1", 12345);
+    clientThread.start();
+
     w.show();
 
 
