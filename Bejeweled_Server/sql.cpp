@@ -32,8 +32,13 @@ bool sql::connectToDatabase() {
     // 切换到项目目录
     QDir dir1(currentDir);
     if (dir1.cdUp()) {
-        QDir::setCurrent(dir1.path());
-        currentDir = QDir::currentPath();
+
+        if (dir1.cdUp()) {
+            QDir::setCurrent(dir1.path());
+            currentDir = QDir::currentPath();
+        } else {
+            qDebug() << "无法切换到上一级目录！";
+        }
     } else {
         qDebug() << "无法切换到上一级目录！";
     }
