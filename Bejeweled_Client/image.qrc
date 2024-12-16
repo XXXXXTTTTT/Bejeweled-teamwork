@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>media/media/pk3.jpeg</file>
+        <file>media/media/board.png</file>
+        <file>media/media/1.png</file>
+        <file>media/media/2.png</file>
+        <file>media/media/3.png</file>
+        <file>media/media/4.png</file>
+        <file>media/media/5.png</file>
+        <file>media/media/6.png</file>
+        <file>media/media/7.png</file>
+        <file>media/media/1.gif</file>
+        <file>media/media/2.gif</file>
+        <file>media/media/3.gif</file>
+        <file>media/media/4.gif</file>
+        <file>media/media/5.gif</file>
+        <file>media/media/6.gif</file>
+        <file>media/media/7.gif</file>
+    </qresource>
+</RCC>
