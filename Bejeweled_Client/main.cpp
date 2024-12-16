@@ -1,17 +1,15 @@
-#include "mainwindow.h"
+
+// #include "mainwindow.h"
 #include "clientThread.h"
+#include "play.h"
 #include <QApplication>
-#include <music.h>
-#include <thread>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
 
 
 
-
-    w.show();
 
 
 
@@ -66,5 +64,8 @@ int main(int argc, char *argv[])
     //停止
     // m.stop();
 
-        return a.exec();
+    Play w;
+
+    w.show();
+    return a.exec();
 }
