@@ -1,8 +1,13 @@
 
+
 // #include "mainwindow.h"
 #include "clientThread.h"
 #include "play.h"
+#include "mainwindow.h"
+#include "menu.h"
+#include "music.h"
 #include <QApplication>
+#include <thread>
 
 int main(int argc, char *argv[])
 {
@@ -16,12 +21,12 @@ int main(int argc, char *argv[])
     //测试代码
     
     // //bgm播放
-    // music m=music();
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
+    music m=music();
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     // //音效播放
-    // m.sound("start_timi.wav");
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
-    // //音效播放
+    m.sound("start_timi.wav");
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // // //音效播放
     // m.sound("click.wav");
     // std::this_thread::sleep_for(std::chrono::seconds(1));
     // //音效播放
@@ -68,8 +73,21 @@ int main(int argc, char *argv[])
     // clientThread.start();
 
     
-    Play w;
+    //测试登入注册页面
 
-    w.show();
+    // MainWindow loginWindow;
+    // Menu mainMenu;
+
+    // QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
+
+    // loginWindow.show();
+
+    //测试游戏页面
+
+
+    // Play w;
+
+    // w.show();
+
     return a.exec();
 }

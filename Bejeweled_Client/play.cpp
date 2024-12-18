@@ -22,7 +22,7 @@ Play::Play(QWidget *parent)
 
     // 设置背景样式表
     view->setStyleSheet("QGraphicsView {"
-                        "background-image: url(:/new/prefix1/media/media/board.png);"
+                        "background-image: url(:/images/media/media/board.png);"
                         "background-position: center;"
                         "background-repeat: no-repeat;"
                         //"background-size: contain;"  // 适应视图大小

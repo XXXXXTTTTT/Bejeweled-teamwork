@@ -1,0 +1,45 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>media/media/pk3.jpeg</file>
+        <file>media/media/board.png</file>
+        <file>media/media/1.png</file>
+        <file>media/media/2.png</file>
+        <file>media/media/3.png</file>
+        <file>media/media/6.gif</file>
+        <file>media/media/7.gif</file>
+        <file>media/media/4.gif</file>
+        <file>media/media/5.gif</file>
+        <file>media/media/3.gif</file>
+        <file>media/media/1.gif</file>
+        <file>media/media/2.gif</file>
+        <file>media/media/4.png</file>
+        <file>media/media/5.png</file>
+        <file>media/media/6.png</file>
+        <file>media/media/7.png</file>
+        <file>resources/1.jpg</file>
+        <file>resources/2.jpg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>resources/sound/1.mp3</file>
+        <file>resources/sound/2.mp3</file>
+        <file>resources/sound/3.mp3</file>
+        <file>resources/sound/3counts.mp3</file>
+        <file>resources/sound/bgm.mp3</file>
+        <file>resources/sound/click.wav</file>
+        <file>resources/sound/combo_2.wav</file>
+        <file>resources/sound/combo_3.wav</file>
+        <file>resources/sound/combo_4.wav</file>
+        <file>resources/sound/combo_5.wav</file>
+        <file>resources/sound/combo_6.wav</file>
+        <file>resources/sound/combo_7.wav</file>
+        <file>resources/sound/fail.wav</file>
+        <file>resources/sound/great.mp3</file>
+        <file>resources/sound/match.wav</file>
+        <file>resources/sound/match1.mp3</file>
+        <file>resources/sound/match2.mp3</file>
+        <file>resources/sound/match2.wav</file>
+        <file>resources/sound/match3.mp3</file>
+        <file>resources/sound/start_timi.wav</file>
+        <file>resources/sound/unbelievable.mp3</file>
+    </qresource>
+</RCC>

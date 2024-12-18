@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(:/new/prefix1/media/media/board.png);</string>
+    <string notr="true">background-image: url(:/images/media/media/board.png);</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -31,15 +31,21 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>831</width>
+     <width>871</width>
      <height>131</height>
     </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">image: url(:/images/media/media/pk3.jpeg);</string>
    </property>
    <property name="text">
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="image.qrc">:/new/prefix1/media/media/pk3.jpeg</pixmap>
+    <pixmap>:/new/prefix1/media/media/pk3.jpeg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -179,8 +185,6 @@ QPushButton:pressed {
    </property>
   </widget>
  </widget>
- <resources>
-  <include location="image.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
