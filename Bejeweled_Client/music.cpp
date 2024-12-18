@@ -22,8 +22,8 @@ music::music()
     m_mediaPlayer->setAudioOutput(m_audioOutput);
 
     // 设置音乐文件路径
-    qDebug() << "Resource URL: " << QUrl("qrc:/resources/sound/3.mp3").toString();
-    m_mediaPlayer->setSource(QUrl("qrc:/resources/sound/3.mp3"));
+    qDebug() << "Resource URL: " << QUrl("qrc:/music/resources/sound/3.mp3").toString();
+    m_mediaPlayer->setSource(QUrl("qrc:/music/resources/sound/3.mp3"));
 
 
 
@@ -49,7 +49,7 @@ void music::sound(QString string)
 
     // 获取当前应用程序的目录
 
-    QString audioFilePath = "qrc:/resources/sound/"+ string;
+    QString audioFilePath = "qrc:/music/resources/sound/"+ string;
 
     // 设置音乐文件路径
     m_mediaPlayer->setSource(QUrl(audioFilePath));

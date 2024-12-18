@@ -119,6 +119,8 @@ void ClientThread::dealWithMsg(const QJsonObject& message) {
         }
     } else if(type.compare("Register") == 0) {
         //注册
+
+
     } else if(type.compare("Match") == 0) {
         //点击开始匹配后的相应
 
