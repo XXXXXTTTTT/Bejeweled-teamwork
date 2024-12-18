@@ -20,8 +20,12 @@ SOURCES += \
     clientthread.cpp \
     Jewel.cpp \
     board.cpp \
+    play.cpp \
+    dialog.cpp \
     main.cpp \
-    play.cpp
+    music.cpp\
+    mainwindow.cpp \
+    menu.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -29,23 +33,15 @@ HEADERS += \
     clientthread.h \
     Jewel.h \
     board.h \
-    play.h
-
-FORMS += \
-    play.ui \
-    dialog.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    menu.cpp
-
-HEADERS += \
     dialog.h \
     mainwindow.h \
-    menu.h
+    menu.h \
+    play.h
 
 FORMS += \
     dialog.ui \
     mainwindow.ui \
+    play.ui \
     menu.ui
 
 # Default rules for deployment.
@@ -54,8 +50,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    image.qrc \
     resource.qrc
 
-DISTFILES += \
-    resources/database.db
+

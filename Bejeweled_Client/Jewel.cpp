@@ -23,7 +23,7 @@ Jewel::Jewel(int x, int y, int type, int where, QGraphicsItem *parent)
         setPos(67 * (y + 1) + 879, 67 * (x + 1) + 36);
     }
 
-    m_movie = new QMovie(":/new/prefix1/media/media/" + QString::number(type) + ".gif");  // 选择适合的gif路径
+    m_movie = new QMovie(":/images/media/media/" + QString::number(type) + ".gif");  // 选择适合的gif路径
     m_movie->setScaledSize(QSize(64, 64));  // 设置动画的大小
 }
 
@@ -37,25 +37,25 @@ void Jewel::setIconForGem(int type) {
     // 根据宝石类型选择静态图片
     switch (type) {
     case 1:
-        m_pixmap = QPixmap(":/new/prefix1/media/media/1.png");
+        m_pixmap = QPixmap(":/images/media/media/1.png");
         break;
     case 2:
-        m_pixmap = QPixmap(":/new/prefix1/media/media/2.png");
+        m_pixmap = QPixmap(":/images/media/media/2.png");
         break;
     case 3:
-        m_pixmap = QPixmap(":/new/prefix1/media/media/3.png");
+        m_pixmap = QPixmap(":/images/media/media/3.png");
         break;
     case 4:
-        m_pixmap = QPixmap(":/new/prefix1/media/media/4.png");
+        m_pixmap = QPixmap(":/images/media/media/4.png");
         break;
     case 5:
-        m_pixmap = QPixmap(":/new/prefix1/media/media/5.png");
+        m_pixmap = QPixmap(":/images/media/media/5.png");
         break;
     case 6:
-        m_pixmap = QPixmap(":/new/prefix1/media/media/6.png");
+        m_pixmap = QPixmap(":/images/media/media/6.png");
         break;
     case 7:
-        m_pixmap = QPixmap(":/new/prefix1/media/media/7.png");
+        m_pixmap = QPixmap(":/images/media/media/7.png");
         break;
     }
 }
@@ -91,25 +91,25 @@ void Jewel::mousePressEvent(QGraphicsSceneMouseEvent* event) {
         if (!m_movie) {
             switch (m_type) {
             case 1:
-                m_movie = new QMovie(":/new/prefix1/media/media/1.gif");
+                m_movie = new QMovie(":/images/media/media/1.gif");
                 break;
             case 2:
-                m_movie = new QMovie(":/new/prefix1/media/media/2.gif");
+                m_movie = new QMovie(":/images/media/media/2.gif");
                 break;
             case 3:
-                m_movie = new QMovie(":/new/prefix1/media/media/3.gif");
+                m_movie = new QMovie(":/images/media/media/3.gif");
                 break;
             case 4:
-                m_movie = new QMovie(":/new/prefix1/media/media/4.gif");
+                m_movie = new QMovie(":/images/media/media/4.gif");
                 break;
             case 5:
-                m_movie = new QMovie(":/new/prefix1/media/media/5.gif");
+                m_movie = new QMovie(":/images/media/media/5.gif");
                 break;
             case 6:
-                m_movie = new QMovie(":/new/prefix1/media/media/6.gif");
+                m_movie = new QMovie(":/images/media/media/6.gif");
                 break;
             case 7:
-                m_movie = new QMovie(":/new/prefix1/media/media/7.gif");
+                m_movie = new QMovie(":/images/media/media/7.gif");
                 break;
             default:
                 break;
