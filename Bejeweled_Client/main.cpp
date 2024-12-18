@@ -1,7 +1,10 @@
 
+
 // #include "mainwindow.h"
 #include "clientThread.h"
 #include "play.h"
+#include "mainwindow.h"
+#include "menu.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -68,8 +71,13 @@ int main(int argc, char *argv[])
     // clientThread.start();
 
     
-    Play w;
 
-    w.show();
+    MainWindow loginWindow;
+    Menu mainMenu;
+
+    QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
+
+    loginWindow.show();
+
     return a.exec();
 }

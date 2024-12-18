@@ -5,16 +5,20 @@
         <file>media/media/1.png</file>
         <file>media/media/2.png</file>
         <file>media/media/3.png</file>
+        <file>media/media/6.gif</file>
+        <file>media/media/7.gif</file>
+        <file>media/media/4.gif</file>
+        <file>media/media/5.gif</file>
+        <file>media/media/3.gif</file>
+        <file>media/media/1.gif</file>
+        <file>media/media/2.gif</file>
         <file>media/media/4.png</file>
         <file>media/media/5.png</file>
         <file>media/media/6.png</file>
         <file>media/media/7.png</file>
-        <file>media/media/1.gif</file>
-        <file>media/media/2.gif</file>
-        <file>media/media/3.gif</file>
-        <file>media/media/4.gif</file>
-        <file>media/media/5.gif</file>
-        <file>media/media/6.gif</file>
-        <file>media/media/7.gif</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>resources/1.jpg</file>
+        <file>resources/2.jpg</file>
     </qresource>
 </RCC>

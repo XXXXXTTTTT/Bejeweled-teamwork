@@ -32,7 +32,21 @@ HEADERS += \
     play.h
 
 FORMS += \
-    play.ui
+    play.ui \
+    dialog.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    menu.cpp
+
+HEADERS += \
+    dialog.h \
+    mainwindow.h \
+    menu.h
+
+FORMS += \
+    dialog.ui \
+    mainwindow.ui \
+    menu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
