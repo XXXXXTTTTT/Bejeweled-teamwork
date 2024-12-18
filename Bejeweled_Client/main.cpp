@@ -14,9 +14,6 @@ int main(int argc, char *argv[])
 
 
     //测试代码
-
-    // ClientThread clientThread("127.0.0.1", 12345);
-    // clientThread.start();
     
     // //bgm播放
     // music m=music();
@@ -64,6 +61,13 @@ int main(int argc, char *argv[])
     //停止
     // m.stop();
 
+    //测试Client通信线程部分
+
+    
+    // ClientThread clientThread("127.0.0.1", 12345);
+    // clientThread.start();
+
+    
     Play w;
 
     w.show();
