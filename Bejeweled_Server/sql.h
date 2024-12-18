@@ -2,12 +2,14 @@
 #define SQL_H
 
 #include <QSqlDatabase>
+#include <QThread>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
 #include <QDebug>
 #include <QMessageBox>
 #include <QDir>
+#include <QReadWriteLock>
 
 class sql
 {
@@ -19,6 +21,8 @@ public:
     //连接到数据库
     bool connectToDatabase();
 
+    //断开连接
+    void disconnectToDatabase();
     //注册时检测用户名是否存在(返回1代表可以注册,0代表用户名已存在,-1代表用户名格式不对,-2代表密码格式不对)
     int canRegisterOrNot(QString name, QString password);
     //保存用户注册的账号信息
@@ -34,6 +38,11 @@ private:
     bool m_connectOrNot;
     //数据库
     QSqlDatabase m_db;
+
+    //当前连接名
+    QString m_connectionName;
+
+    static QReadWriteLock m_lock;
 };
 
 #endif // SQL_H
