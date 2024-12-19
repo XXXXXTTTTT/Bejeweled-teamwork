@@ -30,6 +30,9 @@ public:
     int getX(){return m_x;}
     int getY(){return m_y;}
 
+    int getType() const { return m_type; }
+    void setType(int type) { m_type = type; }
+
     void setIconForGem(int type);
     void ShowJewel(int a[8][8]);
 
@@ -44,6 +47,7 @@ public:
 
 private slots:
     void setButtonIcon(){setIconForGem(m_type);}
+    void onFrameChanged(int frameNumber);  // 新增槽函数用于处理帧更新
     //void sendPosInfo_onclicked();
 
 signals:

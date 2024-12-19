@@ -3,6 +3,8 @@
 #include <QHBoxLayout>
 #include <QMenuBar>
 #include <QApplication>
+#include <QRandomGenerator>
+#include <QTimer>
 using namespace std;
 QGraphicsScene *scene_3;
 Play::Play(QWidget *parent)
@@ -42,7 +44,6 @@ Play::Play(QWidget *parent)
     m_hint->setText("提示");
 
     m_score = 0;
-    m_ui->label_3->setText("时间限制:1分钟");
 
     //测试己方宝石
     scene_3 = new QGraphicsScene(m_ui->graphicsView);
@@ -71,8 +72,18 @@ Play::Play(QWidget *parent)
     m_ui->graphicsView->setRenderHint(QPainter::TextAntialiasing);
     m_ui->graphicsView->setRenderHint(QPainter::SmoothPixmapTransform);
 
-    connect(m_ui->start, &QPushButton::clicked, m_board, &Board::generateBoard);
+    //connect(m_ui->start, &QPushButton::clicked, m_board, &Board::generateBoard);
+    connect(m_ui->pushButton, &QPushButton::clicked, m_board, &Board::updateBoard);
 
+
+    // 初始化计数器
+    count = 0;
+    // 创建定时器
+    timer = new QTimer(this);
+    // 连接定时器的timeout信号到updateLCD槽函数
+    connect(timer, &QTimer::timeout, this, &Play::updateziji);
+    // 设置定时器的更新时间间隔（比如 1000 毫秒，即每秒）
+    timer->start(1000);  // 每1秒触发一次timeout信号
 }
 
 Play::~Play()
@@ -84,4 +95,15 @@ void Play::startButtonClicked()
 {
     // 处理点击事件，例如调用 board 的生成宝石方法
     m_board->generateBoard();
+}
+
+void Play::updateButtonClicked() {
+    // 触发 Board 类的 updateBoard 方法，更新棋盘
+    m_board->updateBoard();
+}
+
+void Play::updateziji()
+{
+    count++;  // 增加数字
+    m_ui->ziji->display(count); // 更新显示的数字
 }
