@@ -31,7 +31,8 @@ private slots:
                //void onHintButtonClicked();   // 提示按钮
                //void onResetButtonClicked();  // 手动重置按钮
     void startButtonClicked();
-    //void updateButtonClicked();
+    void updateButtonClicked();
+    void updateziji();
 
 private:
     Ui::Play *m_ui;                 // 指向 UI 类的指针，确保使用完整类型
@@ -42,5 +43,8 @@ private:
 
     Board *m_board;
     int m_jewel[8][8] = {{0}};      // 匹配检测
+
+    QTimer *timer; // 定时器，显示在lcdnumber上
+    int count;      // 显示的数字
 };
 #endif // PLAY_H
