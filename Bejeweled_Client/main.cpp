@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
     //测试代码
     
     // //bgm播放
-    music m=music();
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    // //音效播放
-    m.sound("start_timi.wav");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // music m=music();
+    // std::this_thread::sleep_for(std::chrono::seconds(1));
+    // // //音效播放
+    // m.sound("start_timi.wav");
+    // std::this_thread::sleep_for(std::chrono::seconds(1));
     // // //音效播放
     // m.sound("click.wav");
     // std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -75,12 +75,12 @@ int main(int argc, char *argv[])
     
     //测试登入注册页面
 
-    // MainWindow loginWindow;
-    // Menu mainMenu;
+    MainWindow loginWindow;
+    Menu mainMenu;
 
-    // QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
+    QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
 
-    // loginWindow.show();
+    loginWindow.show();
 
     //测试游戏页面
 

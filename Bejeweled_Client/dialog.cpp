@@ -51,7 +51,6 @@ void Dialog::resizeEvent(QResizeEvent *event)
     QPalette palette;
     palette.setBrush(QPalette::Window, scaledBackground);
     this->setPalette(palette);
-
     QDialog::resizeEvent(event); // 调用基类的 resizeEvent
 }
 
@@ -76,4 +75,5 @@ void Dialog::on_buttonBox_accepted()
     } else {
         QMessageBox::warning(this, "错误", "注册失败");
     }
+
 }
