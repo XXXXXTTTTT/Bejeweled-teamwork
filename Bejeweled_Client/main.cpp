@@ -85,9 +85,9 @@ int main(int argc, char *argv[])
     //测试游戏页面
 
 
-    // Play w;
+    Play w;
 
-    // w.show();
+    w.show();
 
     return a.exec();
 }
