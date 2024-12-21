@@ -25,6 +25,7 @@ private slots:
     void on_seQuenceButton_clicked();
 
 private:
+    void onResultReceived(QString enemyId);
     Ui::Menu *m_ui;
     QPixmap m_backgroundImage; // 背景图片
     double m_aspectRatio;      // 背景图片的宽高比例

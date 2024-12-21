@@ -3,6 +3,7 @@
 
 // 初始化静态成员
 sql* ClientTask::m_sql = new sql;
+QString  ClientTask:: m_waitingPlayerName = "";
 QString  ClientTask::m_waitingPlayer = "";
 QMutex* ClientTask::m_mutex = new QMutex;
 QHash<QString, QTcpSocket *> ClientTask::m_clients;
@@ -63,15 +64,16 @@ void ClientTask::run() {
                 if (!doc.isNull() && !doc.isEmpty() && doc.isObject()) {
                     QJsonObject json = doc.object();
                     //处理信息
-                    dealWithMsg(json);
                     qDebug() << "Received JSON:" << json;
+                    dealWithMsg(json);
+
                 } else {
                     qDebug() << "Invalid or EMPTY JSON received.";
                 }
             }
 
         } else {
-            qDebug() << "No data received, checking connection.";
+            // qDebug() << "No data received, checking connection.";
             if (m_socket->state() != QAbstractSocket::ConnectedState) {
                 qDebug() << "Client disconnected during idle wait.";
                 break;
@@ -130,10 +132,36 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
         }
     } else if(type.compare("Register") == 0) {
         //注册
-    } else if(type.compare("Match") == 0) {
+        QString name = message["name"].toString();
+        QString password = message["password"].toString();
+        int res =m_sql->canRegisterOrNot(name,password);
+        response["type"] = "Register";
 
+        response["res"] = res;
+
+        if(res == 1) {
+            //注册成功
+
+        }
+        else if(res==0)
+        {
+            // 用户名已存在
+
+        }
+    } else if(type.compare("Match") == 0) {
+        int res =matchPlayer(m_currUuid);
+        response["type"] = "Match";
+
+        response["res"] = res;
         //开始匹配
-        matchPlayer(m_userName);
+        if(res)
+        {
+            //匹配成功
+        }
+        else
+        {
+            //进入匹配
+        }
 
     } else if(type.compare("Playing") == 0) {
         //游戏中
@@ -149,8 +177,10 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
     //添加分隔符
     responseData.append("\n");
     // 发送响应
-    m_socket->write(responseData);
-
+    if(type.compare("Match") != 0)
+    {
+        m_socket->write(responseData);
+    }
     //是否一写入就发送
     // m_socket.flush();
 
@@ -198,25 +228,27 @@ bool ClientTask::matchPlayer(const QString &clientId) {
     if (m_waitingPlayer.isEmpty()) {
         // 如果没有等待的玩家，设置当前玩家为等待玩家
         m_waitingPlayer = clientId;
+        m_waitingPlayerName = m_userName;
         return false;
     } else {
         // 匹配成功，移除等待玩家
         QString m_enemyId = m_waitingPlayer;
         m_waitingPlayer.clear();
 
-
-
-
         QTcpSocket *player1 = m_clients[clientId];
-
         QTcpSocket *player2 = m_clients[m_enemyId];
+
+        QJsonObject json0;
+        json0["type"] = "Match";
+        json0["enemyId"] = m_waitingPlayerName;
+        json0["res"]=1;
+        sendMsg(json0, player1);
 
         //向对手发送当前匹配到了玩家并传递玩家id
         QJsonObject json;
-        json["type"] = "Matched";
-
-        json["enemyId"] = clientId;
-
+        json["type"] = "Match";
+        json["enemyId"] = m_userName;
+        json["res"]=1;
         sendMsg(json, player2);
 
 

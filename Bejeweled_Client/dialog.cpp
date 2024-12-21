@@ -1,4 +1,5 @@
 #include "dialog.h"
+#include "qjsonobject.h"
 #include "ui_dialog.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -6,6 +7,7 @@
 #include <QPalette>
 #include <QPixmap>
 #include <QResizeEvent>
+#include <iostream>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -60,20 +62,34 @@ void Dialog::on_buttonBox_accepted()
     QString username = m_ui->username->text();
     QString password = m_ui->password->text();
 
+
     if (username.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "错误", "用户名或密码不能为空");
         return;
     }
+    QJsonObject json1;
+    json1["type"] = "Register";
+    json1["name"] = username;
+    json1["password"] = password;
+    ClientThread*clientThread=ClientThread::instance();
+    clientThread->sendMsg(json1);
 
-    QSqlQuery query;
-    query.prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
-    query.bindValue(":username", username);
-    query.bindValue(":password", password);
+    // 不使用 QEventLoop，改用信号与槽机制
+    connect(clientThread, &ClientThread::resultReceived, this, &Dialog::onResultReceived);
 
-    if (query.exec()) {
-        QMessageBox::information(this, "成功", "注册成功");
-        this->close();
-    } else {
-        QMessageBox::warning(this, "错误", "注册失败");
+}
+void Dialog::onResultReceived(int res)
+{
+    disconnect(ClientThread::instance(), &ClientThread::resultReceived, this, &Dialog::onResultReceived);
+
+    // 处理服务器返回的结果，接收到信号后退出事件循环
+    ClientThread::instance()->m_res = res;
+    // 根据 m_res 判断注册是否成功
+    if (ClientThread::instance()->m_res == 1) {
+        QMessageBox::information(this, "注册成功", "注册成功");
+        this->accept();  // 注册成功后关闭对话框
+    } else if (ClientThread::instance()->m_res == 0) {
+        QMessageBox::warning(this, "注册失败", "用户名已被占用");
+        this->accept();
     }
 }
