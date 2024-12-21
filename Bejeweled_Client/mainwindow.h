@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QResizeEvent> // 添加 QResizeEvent 的头文件
-
+#include <clientthread.h>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -13,7 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow( QWidget *parent = nullptr);
     ~MainWindow();
 
 protected:
@@ -28,6 +28,7 @@ signals:
     void loginSuccess();
 
 private:
+    void onResultReceived(int res);
     Ui::MainWindow *m_ui;
     QPixmap m_backgroundImage; // 背景图片
     double m_aspectRatio;      // 背景图片的宽高比例

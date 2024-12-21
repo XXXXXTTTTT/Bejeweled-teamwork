@@ -1,7 +1,8 @@
 #include "clientthread.h"
 ClientThread::ClientThread(const QString& host, quint16 port, QObject* parent)
-    : QThread(parent), m_host(host), m_port(port), m_socket(nullptr) {}
+    : QThread(parent), m_socket(nullptr), m_host(host), m_port(port) {}
 
+ClientThread* ClientThread::m_instance = nullptr;
     ClientThread::~ClientThread() {
     if (m_socket) {
         m_socket->disconnectFromHost();
@@ -9,14 +10,20 @@ ClientThread::ClientThread(const QString& host, quint16 port, QObject* parent)
         delete m_socket;
     }
 }
-
+    ClientThread *ClientThread::instance()
+    {
+        if (!m_instance) {
+            m_instance = new ClientThread("127.0.0.1",12345,nullptr);
+        }
+        return m_instance;
+    }
 void ClientThread::run(){
     m_socket = new QTcpSocket();
 
     //连接信号与槽函数
     connect(m_socket, &QTcpSocket::readyRead, this, &ClientThread::onReadyRead);
     connect(m_socket, &QTcpSocket::disconnected, this, &ClientThread::onDisconnected);
-    connect(this, &ClientThread::receivedMessage, this, &ClientThread::dealWithMsg);
+    // connect(this, &ClientThread::receivedMessage, this, &ClientThread::dealWithMsg);
 
     // 连接到服务器
     m_socket->connectToHost(m_host, m_port);
@@ -29,30 +36,30 @@ void ClientThread::run(){
 
     qDebug() << "Connected to server";
 
-    //测试
+    // //测试
 
 
-    QJsonObject json1;
-    json1["type"] = "MSG";
+    // QJsonObject json1;
+    // json1["type"] = "MSG";
 
-    json1["content"] = "你好";
-    sendMsg(json1);
+    // json1["content"] = "你好";
+    // sendMsg(json1);
 
-    QJsonObject json2;
-    json2["type"] = "LogIn";
+    // QJsonObject json2;
+    // json2["type"] = "LogIn";
 
-    json2["name"] = "XXXTTT";
+    // json2["name"] = "wyq";
 
-    json2["password"] = "345678";
-    sendMsg(json2);
+    // json2["password"] = "111";
+    // sendMsg(json2);
 
-    QJsonObject json3;
-    json3["type"] = "LogIn";
+    // QJsonObject json3;
+    // json3["type"] = "LogIn";
 
-    json3["name"] = "XXXTTT";
+    // json3["name"] = "XXXTTT";
 
-    json3["password"] = "123456";
-    sendMsg(json3);
+    // json3["password"] = "345678";
+    // sendMsg(json3);
 
     // 进入事件循环
     exec();
@@ -60,15 +67,19 @@ void ClientThread::run(){
 
 void ClientThread::sendMsg(const QJsonObject& message) {
     if (m_socket && m_socket->state() == QAbstractSocket::ConnectedState) {
+        // qDebug()<<"Send";
         QByteArray data = QJsonDocument(message).toJson(QJsonDocument::Compact);
 
         //添加分隔符
         data.append("\n");
         // 发送响应
-        m_socket->write(data);
-        // m_socket->flush();
+        qint64 bytesWritten = m_socket->write(data);
+        // qDebug() << "Bytes written:" << bytesWritten;
+
+
+        m_socket->flush();
     } else {
-        qDebug() << "Socket not connected. Cannot send message.";
+        qDebug() << "Socket not connected. Current state:" << m_socket->state();
     }
 }
 
@@ -85,10 +96,13 @@ void ClientThread::onReadyRead() {
         // 解析 JSON
         QJsonDocument doc = QJsonDocument::fromJson(jsonData);
 
+
+
         if (!doc.isNull() && !doc.isEmpty() && doc.isObject()) {
             QJsonObject json = doc.object();
             //处理信息
             dealWithMsg(json);
+            receivedMessage(json);
             qDebug() << "Received JSON:" << json;
         } else {
             qDebug() << "Invalid or EMPTY JSON received.";
@@ -103,28 +117,43 @@ void ClientThread::dealWithMsg(const QJsonObject& message) {
     QString type = message["type"].toString();
 
     if(type.compare("LogIn") == 0) {
-        int res = message["res"].toInt();
+        m_res = message["res"].toInt();
 
         //登入
-        if(res == 1) {
+        if(m_res == 1) {
             //登入成功
             qDebug() << "登入成功";
         } else {
             //登入失败
-            if(res == 0) {
+            if(m_res == 0) {
                 qDebug() << "用户名或密码错误";
-            } else if(res == -1) {
+            } else if(m_res == -1) {
                 qDebug() << "查询失败";
             }
         }
-    } else if(type.compare("Register") == 0) {
+    }
+    else if(type.compare("Register") == 0)
+    {
+        m_res = message["res"].toInt();
+
         //注册
-
-
-    } else if(type.compare("Match") == 0) {
+        if(m_res == 1) {
+            //注册成功
+            qDebug() << "注册成功";
+        }
+        //失败
+        else if(m_res==0)
+        {
+            qDebug() << "注册失败：用户名已被使用";
+        }
+    }
+    else if(type.compare("Match") == 0)
+    {
         //点击开始匹配后的相应
 
-    } else if(type.compare("Matched") == 0) {
+    }
+    else if(type.compare("Matched") == 0)
+    {
         //匹配成功
 
         //获取对手名
@@ -137,4 +166,25 @@ void ClientThread::onDisconnected() {
     qDebug() << "Server disconnected";
     emit disconnected();
     quit(); // 退出线程事件循环
+}
+void ClientThread::receivedMessage(const QJsonObject& message)
+{
+
+    QString type = message["type"].toString();
+    // 解析响应并更新 m_res
+    m_res = message["res"].toInt();
+    //匹配
+    if(type=="Match")
+    {
+        if(m_res==1)
+        {
+            emit matchReceived(message["enemyId"].toString());
+        }
+    }
+    //注册与登录
+    else
+    {
+        // 发射信号通知界面更新 UI
+        emit resultReceived(m_res);
+    }
 }

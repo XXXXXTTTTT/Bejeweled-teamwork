@@ -76,6 +76,7 @@ private:
     static QHash<QString, QTcpSocket *> m_clients;
 
     // 等待中的玩家
+    static QString m_waitingPlayerName;
     static QString m_waitingPlayer;
 
     // 线程安全

@@ -1,4 +1,7 @@
 #include "menu.h"
+#include "clientthread.h"
+#include "play.h"
+#include "qjsonobject.h"
 #include "ui_menu.h"
 #include <QMessageBox>
 #include <QPalette>
@@ -24,8 +27,8 @@ Menu::Menu(QWidget *parent) :
     this->setPalette(palette);
 
     // 连接按钮到槽函数
-    connect(m_ui->startGameButton, &QPushButton::clicked, this, &Menu::on_startGameButton_clicked);
-    connect(m_ui->startGameButton, &QPushButton::clicked, this, &Menu::on_seQuenceButton_clicked);
+    // connect(m_ui->startGameButton, &QPushButton::clicked, this, &Menu::on_startGameButton_clicked);
+    // connect(m_ui->startGameButton, &QPushButton::clicked, this, &Menu::on_seQuenceButton_clicked);
 }
 
 Menu::~Menu()
@@ -59,10 +62,27 @@ void Menu::resizeEvent(QResizeEvent *event)
 
 void Menu::on_startGameButton_clicked()
 {
-    // 开始多人对战逻辑
-    QMessageBox::information(this, "开始游戏", "多人对战游戏已开始！");
-    qDebug() << "多人对战游戏已开始";
+    // 匹配对手
+    QMessageBox::information(this, "匹配中", "等待对手加入");
+
+    QJsonObject json;
+    json["type"] = "Match";
+    ClientThread*clientThread=ClientThread::instance();
+    clientThread->sendMsg(json);
+
+    connect(clientThread, &ClientThread::matchReceived, this, &Menu::onResultReceived);
 }
 
 void Menu::on_seQuenceButton_clicked()
 {}
+void Menu::onResultReceived(QString enemyId)
+{
+    disconnect(ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
+    // 处理服务器返回的结果
+
+        QMessageBox::information(this, "匹配成功", "对手："+enemyId);
+        Play * play = new Play();
+        play -> show();
+        this->close();
+
+}

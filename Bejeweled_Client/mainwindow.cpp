@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "menu.h"
 #include "ui_mainwindow.h"
 #include "dialog.h"
 #include <QSqlDatabase>
@@ -25,20 +26,20 @@ MainWindow::MainWindow(QWidget *parent)
     palette.setBrush(QPalette::Window, m_backgroundImage);
     this->setPalette(palette);
 
-    // 初始化数据库
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("users.db");
-    if (!db.open()) {
-        QMessageBox::critical(this, "错误", "无法连接到数据库");
-    }
+    // // 初始化数据库
+    // QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    // db.setDatabaseName("users.db");
+    // if (!db.open()) {
+    //     QMessageBox::critical(this, "错误", "无法连接到数据库");
+    // }
 
-    // 创建用户表
-    QSqlQuery query;
-    query.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
+    // // 创建用户表
+    // QSqlQuery query;
+    // query.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
 
     // 手动连接槽函数
-    connect(m_ui->loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
-    connect(m_ui->registerButton, &QPushButton::clicked, this, &MainWindow::on_registerButton_clicked);
+    // connect(m_ui->loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
+    // connect(m_ui->registerButton, &QPushButton::clicked, this, &MainWindow::on_registerButton_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -75,22 +76,41 @@ void MainWindow::on_loginButton_clicked()
     QString username = m_ui->username->text();
     QString password = m_ui->password->text();
 
-    QSqlQuery query;
-    query.prepare("SELECT * FROM users WHERE username = :username AND password = :password");
-    query.bindValue(":username", username);
-    query.bindValue(":password", password);
 
-    if (query.exec() && query.next()) {
-        QMessageBox::information(this, "成功", "登录成功");
-        emit loginSuccess();
-        this->close();
-    } else {
-        QMessageBox::warning(this, "错误", "用户名或密码错误");
-    }
+    QJsonObject json;
+    json["type"] = "LogIn";
+    json["name"] = username;
+    json["password"] = password;
+
+    ClientThread*clientThread=ClientThread::instance();
+    clientThread->sendMsg(json);
+
+    connect(clientThread, &ClientThread::resultReceived, this, &MainWindow::onResultReceived);
+
 }
 
 void MainWindow::on_registerButton_clicked()
 {
     Dialog *dialog = new Dialog(this);
     dialog->show();
+}
+void MainWindow::onResultReceived(int res)
+{
+    disconnect(ClientThread::instance(), &ClientThread::resultReceived, this, &MainWindow::onResultReceived);
+
+    // 处理服务器返回的结果，接收到信号后退出事件循环
+    ClientThread::instance()->m_res = res;
+    // 根据 m_res 判断注册是否成功
+    if (ClientThread::instance()->m_res == 1) {
+        QMessageBox::information(this, "登录成功", "登录成功");
+        Menu *menu=new Menu();
+        menu->show();
+        this->close();
+    } else if (ClientThread::instance()->m_res == 0) {
+        QMessageBox::warning(this, "登录失败", "用户名或密码错误");
+    }
+    else
+    {
+        QMessageBox::warning(this, "登录失败", "查询失败");
+    }
 }
