@@ -226,9 +226,9 @@ bool ClientTask::matchPlayer(const QString &clientId) {
 
     //生成随机数字串
     QString r="";
-    for(int i=0;i<100;i++)
+    for(int i=0;i<1000;i++)
     {
-        r+=QString::number(QRandomGenerator::global()->bounded(1, 8));
+        r+=QString::number(QRandomGenerator::global()->bounded(1, 5));
     }
 
     if (m_waitingPlayer.isEmpty()) {

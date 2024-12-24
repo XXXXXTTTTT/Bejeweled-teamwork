@@ -1,5 +1,6 @@
 #include "play.h"
 #include "clientthread.h"
+#include "information.h"
 #include "music.h"
 #include "ui_play.h"
 #include <QHBoxLayout>
@@ -92,6 +93,8 @@ Play::Play(QWidget *parent)
     m_mus = music::instance();
     // qDebug()<<m_ui->horizontalSlider->value();
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
+    m_ui->label_3->setText(information::instance().m_userName+"'s score");
+    m_ui->label_4->setText(information::instance().m_enemyName+"'s score");
 }
 
 Play::~Play()

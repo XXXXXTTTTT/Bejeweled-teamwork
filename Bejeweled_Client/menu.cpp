@@ -7,6 +7,7 @@
 #include <QPalette>
 #include <QPixmap>
 #include <QResizeEvent>
+#include <information.h>
 
 Menu::Menu(QWidget *parent) :
     QWidget(parent),
@@ -81,6 +82,7 @@ void Menu::onResultReceived(QString enemyId)
     // 处理服务器返回的结果
 
         QMessageBox::information(this, "匹配成功", "对手："+enemyId);
+        information::instance().enemyName=enemyId;
         Play * play = new Play();
         play -> show();
         this->close();

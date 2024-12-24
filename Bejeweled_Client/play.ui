@@ -205,11 +205,11 @@ QPushButton:pressed {
    <property name="font">
     <font>
      <family>Impact</family>
-     <pointsize>16</pointsize>
+     <pointsize>14</pointsize>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: white
+    <string notr="true">color:rgb(170, 255, 255)
 </string>
    </property>
    <property name="text">
@@ -221,19 +221,19 @@ QPushButton:pressed {
     <rect>
      <x>640</x>
      <y>40</y>
-     <width>261</width>
+     <width>381</width>
      <height>21</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Impact</family>
-     <pointsize>16</pointsize>
+     <pointsize>14</pointsize>
      <underline>false</underline>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: white</string>
+    <string notr="true">color: rgb(255, 85, 127)</string>
    </property>
    <property name="text">
     <string>THE OPPONENT'S SCORE</string>

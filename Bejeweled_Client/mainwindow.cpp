@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QPalette>
 #include <QPixmap>
+#include <information.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -81,7 +82,7 @@ void MainWindow::on_loginButton_clicked()
     json["type"] = "LogIn";
     json["name"] = username;
     json["password"] = password;
-
+    information::instance().userName=username;
     ClientThread*clientThread=ClientThread::instance();
     clientThread->sendMsg(json);
 

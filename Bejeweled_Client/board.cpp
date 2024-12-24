@@ -11,19 +11,19 @@ Board::Board(QString r0, QGraphicsScene *sc)
     m_mus =music::instance();
     m_grid.resize(8, std::vector<int>(8));
 
-    //初始化
-    m_allJewelItems = std::vector<std::vector<Jewel*>>(8, std::vector<Jewel *>(8, nullptr));
+    // //初始化
+    // m_allJewelItems = std::vector<std::vector<Jewel*>>(8, std::vector<Jewel *>(8, nullptr));
 
-    // 创建逻辑线程和工作器
-    m_logicThread = new QThread(this);
-    m_logicWorker = new LogicWorker(this);
-    m_logicWorker->moveToThread(m_logicThread);
+    // // 创建逻辑线程和工作器
+    // m_logicThread = new QThread(this);
+    // m_logicWorker = new LogicWorker(this);
+    // m_logicWorker->moveToThread(m_logicThread);
 
-    //连接对应信号和槽函数
-    connect(this, &Board::enqueueTask, m_logicWorker, &LogicWorker::addTask);
-    // connect(m_logicWorker, &LogicWorker::taskFinished, this, &Board::handleTaskFinished);
+    // //连接对应信号和槽函数
+    // connect(this, &Board::enqueueTask, m_logicWorker, &LogicWorker::addTask);
+    // // connect(m_logicWorker, &LogicWorker::taskFinished, this, &Board::handleTaskFinished);
 
-    m_logicThread->start();
+    // m_logicThread->start();
 
     // // 将传入的数组转换为vector
     // for (int i = 0; i < 8; ++i) {
