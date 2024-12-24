@@ -13,7 +13,9 @@ ClientThread* ClientThread::m_instance = nullptr;
 }
     ClientThread *ClientThread::instance()
     {
-
+        if (!m_instance) {
+            m_instance = new ClientThread("127.0.0.1",12345,nullptr);
+        }
         return m_instance;
     }
 void ClientThread::run(){

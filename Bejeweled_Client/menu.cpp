@@ -82,7 +82,7 @@ void Menu::onResultReceived(QString enemyId)
     // 处理服务器返回的结果
 
         QMessageBox::information(this, "匹配成功", "对手："+enemyId);
-        information::instance().enemyName=enemyId;
+        information::instance().m_enemyName=enemyId;
         Play * play = new Play();
         play -> show();
         this->close();

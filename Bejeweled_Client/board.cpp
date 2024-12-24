@@ -1,8 +1,8 @@
 #include "board.h"
+#include "information.h"
 #include "music.h"
 #include "play.h"
 QString r="";
-
 
 Board::Board(QString r0, QGraphicsScene *sc)
     : m_scene(sc) {
@@ -11,21 +11,21 @@ Board::Board(QString r0, QGraphicsScene *sc)
     m_mus =music::instance();
     m_grid.resize(8, std::vector<int>(8));
 
-    // //初始化
-    // m_allJewelItems = std::vector<std::vector<Jewel*>>(8, std::vector<Jewel *>(8, nullptr));
+    //初始化
+    m_allJewelItems = std::vector<std::vector<Jewel*>>(8, std::vector<Jewel *>(8, nullptr));
 
-    // // 创建逻辑线程和工作器
-    // m_logicThread = new QThread(this);
-    // m_logicWorker = new LogicWorker(this);
-    // m_logicWorker->moveToThread(m_logicThread);
+    // 创建逻辑线程和工作器
+    m_logicThread = new QThread(this);
+    m_logicWorker = new LogicWorker(this);
+    m_logicWorker->moveToThread(m_logicThread);
 
-    // //连接对应信号和槽函数
-    // connect(this, &Board::enqueueTask, m_logicWorker, &LogicWorker::addTask);
-    // // connect(m_logicWorker, &LogicWorker::taskFinished, this, &Board::handleTaskFinished);
+    //连接对应信号和槽函数
+    connect(this, &Board::enqueueTask, m_logicWorker, &LogicWorker::addTask);
+    // connect(m_logicWorker, &LogicWorker::taskFinished, this, &Board::handleTaskFinished);
 
-    // m_logicThread->start();
+    m_logicThread->start();
 
-    // // 将传入的数组转换为vector
+    // 将传入的数组转换为vector
     // for (int i = 0; i < 8; ++i) {
     //     std::vector<int> row;
     //     for (int k = 0; k < 8; ++k) {
@@ -54,7 +54,7 @@ void Board::generateBoard(QString &r){
             else
             {
                 // 随机生成一个宝石类型
-                gemType = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
             }
             // 需要检查该宝石是否符合规则
             while (checkForInvalidPlacement(i, j, gemType)) {
@@ -66,7 +66,7 @@ void Board::generateBoard(QString &r){
                 else
                 {
                     // 随机生成一个宝石类型
-                    gemType = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
                 }
             }
 
@@ -95,7 +95,7 @@ void Board::generateBoard() {
             else
             {
                 // 随机生成一个宝石类型
-                gemType = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
             }
             // 需要检查该宝石是否符合规则
             while (checkForInvalidPlacement(i, j, gemType)) {
@@ -107,7 +107,7 @@ void Board::generateBoard() {
                 else
                 {
                     // 随机生成一个宝石类型
-                    gemType = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
                 }
             }
 
@@ -156,7 +156,7 @@ void Board::updateBoard() {
         // 随机生成新的棋盘数据
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
-                // m_grid[i][j] = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                // m_grid[i][j] = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
 
                 if(!r.isEmpty())
                 {
@@ -166,7 +166,7 @@ void Board::updateBoard() {
                 else
                 {
                     // 随机生成一个宝石类型
-                    m_grid[i][j] = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                    m_grid[i][j] = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
                 }
             }
         }
@@ -617,7 +617,7 @@ void Board::generateNewJewels() {
                 else
                 {
                     // 随机生成一个宝石类型
-                    gemType = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
                 }
                 m_grid[x][y] = gemType;
 
@@ -653,7 +653,11 @@ void Board::generateNewJewels() {
         }
         else
         {
-            if(m_combo>2)
+            if(m_combo==6)
+            {
+                m_mus->sound("start_timi.wav",Play::m_soundVolume);
+            }
+            else if(m_combo>2)
             {
                 m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
             }

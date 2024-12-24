@@ -82,7 +82,7 @@ void MainWindow::on_loginButton_clicked()
     json["type"] = "LogIn";
     json["name"] = username;
     json["password"] = password;
-    information::instance().userName=username;
+    information::instance().m_userName=username;
     ClientThread*clientThread=ClientThread::instance();
     clientThread->sendMsg(json);
 

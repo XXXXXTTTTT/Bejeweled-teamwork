@@ -1,5 +1,6 @@
 #include "clienttask.h"
 #include "QRandomGenerator"
+#include "information.h"
 
 // 初始化静态成员
 sql* ClientTask::m_sql = new sql;
@@ -228,7 +229,7 @@ bool ClientTask::matchPlayer(const QString &clientId) {
     QString r="";
     for(int i=0;i<1000;i++)
     {
-        r+=QString::number(QRandomGenerator::global()->bounded(1, 5));
+        r+=QString::number(QRandomGenerator::global()->bounded(1, information::instance().m_RRange));
     }
 
     if (m_waitingPlayer.isEmpty()) {
