@@ -655,15 +655,24 @@ void Board::generateNewJewels() {
         {
             if(m_combo==6)
             {
-                m_mus->sound("start_timi.wav",Play::m_soundVolume);
-            }
-            else if(m_combo>2)
-            {
                 m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
             }
-            else if(m_combo>1)
+            else if(m_combo==5)
+            {
+                m_mus->sound("amazing.wav",Play::m_soundVolume);
+            }
+            else if(m_combo==4)
+            {
+                m_mus->sound("excellent.wav",Play::m_soundVolume);
+            }
+
+            else if(m_combo==3)
             {
                 m_mus->sound("great.mp3",Play::m_soundVolume);
+            }
+            else if(m_combo==2)
+            {
+                m_mus->sound("good.wav",Play::m_soundVolume);
             }
             m_combo=0;
         }
