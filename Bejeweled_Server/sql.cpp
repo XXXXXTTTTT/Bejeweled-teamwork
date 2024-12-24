@@ -62,6 +62,8 @@ bool sql::connectToDatabase() {
     if (ok) {
         m_connectOrNot = true;
         qDebug() << "数据库连接成功";
+        QSqlQuery query(m_db);
+        // query.exec("create table new_userList(username varchar(20),password varchar(28))");
         return true;
     } else {
         qDebug() << "数据库连接失败";
@@ -98,7 +100,8 @@ int sql::canRegisterOrNot(QString name, QString password) {
 
     QSqlQuery query(m_db);
     //查询
-    query.prepare("SELECT * FROM userList WHERE name = :username");
+
+    query.prepare("SELECT * FROM userList WHERE username = :username");
     query.bindValue(":username", name);
 
     if (!query.exec()) {
@@ -110,7 +113,6 @@ int sql::canRegisterOrNot(QString name, QString password) {
 
     if (query.next()) {
         qDebug() << "Register failed: " << name <<" is used." ;
-
         return 0;
     } else {
         //无用户名重复
@@ -126,27 +128,36 @@ int sql::canRegisterOrNot(QString name, QString password) {
 
 //保存用户注册的账号信息
 void sql::saveUserRegisterData(QString name, QString password) {
-    QWriteLocker locker(&m_lock); // 加写锁
-    QSqlQuery query(m_db);
-    // 获取当前最大 ID
-    query.prepare("SELECT MAX(id) FROM users");
-    if (!query.exec()) {
-        qDebug() << "Failed to get max ID:" << query.lastError().text();
-
+    // QWriteLocker locker(&m_lock); // 加写锁
+    if (!m_db.isOpen()) {
+        qDebug() << "Database not open!";
         return;
     }
 
-    int newId = 1; // 默认从 1 开始
-    if (query.next()) {
-        int maxId = query.value(0).toInt(); // 获取最大 ID
-        newId = maxId + 1;                 // 新 ID 为最大值 +1
-    }
+    QSqlQuery query(m_db);
+    // 获取当前最大 ID
+
+    // query.prepare("SELECT MAX(id) FROM userList");
+    // if (!query.exec()) {
+    //     qDebug() << "Failed to get max ID:" << query.lastError().text();
+
+    //     return;
+    // }
+
+    // int newId = 1; // 默认从 1 开始
+    // if (query.next()) {
+    //     int maxId = query.value(0).toInt(); // 获取最大 ID
+    //     newId = maxId + 1;                 // 新 ID 为最大值 +1
+    // }
 
     // 插入新用户信息
-    query.prepare("INSERT INTO users (id, username, password) VALUES (:id, :username, :password)");
-    query.bindValue(":id", newId);
+    query.prepare("INSERT INTO userList (username, password) VALUES (:username, :password)");
+    // query.bindValue("id", "6");
     query.bindValue(":username", name);
     query.bindValue(":password", password);
+    // query.prepare("INSERT INTO userList (username, password) VALUES (?, ?)");
+    // query.addBindValue(name);
+    // query.addBindValue(password);
 
     if (!query.exec()) {
         qDebug() << "Failed to insert user:" << query.lastError().text();
@@ -154,7 +165,7 @@ void sql::saveUserRegisterData(QString name, QString password) {
         return;
     }
 
-    qDebug() << "User registered successfully with ID:" << newId;
+    qDebug() << "User registered successfully with ID:" ;
 }
 
 
@@ -171,10 +182,13 @@ int sql::canLoginOrNot(QString name, QString password) {
 
     QSqlQuery query(m_db);
 
+
     //查询
-    query.prepare("SELECT * FROM userList WHERE name = :username AND password = :password");
-    query.bindValue(":username", name);
-    query.bindValue(":password", password);
+    query.prepare("SELECT * FROM userList WHERE username = :username AND password = :password");
+    query.bindValue(":username", name.trimmed());
+    query.bindValue(":password", password.trimmed());
+    // qDebug() << "Executing query: SELECT * FROM userList WHERE username ="
+    //          << name << "AND password =" << password;
 
     if (!query.exec()) {
         qDebug() << "Query error:" << query.lastError().text();
@@ -186,6 +200,7 @@ int sql::canLoginOrNot(QString name, QString password) {
         return 1;
     } else {
         qDebug() << "Login failed: " << "Invalid username or password." ;
+        qDebug() << "Last executed query:" << query.lastQuery();
         return 0;
     }
 

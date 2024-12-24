@@ -11,10 +11,10 @@ class ClientThread : public QThread {
     Q_OBJECT
 
 public:
-    explicit ClientThread(const QString& host, quint16 port, QObject* parent = nullptr);
-
+    int m_res;
+QTcpSocket* m_socket;
     ~ClientThread();
-
+static ClientThread *instance();
 protected:
     void run() override;
 
@@ -23,7 +23,8 @@ public slots:
 
     void dealWithMsg(const QJsonObject& message);
 signals:
-    void receivedMessage(const QJsonObject& message);
+    void resultReceived(int res);
+    void matchReceived(QString name);
 
     void connectionFailed(const QString& error);
 
@@ -35,9 +36,13 @@ private slots:
     void onDisconnected();
 
 private:
+    void receivedMessage(const QJsonObject& message);
+    explicit ClientThread(const QString& host, quint16 port, QObject* parent = nullptr);
+    static ClientThread * m_instance;
     QString m_host;
     quint16 m_port;
-    QTcpSocket* m_socket;
+
+
 };
 
 

@@ -1,6 +1,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
+#include "clientThread.h"
 #include <QDialog>
 #include <QResizeEvent> // 添加 QResizeEvent 的头文件
 
@@ -10,6 +11,7 @@ class Dialog;
 
 class Dialog : public QDialog
 {
+
     Q_OBJECT
 
 public:
@@ -22,6 +24,7 @@ protected:
 
 private slots:
     void on_buttonBox_accepted();
+    void onResultReceived(int res);
 
 private:
     Ui::Dialog *m_ui;

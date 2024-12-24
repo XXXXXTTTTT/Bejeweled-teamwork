@@ -8,15 +8,11 @@
 #include "music.h"
 #include <QApplication>
 #include <thread>
+#include "dialog.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
-
-
-
-
 
     //测试代码
     
@@ -75,7 +71,11 @@ int main(int argc, char *argv[])
     
     //测试登入注册页面
 
-    MainWindow loginWindow;
+    ClientThread* clientThread =ClientThread::instance();
+    clientThread->start();
+    qDebug() << "客户端已启动";
+
+    MainWindow loginWindow=MainWindow();
     Menu mainMenu;
 
     QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
