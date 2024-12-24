@@ -11,24 +11,75 @@
 #include<QPushButton>
 #include <QGraphicsItem>
 //宝石类的声明
-class Jewel :  public QObject,public QGraphicsItem {
+class Jewel :  public QObject,public QGraphicsPixmapItem {
     Q_OBJECT
+
+    // 声明可动画的属性
+
+    //位置
+    Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+
+    //透明度
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+
+    //大小
+    Q_PROPERTY(qreal scale READ scale WRITE setScale NOTIFY scaleChanged)
+
 private:
     //QString color;
     int m_type;     //宝石的种类
     int m_x;        //当前宝石的x坐标
     int m_y;        //当前宝石的y坐标
-    int m_where;
     bool m_choosed; // 是否被选中
-    QPixmap m_pixmap; // 宝石图像
+    QPixmap m_pixmap; // 宝石静态图像
     QMovie *m_movie;  // 用于显示gif动图
-public:
+    QPixmap m_selector; //宝石被选中时显示的框体
+    qreal m_opacity = 1.0; // 默认完全不透明
 
-    //重写的时候默认使用button的构造器初始化 gxc
-    Jewel(int x , int y , int type,int where ,QGraphicsItem *parent = nullptr);      //初始化宝石的坐标和对应的QLabel的生成以及图片的加载
-    ~Jewel();                           //析构函数                   //获取当前宝石的button
+    //当前被选中的宝石
+    static Jewel* m_currSelectedJewel;
+
+public:
+    //默认构造
+    Jewel() {};
+
+    //含参构造
+    Jewel(int x , int y , int type,QGraphicsPixmapItem *parent = nullptr);
+
+    //析构函数
+    ~Jewel();
+
+
     int getX(){return m_x;}
+
     int getY(){return m_y;}
+
+    void setXY(int x, int y) {m_x = x, m_y = y;}
+    //实现动画所需函数
+
+    //返回位置
+    QPointF pos() const;
+
+    //设置位置
+    void setPos(const QPointF& newPos);
+
+    //返回透明度
+    qreal opacity() const;
+
+    //设置透明度
+    void setOpacity(qreal opacity);
+
+    // 返回当前缩放比例
+    qreal scale() const;
+
+    //设置缩放比例
+    void setScale(qreal scaleFactor); // 设置
+
+
+    //设置为静态图片显示
+    void setStaticDisplay();
+    //设置为动态图片显示
+    void setDynamicDisplay();
 
     int getType() const { return m_type; }
     void setType(int type) { m_type = type; }
@@ -45,13 +96,20 @@ public:
     // 鼠标点击事件处理函数
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
+    //判断当前操作是否为交换操作(两点是否满足交换)
+    // static bool isSwapOrNot(int x1, int y1, int x2, int y2);
+signals:
+    void jewelSwap(int x1, int y1, int x2, int y2); // 声明信号：宝石被点击时发送
+
+    void opacityChanged();//动画修改透明度需要使用
+
+    void scaleChanged(); // 缩放变化时发射的信号
 private slots:
-    void setButtonIcon(){setIconForGem(m_type);}
-    void onFrameChanged(int frameNumber);  // 新增槽函数用于处理帧更新
+    // void setButtonIcon(){setIconForGem(m_type);}
     //void sendPosInfo_onclicked();
 
-signals:
-    void jewelClicked(int x, int y); // 声明信号：宝石被点击时发送
+
+
 };
 
 #endif // JEWEL_H

@@ -18,6 +18,7 @@
         <file>media/media/7.png</file>
         <file>resources/1.jpg</file>
         <file>resources/2.jpg</file>
+        <file>media/media/selector.png</file>
     </qresource>
     <qresource prefix="/music">
         <file>resources/sound/1.mp3</file>

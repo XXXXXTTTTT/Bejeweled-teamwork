@@ -53,7 +53,6 @@ void Dialog::resizeEvent(QResizeEvent *event)
     QPalette palette;
     palette.setBrush(QPalette::Window, scaledBackground);
     this->setPalette(palette);
-
     QDialog::resizeEvent(event); // 调用基类的 resizeEvent
 }
 
@@ -92,4 +91,5 @@ void Dialog::onResultReceived(int res)
         QMessageBox::warning(this, "注册失败", "用户名已被占用");
         this->accept();
     }
+
 }
