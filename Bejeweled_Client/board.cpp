@@ -8,6 +8,17 @@ Board::Board(int j[8][8], QGraphicsScene *sc)
     //初始化
     m_allJewelItems = std::vector<std::vector<Jewel*>>(8, std::vector<Jewel *>(8, nullptr));
 
+    // 创建逻辑线程和工作器
+    m_logicThread = new QThread(this);
+    m_logicWorker = new LogicWorker(this);
+    m_logicWorker->moveToThread(m_logicThread);
+
+    //连接对应信号和槽函数
+    connect(this, &Board::enqueueTask, m_logicWorker, &LogicWorker::addTask);
+    // connect(m_logicWorker, &LogicWorker::taskFinished, this, &Board::handleTaskFinished);
+
+    m_logicThread->start();
+
     // 将传入的数组转换为vector
     for (int i = 0; i < 8; ++i) {
         std::vector<int> row;
@@ -18,6 +29,12 @@ Board::Board(int j[8][8], QGraphicsScene *sc)
     }
     generateBoard();  // 生成棋盘
 
+}
+
+Board::~Board() {
+    m_logicThread->quit();
+    m_logicThread->wait();
+    delete m_logicWorker;
 }
 
 void Board::generateBoard() {
@@ -37,8 +54,8 @@ void Board::generateBoard() {
             m_grid[i][j] = gemType;  // 更新 m_grid 中的宝石类型
 
             // 创建宝石对象并设置坐标
-            Jewel* gem = new Jewel(i, j, gemType, 1);
-            connect(gem, &Jewel::jewelSwap, this, &Board::swapJewels);
+            Jewel* gem = new Jewel(i, j, gemType);
+            connect(gem, &Jewel::jewelSwap, this, &Board::enqueueSwap);
             gem->setPos(QPointF(i * 67 + offsetX, j * 68 + offsetY));
             m_scene->addItem(gem);  // 将宝石添加到场景中
             m_allJewelItems[i][j] = gem;
@@ -180,9 +197,31 @@ bool Board::checkVertical(int x, int y) {
     return count >= 3;  // 如果连续的宝石数>=3，则返回true，表示无效
 }
 
+void Board::enqueueSwap(int x1, int y1, int x2, int y2) {
 
-//宝石交换
+    if (m_logicWorker->isProcessingOrNot()) {
+        qDebug() << "任务队列未完成，阻止新交换";
+        return;
+    }
+
+    emit enqueueTask([=]() {
+        swapJewels(x1, y1, x2, y2);
+    });
+
+}
+
+//任务完成后处理下一个
+void Board::handleTaskFinished() {
+    qDebug() << "任务完成，准备处理下一个任务";
+    // m_logicWorker->processNextTask();
+
+}
+
+//宝石交换任务
 void Board::swapJewels(int x1, int y1, int x2, int y2) {
+    // 加锁范围，保护 m_grid 的一致性
+    QMutexLocker locker(&m_mutex);
+
 
     qDebug() << "接收到了";
 
@@ -198,9 +237,7 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
     qDebug() << "1: " << x1 << y1;
 
     qDebug() << "2: " << x2 << y2;
-    // qDebug() << "1: " << jewel1->getX() << jewel1->getY();
 
-    // qDebug() << "2: " << jewel2->getX() << jewel2->getY();
     if (!jewel1 || !jewel2) return;
 
     qDebug() << "动画来咯";
@@ -226,7 +263,7 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
     animationGroup->addAnimation(anim2);
 
     // 连接动画组结束信号
-    connect(animationGroup, &QParallelAnimationGroup::finished, [=]() {
+    connect(animationGroup, &QParallelAnimationGroup::finished, this, [=]() {
         // 交换数据
         std::swap(m_grid[x1][y1], m_grid[x2][y2]);
 
@@ -239,17 +276,22 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
         if (checkForMatches()) {
 
 
-
+            //交换后宝石信息更新
 
             swapJewelsDestination(jewel1, jewel2);
             qDebug() << "交换完后";
             qDebug() << "x1y1:" << m_allJewelItems[x1][y1]->getType();
 
             qDebug()<< "x2y2:" << m_allJewelItems[x2][y2]->getType();
-            //交换后宝石信息更新
 
 
-            processMatches(); // 处理消除
+
+            emit enqueueTask([=]() {
+                    processMatches();
+            });
+
+
+
         } else {
             // 如果没有形成消除，交换回去
             QParallelAnimationGroup* reverseGroup = new QParallelAnimationGroup(this);
@@ -289,6 +331,7 @@ bool Board::checkForMatches() {
 
 //删除匹配的宝石
 void Board::processMatches() {
+
     // 找到所有需要消除的宝石
     QSet<std::pair<int, int>> matches;
 
@@ -310,93 +353,180 @@ void Board::processMatches() {
     }
 
     qDebug() << "消除个数：" << matches.size();
-    // 消除匹配的宝石
-    for (auto& match : matches) {
-        int x = match.first;
-        int y = match.second;
 
-        Jewel* jewel = m_allJewelItems[x][y];
-        if (jewel) {
-            qDebug() << x << ": " << y;
-            QPropertyAnimation* fadeAnim = new QPropertyAnimation(jewel, "opacity");
-            fadeAnim->setDuration(100);
-            fadeAnim->setEndValue(0.0);
-            connect(fadeAnim, &QPropertyAnimation::finished, [=]() {
-                m_scene->removeItem(jewel);
+    QParallelAnimationGroup* deleteGroup = new QParallelAnimationGroup(this);
+
+
+    // 加锁范围，保护 m_grid 的一致性
+    {
+
+
+        // 加锁范围，保护 m_grid 的一致性
+        QMutexLocker locker(&m_mutex);
+
+        // 消除匹配的宝石
+        for (auto& match : matches) {
+            int x = match.first;
+            int y = match.second;
+
+            Jewel* jewel = m_allJewelItems[x][y];
+            if (jewel) {
+                qDebug() << x << ": " << y;
+                // 创建透明度动画
+                QPropertyAnimation* fadeAnim = new QPropertyAnimation(jewel, "opacity");
+                fadeAnim->setDuration(300);
+                fadeAnim->setStartValue(1.0);  // 开始时完全不透明
+                fadeAnim->setEndValue(0.0);    // 结束时完全透明
+
+                // 创建缩放动画
+                QPropertyAnimation* scaleAnim = new QPropertyAnimation(jewel, "scale");
+                scaleAnim->setDuration(300);
+                scaleAnim->setStartValue(1.0);  // 开始时大小为 1
+                scaleAnim->setEndValue(0.0);    // 结束时大小为 0，完全消失
+
+                // 将动画添加到动画组中
+                deleteGroup->addAnimation(fadeAnim);
+                deleteGroup->addAnimation(scaleAnim);
+
+                m_grid[x][y] = 0;
+
                 m_allJewelItems[x][y] = nullptr;
 
-                // delete jewel;
-            });
-            fadeAnim->start(QAbstractAnimation::DeleteWhenStopped);
+                deleteGroup->addAnimation(fadeAnim);
+                deleteGroup->addAnimation(scaleAnim);
+                connect(fadeAnim, &QPropertyAnimation::finished, this, [=]() {
+
+                    qDebug() << "BEFORE: JEWELSIZE: " << m_scene->items().size();
+
+                    m_scene->removeItem(jewel);
+
+                    // delete jewel;
+
+                    qDebug() << "AFTER: JEWELSIZE: " << m_scene->items().size();
+
+
+
+                });
+            }
         }
 
-        m_grid[x][y] = 0;
+
+
     }
+    connect(deleteGroup, &QParallelAnimationGroup::finished, this, [=]() {
+        qDebug() << "ALLAFTER: JEWELSIZE: " << m_scene->items().size();
+        qDebug() << "消除完毕";
 
-    qDebug() << "消除完毕";
-
-    QTimer::singleShot(500, this, [=]() {
-        dropJewels();
+        emit enqueueTask([=]() {
+            dropJewels();
+        });
     });
+
+    deleteGroup->start(QAbstractAnimation::DeleteWhenStopped);
+
 }
 
 //匹配后的宝石下落
 void Board::dropJewels() {
-    for (int x = 0; x < 8; ++x) {
-        for (int y = 7; y >= 0; --y) {
-            if (m_grid[x][y] == 0) {
-                for (int k = y - 1; k >= 0; --k) {
-                    if (m_grid[x][k] != 0) {
-                        Jewel* jewel = m_allJewelItems[x][k];
-                        if (jewel) {
-                            jewel->setXY(x, y);
-                            m_allJewelItems[x][y] = jewel;
-                            m_allJewelItems[x][k] = nullptr;
-                            m_grid[x][y] = m_grid[x][k];
-                            m_grid[x][k] = 0;
-                            QPropertyAnimation* dropAnim = new QPropertyAnimation(jewel, "pos");
-                            dropAnim->setDuration(300);
-                            dropAnim->setEndValue(QPointF(x * 67 + offsetX, y * 68 + offsetY));
-                            dropAnim->start(QAbstractAnimation::DeleteWhenStopped);
+
+    QParallelAnimationGroup* dropGroup = new QParallelAnimationGroup(this);
+
+    int num = 0;
+
+    {
 
 
-                            //处理消除
-                            // connect(dropAnim, &QPropertyAnimation::finished, [=]() {
 
-                            //     if(checkForMatches()) {
-                            //         processMatches();
-                            //     }
-                            // });
+        // 加锁范围，保护 m_grid 的一致性
+        QMutexLocker locker(&m_mutex);
 
+
+
+
+
+
+        for (int x = 0; x < 8; ++x) {
+            for (int y = 7; y >= 0; --y) {
+                //寻找消除了的宝石
+                if (m_grid[x][y] == 0) {
+                    // qDebug() << "x,y: " << x << y;
+                    for (int k = y - 1; k >= 0; --k) {
+                        //寻找顶替消除宝石位置的宝石
+                        if (m_grid[x][k] != 0) {
+                            // qDebug() << "x,k: " << x << k;
+                            Jewel* jewel = m_allJewelItems[x][k];
+                            if (jewel) {
+                                jewel->setXY(x, y);
+                                m_allJewelItems[x][y] = jewel;
+                                m_allJewelItems[x][k] = nullptr;
+                                m_grid[x][y] = m_grid[x][k];
+                                m_grid[x][k] = 0;
+                                QPropertyAnimation* dropAnim = new QPropertyAnimation(jewel, "pos");
+                                dropAnim->setDuration(300);
+                                dropAnim->setEndValue(QPointF(x * 67 + offsetX, y * 68 + offsetY));
+                                dropGroup->addAnimation(dropAnim);
+
+                                num++;
+                                //处理消除
+                                // connect(dropAnim, &QPropertyAnimation::finished, [=]() {
+
+                                //     if(checkForMatches()) {
+                                //         processMatches();
+                                //     }
+                                // });
+
+                            }
+
+                            break;
                         }
-
-                        break;
                     }
                 }
             }
         }
+
     }
 
-    QTimer::singleShot(500, this, [=]() {
-        // if (checkForMatches()) {
-        //     processMatches(); // 处理消除
-        // }
-        generateNewJewels();
-    });
+    qDebug() << "BEFOR: num:" << num;
+    if(num != 0) {
+        connect(dropGroup, &QParallelAnimationGroup::finished, this, [=]() {
+            qDebug() << "AFTER: num:" << num;
+            qDebug() << "下落完毕";
+            emit enqueueTask([=]() {
+                generateNewJewels();
+            });
+        });
+
+        dropGroup->start(QAbstractAnimation::DeleteWhenStopped);
+    } else {
+        qDebug() << "无下落需要";
+        emit enqueueTask([=]() {
+            generateNewJewels();
+        });
+    }
+
+
+
 }
 
 //随机生成新宝石
 void Board::generateNewJewels() {
+    // 加锁范围，保护 m_grid 的一致性
+    QMutexLocker locker(&m_mutex);
+
+
+    QParallelAnimationGroup* generateNewGroup = new QParallelAnimationGroup(this);
 
     for (int x = 0; x < 8; ++x) {
         for (int y = 0; y < 8; ++y) {
             if (m_grid[x][y] == 0) {
+
+                // qDebug() << "OK";
                 int gemType = QRandomGenerator::global()->bounded(1, 8);
                 m_grid[x][y] = gemType;
 
-                Jewel* gem = new Jewel(x, y, gemType, 1);
+                Jewel* gem = new Jewel(x, y, gemType);
                 //连接交换信号和槽函数
-                connect(gem, &Jewel::jewelSwap, this, &Board::swapJewels);
+                connect(gem, &Jewel::jewelSwap, this, &Board::enqueueSwap);
                 gem->setPos(QPointF(x * 67 + 252, -100)); // 从上方掉落
                 m_scene->addItem(gem);
                 m_allJewelItems[x][y] = gem;
@@ -405,6 +535,7 @@ void Board::generateNewJewels() {
                 dropAnim->setDuration(300);
                 dropAnim->setEndValue(QPointF(x * 67 + 252, y * 68 + 45));
 
+                generateNewGroup->addAnimation(dropAnim);
                 //处理消除
                 // connect(dropAnim, &QPropertyAnimation::finished, [=]() {
 
@@ -412,18 +543,22 @@ void Board::generateNewJewels() {
                 //         processMatches();
                 //     }
                 // });
-
-                dropAnim->start(QAbstractAnimation::DeleteWhenStopped);
-
             }
         }
     }
 
-    QTimer::singleShot(500, this, [=]() {
+    connect(generateNewGroup, &QParallelAnimationGroup::finished, this, [=]() {
+        qDebug() << "生成完毕";
         if (checkForMatches()) {
-            processMatches(); // 处理消除
+            emit enqueueTask([=]() {
+                processMatches();
+            });
         }
+
     });
+
+    generateNewGroup->start(QAbstractAnimation::DeleteWhenStopped);
+
 }
 
 //交换宝石位置信息

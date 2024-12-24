@@ -10,8 +10,10 @@ Jewel* Jewel::m_currSelectedJewel = nullptr;
 
 
 // 构造函数，初始化宝石的坐标、种类以及所在格子的位置
-Jewel::Jewel(int x, int y, int type, int where, QGraphicsPixmapItem *parent)
-    : QGraphicsPixmapItem(parent), m_type(type), m_x(x), m_y(y), m_where(where) {
+Jewel::Jewel(int x, int y, int type,QGraphicsPixmapItem *parent)
+    : QGraphicsPixmapItem(parent), m_type(type), m_x(x), m_y(y) {
+
+
 
 
     //初始化图片文件
@@ -65,6 +67,9 @@ Jewel::Jewel(int x, int y, int type, int where, QGraphicsPixmapItem *parent)
 
     // 设置初始为静态显示
     setStaticDisplay();
+
+    // 设置变换原点为中心
+    setTransformOriginPoint(boundingRect().center());
 }
 
 //析构函数
@@ -112,6 +117,20 @@ void Jewel::setOpacity(qreal opacity) {
         emit opacityChanged();
     }
 }
+
+// 返回当前缩放比例
+qreal Jewel::scale() const {
+    return QGraphicsItem::scale();
+}
+
+//设置缩放比例
+void Jewel::setScale(qreal scaleFactor) {
+    // 设置缩放比例
+    QGraphicsPixmapItem::setScale(scaleFactor);
+    emit scaleChanged(); // 发射缩放变化的信号
+}
+
+
 
 // 返回宝石项的边界矩形
 QRectF Jewel::boundingRect() const {

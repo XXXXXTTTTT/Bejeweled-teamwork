@@ -22,12 +22,14 @@ class Jewel :  public QObject,public QGraphicsPixmapItem {
     //透明度
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
 
+    //大小
+    Q_PROPERTY(qreal scale READ scale WRITE setScale NOTIFY scaleChanged)
+
 private:
     //QString color;
     int m_type;     //宝石的种类
     int m_x;        //当前宝石的x坐标
     int m_y;        //当前宝石的y坐标
-    int m_where;
     bool m_choosed; // 是否被选中
     QPixmap m_pixmap; // 宝石静态图像
     QMovie *m_movie;  // 用于显示gif动图
@@ -41,9 +43,15 @@ public:
     //默认构造
     Jewel() {};
 
-    Jewel(int x , int y , int type,int where ,QGraphicsPixmapItem *parent = nullptr);      //初始化宝石的坐标和对应的QLabel的生成以及图片的加载
-    ~Jewel();                           //析构函数                   //获取当前宝石的button
+    //含参构造
+    Jewel(int x , int y , int type,QGraphicsPixmapItem *parent = nullptr);
+
+    //析构函数
+    ~Jewel();
+
+
     int getX(){return m_x;}
+
     int getY(){return m_y;}
 
     void setXY(int x, int y) {m_x = x, m_y = y;}
@@ -55,10 +63,17 @@ public:
     //设置位置
     void setPos(const QPointF& newPos);
 
-
+    //返回透明度
     qreal opacity() const;
 
+    //设置透明度
     void setOpacity(qreal opacity);
+
+    // 返回当前缩放比例
+    qreal scale() const;
+
+    //设置缩放比例
+    void setScale(qreal scaleFactor); // 设置
 
 
     //设置为静态图片显示
@@ -87,6 +102,8 @@ signals:
     void jewelSwap(int x1, int y1, int x2, int y2); // 声明信号：宝石被点击时发送
 
     void opacityChanged();//动画修改透明度需要使用
+
+    void scaleChanged(); // 缩放变化时发射的信号
 private slots:
     // void setButtonIcon(){setIconForGem(m_type);}
     //void sendPosInfo_onclicked();
