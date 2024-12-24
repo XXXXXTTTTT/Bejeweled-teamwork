@@ -1,5 +1,5 @@
 #include "clienttask.h"
-
+#include "QRandomGenerator"
 
 // 初始化静态成员
 sql* ClientTask::m_sql = new sql;
@@ -151,7 +151,6 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
     } else if(type.compare("Match") == 0) {
         int res =matchPlayer(m_currUuid);
         response["type"] = "Match";
-
         response["res"] = res;
         //开始匹配
         if(res)
@@ -225,6 +224,13 @@ void ClientTask::sendMsg(const QJsonObject& message, QTcpSocket* targetSocket) {
 bool ClientTask::matchPlayer(const QString &clientId) {
     QMutexLocker locker(m_mutex);
 
+    //生成随机数字串
+    QString r="";
+    for(int i=0;i<100;i++)
+    {
+        r+=QString::number(QRandomGenerator::global()->bounded(1, 8));
+    }
+
     if (m_waitingPlayer.isEmpty()) {
         // 如果没有等待的玩家，设置当前玩家为等待玩家
         m_waitingPlayer = clientId;
@@ -242,15 +248,18 @@ bool ClientTask::matchPlayer(const QString &clientId) {
         json0["type"] = "Match";
         json0["enemyId"] = m_waitingPlayerName;
         json0["res"]=1;
-        sendMsg(json0, player1);
+        json0["random"]=r;
+
 
         //向对手发送当前匹配到了玩家并传递玩家id
         QJsonObject json;
         json["type"] = "Match";
         json["enemyId"] = m_userName;
         json["res"]=1;
-        sendMsg(json, player2);
+        json["random"]=r;
 
+        sendMsg(json, player2);
+        sendMsg(json0, player1);
 
         if (player1 && player2) {
             qDebug() << "Matched players:" << clientId << "and" << m_enemyId;

@@ -32,7 +32,6 @@
         <file>resources/sound/combo_4.wav</file>
         <file>resources/sound/combo_5.wav</file>
         <file>resources/sound/combo_6.wav</file>
-        <file>resources/sound/combo_7.wav</file>
         <file>resources/sound/fail.wav</file>
         <file>resources/sound/great.mp3</file>
         <file>resources/sound/match.wav</file>
@@ -42,5 +41,6 @@
         <file>resources/sound/match3.mp3</file>
         <file>resources/sound/start_timi.wav</file>
         <file>resources/sound/unbelievable.mp3</file>
+        <file>resources/sound/combo_1.wav</file>
     </qresource>
 </RCC>

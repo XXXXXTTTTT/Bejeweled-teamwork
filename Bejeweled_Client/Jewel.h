@@ -1,5 +1,6 @@
 #ifndef JEWEL_H
 #define JEWEL_H
+#include "music.h"
 #include<QString>
 #include<QLabel>
 #include<QDragEnterEvent>
@@ -40,6 +41,7 @@ private:
     static Jewel* m_currSelectedJewel;
 
 public:
+    music * m_mus;
     //默认构造
     Jewel() {};
 

@@ -15,13 +15,17 @@
 #include <QMutexLocker>
 #include "Jewel.h"
 #include "logicworker.h"
+#include "music.h"
 
 class Board : public QObject{
     Q_OBJECT
 public:
-    Board(int j[8][8] ,QGraphicsScene *scene);
+    music * m_mus;
+    int m_combo;
+    Board(QString r , QGraphicsScene *scene);
     ~Board();
     void generateBoard();
+    void generateBoard(QString &r);
     void updateBoard();
     bool checkForInvalidPlacement(int x, int y, int gemType);
     int getJewelType(int x, int y) const;
