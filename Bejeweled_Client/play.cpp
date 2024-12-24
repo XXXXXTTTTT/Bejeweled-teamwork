@@ -50,6 +50,7 @@ Play::Play(QWidget *parent)
     scene_3->setSceneRect(0,67,830,620);
     m_ui->graphicsView->setScene(scene_3);
 
+    //to do后序需要网络生成一个然后传使得双方初始棋盘内容一致
     int initialBoard[8][8] = {
         {1, 2, 3, 4, 5, 6, 7, 1},
         {2, 3, 4, 5, 6, 7, 1, 2},
