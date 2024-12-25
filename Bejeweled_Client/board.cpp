@@ -1,4 +1,5 @@
 #include "board.h"
+#include "music.h"
 #include "play.h"
 QString r="";
 
@@ -7,6 +8,7 @@ Board::Board(QString r0, QGraphicsScene *sc)
     r=r0;
     m_combo=0;
     m_mus =music::instance();
+
     m_grid.resize(8, std::vector<int>(8));
 
     //初始化
@@ -71,6 +73,7 @@ Board::~Board() {
 void Board::generateBoard(QString &r){
 
 }
+
 void Board::generateBoard() {
 
 
@@ -425,7 +428,7 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
 
 
             emit enqueueTask([=]() {
-                    processMatches();
+                processMatches();
             });
 
 
@@ -471,6 +474,32 @@ bool Board::checkForMatches() {
     return false;
 }
 
+bool Board::checkForChains(){
+    QSet<std::pair<int, int>> newMatches;
+
+    // 遍历整个棋盘，检查是否有横向或纵向的匹配
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (m_grid[i][j] != 0 && (checkHorizontal(i, j) || checkVertical(i, j))) {
+                // 记录匹配的宝石位置
+                if (checkHorizontal(i, j)) {
+                    for (int k = j; k < 8 && m_grid[i][k] == m_grid[i][j]; ++k) {
+                        newMatches.insert({i, k});
+                    }
+                }
+                if (checkVertical(i, j)) {
+                    for (int k = i; k < 8 && m_grid[k][j] == m_grid[i][j]; ++k) {
+                        newMatches.insert({k, j});
+                    }
+                }
+            }
+        }
+    }
+
+    // 如果有新的匹配的宝石，说明有连锁反应
+    return !newMatches.isEmpty();  // 返回是否有新的匹配
+}
+
 //删除匹配的宝石
 void Board::processMatches() {
 
@@ -513,9 +542,39 @@ void Board::processMatches() {
     m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
 
     qDebug() << "消除个数：" << matches.size();
+    int matchCount = matches.size();  // 获取当前匹配的宝石数量
 
+    if (matchCount > 0) {
+        // 检查是否有连锁反应
+        bool isChain = checkForChains();  // 判断是否有连锁
+
+        // 计算得分并发射信号
+        calculateScore(matchCount, isChain);
+
+        // 如果发生了连锁反应，增加连锁次数
+        if (isChain) {
+            currentChain++;
+        } else {
+            // 没有连锁反应，重置连锁次数
+            currentChain = 1;  // 初始消除时，默认连锁次数为 1
+        }
+    }
+    /*
+    if(m_combo<6&&matches.size()>=6)
+    {
+        m_combo++;
+    }
+    if(m_combo<6&&matches.size()>=9)
+    {
+        m_combo++;
+    }
+    if(m_combo<6)
+    {
+        m_combo++;
+    }
+    m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
+*/
     QParallelAnimationGroup* deleteGroup = new QParallelAnimationGroup(this);
-
 
     // 加锁范围，保护 m_grid 的一致性
     {
@@ -631,10 +690,10 @@ void Board::dropJewels() {
                                 //处理消除
                                 // connect(dropAnim, &QPropertyAnimation::finished, [=]() {
 
-                                //     if(checkForMatches()) {
-                                //         processMatches();
-                                //     }
-                                // });
+                                    //     if(checkForMatches()) {
+                                    //         processMatches();
+                                    //     }
+                                    // });
 
                             }
 
@@ -770,7 +829,6 @@ void Board::generateNewJewels() {
                 }
             });
 
-
     });
 
     generateNewGroup->start(QAbstractAnimation::DeleteWhenStopped);
@@ -791,7 +849,6 @@ void Board::swapJewelsDestination(Jewel* j1,Jewel* j2) {
     j1->setXY(x2, y2);
     j2->setXY(x1, y1);
 }
-
 //根据索引查找当前宝石items
 // Jewel* Board::findJewelAt(int x, int y) {
 //     //todo: 优化
@@ -817,3 +874,76 @@ void Board::swapJewelsDestination(Jewel* j1,Jewel* j2) {
 // void Board::giveHint() {
 
 // }
+//int Board::getEli(){
+//    return matches.size();
+//}
+/*
+void Board::updateScore(int matchCount) {
+    matchCount = Eli;
+    qDebug() << "Eli is " << Eli;
+    // 调用分数计算函数来更新得分
+    calculateScore(matchCount);
+}
+
+void Board::calculateScore(int matchCount) {
+    matchCount = getEli();
+    int scoreIncrement = 0;
+
+    // 每消除一个宝石加基本得分
+    scoreIncrement += matchCount * BASE_SCORE;
+
+    // 如果有连锁反应，额外加分
+    if (currentChain > 0) {
+        scoreIncrement += currentChain * CHAIN_BONUS;
+    }
+
+    // 如果是四连或五连消除，加上特殊奖励
+    if (matchCount == 4) {
+        scoreIncrement += FOUR_MATCH_BONUS;
+    } else if (matchCount == 5) {
+        scoreIncrement += FIVE_MATCH_BONUS;
+    }
+
+    // 更新总得分
+    m_myscore += scoreIncrement;
+
+    qDebug() << "myscore is " << m_myscore;
+
+    // 发射分数更新信号
+    emit scoreUpdated(m_myscore);
+}
+*/
+void Board::calculateScore(int matchCount, bool isChain) {
+    const int BASE_SCORE = 10;  // 每个宝石的基本分数
+    int score = 0;
+
+    if (!isChain) {
+        // 如果是连锁反应，每个宝石得分乘以当前连锁次数
+        qDebug() << "发生连锁反应" ;
+        score = matchCount * BASE_SCORE * (currentChain + 1);  // 连锁得分
+    } else {
+        // 如果没有连锁反应，按基础分数计算
+
+        score = matchCount * BASE_SCORE;
+        qDebug() << "score is :" << score;
+        qDebug() << "matchCount is :" << matchCount;
+    }
+
+    // 四连消除奖励
+    const int FOUR_MATCH_BONUS = 50;
+    const int FIVE_MATCH_BONUS = 100;
+
+    // 如果消除的是 4 个宝石，奖励加分
+    if (matchCount == 4) {
+        score += FOUR_MATCH_BONUS;
+    }
+    // 如果消除的是 5 个宝石，奖励加分
+    else if (matchCount == 5) {
+        score += FIVE_MATCH_BONUS;
+    }
+
+    // 发射得分更新信号
+    emit scoreUpdated(score);
+}
+
+
