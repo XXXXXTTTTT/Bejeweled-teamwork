@@ -71,8 +71,7 @@ Play::Play(QWidget *parent)
     };
 
     // 创建 Board 对象，传递初始化的数组和场景
-    // m_board = new Board(ClientThread::m_ran, scene);
-    m_board = new Board(initialBoard, scene);
+    m_board = new Board(ClientThread::m_ran, scene);
     // 设置 QGraphicsView 显示场景
     m_ui->graphicsView->setScene(scene);
 

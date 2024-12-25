@@ -3,17 +3,12 @@
 #include "play.h"
 QString r="";
 
-// Board::Board(QString r0, QGraphicsScene *sc)
-//     : m_scene(sc) {
-//     r=r0;
-//     m_combo=0;
-//     m_mus =music::instance();
-// }
-
-Board::Board(int j[8][8], QGraphicsScene *sc)
+Board::Board(QString r0, QGraphicsScene *sc)
     : m_scene(sc) {
+    r=r0;
     m_combo=0;
     m_mus =music::instance();
+
     m_grid.resize(8, std::vector<int>(8));
 
     //初始化
