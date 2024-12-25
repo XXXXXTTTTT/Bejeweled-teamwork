@@ -1,5 +1,6 @@
 #include "board.h"
 #include "information.h"
+#include "ui_play.h"
 #include "music.h"
 #include "play.h"
 QString r="";
@@ -428,17 +429,22 @@ void Board::processMatches() {
     qDebug() << "消除个数：" << matches.size();
     if(m_combo<6&&matches.size()>=6)
     {
-        m_combo++;
+        // m_combo++;
     }
     if(m_combo<6&&matches.size()>=9)
     {
-        m_combo++;
+        // m_combo++;
     }
     if(m_combo<6)
     {
         m_combo++;
+        m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
     }
-    m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
+    else
+    {
+        m_combo++;
+        m_mus->sound("combo_"+ QString::number(6)+".wav",Play::m_soundVolume);
+    }
 
     QParallelAnimationGroup* deleteGroup = new QParallelAnimationGroup(this);
 
@@ -653,7 +659,12 @@ void Board::generateNewJewels() {
         }
         else
         {
-            if(m_combo==6)
+
+            if(m_combo>=10)
+            {
+                m_mus->sound("start_timi.wav",Play::m_soundVolume);
+            }
+            if(m_combo>=6&&m_combo<10)
             {
                 m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
             }

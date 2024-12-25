@@ -28,7 +28,6 @@
         <file>resources/sound/2.mp3</file>
         <file>resources/sound/3.mp3</file>
         <file>resources/sound/3counts.mp3</file>
-        <file>resources/sound/bgm.mp3</file>
         <file>resources/sound/click.wav</file>
         <file>resources/sound/combo_2.wav</file>
         <file>resources/sound/combo_3.wav</file>
@@ -48,5 +47,6 @@
         <file>resources/sound/good.wav</file>
         <file>resources/sound/amazing.wav</file>
         <file>resources/sound/excellent.wav</file>
+        <file>resources/sound/4.mp3</file>
     </qresource>
 </RCC>

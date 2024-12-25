@@ -15,10 +15,11 @@ Play::Play(QWidget *parent)
     : QMainWindow(parent)
     , m_ui(new Ui::Play)
 {
-
+    information::instance().m_ui=*m_ui;
     this->setWindowTitle("宝石迷阵");
     //this->setWindowIcon(QIcon(":/new/prefix1/ICON/13369429051CA2411D99F227A90D19CB9BE4EA10C2.jpg"));
     m_ui->setupUi(this);
+
 
     QGraphicsView *view = m_ui->graphicsView;
 
@@ -95,6 +96,7 @@ Play::Play(QWidget *parent)
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
     m_ui->label_3->setText(information::instance().m_userName+"'s score");
     m_ui->label_4->setText(information::instance().m_enemyName+"'s score");
+
 }
 
 Play::~Play()

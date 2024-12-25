@@ -7,7 +7,7 @@
 #include <QUrl>
 #include <iostream>
 #include <QDir>
-
+#include <QRandomGenerator>
 // 音源位置:
 // Bejeweled-teamwork\Bejeweled_Client\build\Desktop_Qt_6_5_3_MinGW_64_bit-Debug\debug\sound
 // 背景音乐启动方式：构造music();
@@ -18,13 +18,15 @@ music::music()
 {
     m_audioOutput = new QAudioOutput();
     m_mediaPlayer = new QMediaPlayer();
+    QString string=QString::number( QRandomGenerator::global()->bounded(1, 5))+".mp3" ;
+    QString audioFilePath = "qrc:/music/resources/sound/"+ string;
 
     // 设置音频输出
     m_mediaPlayer->setAudioOutput(m_audioOutput);
 
     // 设置音乐文件路径
-    qDebug() << "Resource URL: " << QUrl("qrc:/music/resources/sound/3.mp3").toString();
-    m_mediaPlayer->setSource(QUrl("qrc:/music/resources/sound/bgm.mp3"));
+    qDebug() << "Resource URL: " << QUrl("qrc:/music/resources/sound/"+string).toString();
+    m_mediaPlayer->setSource(QUrl(audioFilePath));
 
 
 
