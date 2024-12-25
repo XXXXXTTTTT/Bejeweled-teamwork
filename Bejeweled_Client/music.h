@@ -8,13 +8,17 @@
 #include <iostream>
 class music
 {
+
 public:
+    static music * instance();
     QAudioOutput *m_audioOutput;
     QMediaPlayer *m_mediaPlayer;
 
-    music();
-    void sound(QString string);
+    void sound(QString string, float volume);
     void stop();
     ~music();
+private:
+    explicit music();
+    static music * m_music;
 };
 #endif // MUSIC_H

@@ -1,8 +1,14 @@
 #include "board.h"
+#include "information.h"
+#include "music.h"
+#include "play.h"
+QString r="";
 
-
-Board::Board(int j[8][8], QGraphicsScene *sc)
+Board::Board(QString r0, QGraphicsScene *sc)
     : m_scene(sc) {
+    r=r0;
+    m_combo=0;
+    m_mus =music::instance();
     m_grid.resize(8, std::vector<int>(8));
 
     //初始化
@@ -20,14 +26,14 @@ Board::Board(int j[8][8], QGraphicsScene *sc)
     m_logicThread->start();
 
     // 将传入的数组转换为vector
-    for (int i = 0; i < 8; ++i) {
-        std::vector<int> row;
-        for (int k = 0; k < 8; ++k) {
-            row.push_back(j[i][k]);
-        }
-        m_grid.push_back(row);
-    }
-    generateBoard();  // 生成棋盘
+    // for (int i = 0; i < 8; ++i) {
+    //     std::vector<int> row;
+    //     for (int k = 0; k < 8; ++k) {
+    //         row.push_back(j[i][k]);
+    //     }
+    //     m_grid.push_back(row);
+    // }
+    generateBoard(r);  // 生成棋盘
 
 }
 
@@ -36,19 +42,32 @@ Board::~Board() {
     m_logicThread->wait();
     delete m_logicWorker;
 }
-
-void Board::generateBoard() {
-
-
+void Board::generateBoard(QString &r){
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            // 随机生成一个宝石类型
-            int gemType = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
-
+            int gemType;
+            if(!r.isEmpty())
+            {
+                gemType = r.at(0).digitValue();
+                r.remove(0,1);
+            }
+            else
+            {
+                // 随机生成一个宝石类型
+                gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+            }
             // 需要检查该宝石是否符合规则
             while (checkForInvalidPlacement(i, j, gemType)) {
-                // 如果生成的宝石在当前位置会造成三颗相同的宝石，重新生成
-                gemType = QRandomGenerator::global()->bounded(1, 8);
+                if(!r.isEmpty())
+                {
+                    gemType = r.at(0).digitValue();
+                    r.remove(0,1);
+                }
+                else
+                {
+                    // 随机生成一个宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+                }
             }
 
             m_grid[i][j] = gemType;  // 更新 m_grid 中的宝石类型
@@ -62,7 +81,47 @@ void Board::generateBoard() {
         }
     }
 }
+void Board::generateBoard() {
 
+
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            int gemType;
+            if(!r.isEmpty())
+            {
+                gemType = r.at(0).digitValue();
+                r.remove(0,1);
+            }
+            else
+            {
+                // 随机生成一个宝石类型
+                gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+            }
+            // 需要检查该宝石是否符合规则
+            while (checkForInvalidPlacement(i, j, gemType)) {
+                if(!r.isEmpty())
+                {
+                    gemType = r.at(0).digitValue();
+                    r.remove(0,1);
+                }
+                else
+                {
+                    // 随机生成一个宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+                }
+            }
+
+            m_grid[i][j] = gemType;  // 更新 m_grid 中的宝石类型
+
+            // 创建宝石对象并设置坐标
+            Jewel* gem = new Jewel(i, j, gemType);
+            connect(gem, &Jewel::jewelSwap, this, &Board::enqueueSwap);
+            gem->setPos(QPointF(i * 67 + offsetX, j * 68 + offsetY));
+            m_scene->addItem(gem);  // 将宝石添加到场景中
+            m_allJewelItems[i][j] = gem;
+        }
+    }
+}
 bool Board::checkForInvalidPlacement(int x, int y, int gemType) {
     // 检查横向
     int count = 1;
@@ -97,7 +156,18 @@ void Board::updateBoard() {
         // 随机生成新的棋盘数据
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
-                m_grid[i][j] = QRandomGenerator::global()->bounded(1, 8);  // 随机生成1到7之间的宝石类型
+                // m_grid[i][j] = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+
+                if(!r.isEmpty())
+                {
+                    m_grid[i][j] = r.at(0).digitValue();
+                    r.remove(0,1);
+                }
+                else
+                {
+                    // 随机生成一个宝石类型
+                    m_grid[i][j] = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+                }
             }
         }
 
@@ -333,6 +403,8 @@ bool Board::checkForMatches() {
 void Board::processMatches() {
 
     // 找到所有需要消除的宝石
+
+
     QSet<std::pair<int, int>> matches;
 
     for (int i = 0; i < 8; ++i) {
@@ -352,7 +424,21 @@ void Board::processMatches() {
         }
     }
 
+
     qDebug() << "消除个数：" << matches.size();
+    if(m_combo<6&&matches.size()>=6)
+    {
+        m_combo++;
+    }
+    if(m_combo<6&&matches.size()>=9)
+    {
+        m_combo++;
+    }
+    if(m_combo<6)
+    {
+        m_combo++;
+    }
+    m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
 
     QParallelAnimationGroup* deleteGroup = new QParallelAnimationGroup(this);
 
@@ -366,6 +452,7 @@ void Board::processMatches() {
 
         // 消除匹配的宝石
         for (auto& match : matches) {
+
             int x = match.first;
             int y = match.second;
 
@@ -521,7 +608,17 @@ void Board::generateNewJewels() {
             if (m_grid[x][y] == 0) {
 
                 // qDebug() << "OK";
-                int gemType = QRandomGenerator::global()->bounded(1, 8);
+                int gemType;
+                if(!r.isEmpty())
+                {
+                    gemType = r.at(0).digitValue();
+                    r.remove(0,1);
+                }
+                else
+                {
+                    // 随机生成一个宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+                }
                 m_grid[x][y] = gemType;
 
                 Jewel* gem = new Jewel(x, y, gemType);
@@ -553,6 +650,31 @@ void Board::generateNewJewels() {
             emit enqueueTask([=]() {
                 processMatches();
             });
+        }
+        else
+        {
+            if(m_combo==6)
+            {
+                m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
+            }
+            else if(m_combo==5)
+            {
+                m_mus->sound("amazing.wav",Play::m_soundVolume);
+            }
+            else if(m_combo==4)
+            {
+                m_mus->sound("excellent.wav",Play::m_soundVolume);
+            }
+
+            else if(m_combo==3)
+            {
+                m_mus->sound("great.mp3",Play::m_soundVolume);
+            }
+            else if(m_combo==2)
+            {
+                m_mus->sound("good.wav",Play::m_soundVolume);
+            }
+            m_combo=0;
         }
 
     });

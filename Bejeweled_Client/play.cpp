@@ -1,4 +1,7 @@
 #include "play.h"
+#include "clientthread.h"
+#include "information.h"
+#include "music.h"
 #include "ui_play.h"
 #include <QHBoxLayout>
 #include <QMenuBar>
@@ -7,10 +10,12 @@
 #include <QTimer>
 using namespace std;
 QGraphicsScene *scene_3;
+float Play::m_soundVolume=0.5;
 Play::Play(QWidget *parent)
     : QMainWindow(parent)
     , m_ui(new Ui::Play)
 {
+
     this->setWindowTitle("宝石迷阵");
     //this->setWindowIcon(QIcon(":/new/prefix1/ICON/13369429051CA2411D99F227A90D19CB9BE4EA10C2.jpg"));
     m_ui->setupUi(this);
@@ -63,7 +68,7 @@ Play::Play(QWidget *parent)
     };
 
     // 创建 Board 对象，传递初始化的数组和场景
-    m_board = new Board(initialBoard, scene);
+    m_board = new Board(ClientThread::m_ran, scene);
 
     // 设置 QGraphicsView 显示场景
     m_ui->graphicsView->setScene(scene);
@@ -85,6 +90,11 @@ Play::Play(QWidget *parent)
     connect(timer, &QTimer::timeout, this, &Play::updateziji);
     // 设置定时器的更新时间间隔（比如 1000 毫秒，即每秒）
     timer->start(1000);  // 每1秒触发一次timeout信号
+    m_mus = music::instance();
+    // qDebug()<<m_ui->horizontalSlider->value();
+    m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
+    m_ui->label_3->setText(information::instance().m_userName+"'s score");
+    m_ui->label_4->setText(information::instance().m_enemyName+"'s score");
 }
 
 Play::~Play()
@@ -107,4 +117,15 @@ void Play::updateziji()
 {
     count++;  // 增加数字
     m_ui->ziji->display(count); // 更新显示的数字
+}
+
+void Play::on_horizontalSlider_valueChanged(int value)
+{
+    m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
+}
+
+
+void Play::on_horizontalSlider_2_sliderMoved(int position)
+{
+    m_soundVolume=float(position)/10000;
 }

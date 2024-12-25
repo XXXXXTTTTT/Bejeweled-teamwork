@@ -13,6 +13,7 @@
 // 背景音乐启动方式：构造music();
 // 背景音乐停止函数：stop();
 // 音效启动函数:例:sound("click.wav");
+music * music:: m_music = nullptr;
 music::music()
 {
     m_audioOutput = new QAudioOutput();
@@ -23,7 +24,7 @@ music::music()
 
     // 设置音乐文件路径
     qDebug() << "Resource URL: " << QUrl("qrc:/music/resources/sound/3.mp3").toString();
-    m_mediaPlayer->setSource(QUrl("qrc:/music/resources/sound/3.mp3"));
+    m_mediaPlayer->setSource(QUrl("qrc:/music/resources/sound/bgm.mp3"));
 
 
 
@@ -39,13 +40,21 @@ music::music()
         }
     });
 }
-void music::sound(QString string)
+music*music::instance()
+{
+    if (!m_music) {
+        m_music = new music();
+    }
+    return m_music;
+}
+void music::sound(QString string,float volume)
 {
     auto m_audioOutput = new QAudioOutput();
     auto m_mediaPlayer = new QMediaPlayer();
 
     // 设置音频输出
     m_mediaPlayer->setAudioOutput(m_audioOutput);
+    m_audioOutput->setVolume(volume);
 
     // 获取当前应用程序的目录
 

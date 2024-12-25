@@ -2,6 +2,7 @@
 ClientThread::ClientThread(const QString& host, quint16 port, QObject* parent)
     : QThread(parent), m_socket(nullptr), m_host(host), m_port(port) {}
 
+QString ClientThread::m_ran="";
 ClientThread* ClientThread::m_instance = nullptr;
     ClientThread::~ClientThread() {
     if (m_socket) {
@@ -152,14 +153,6 @@ void ClientThread::dealWithMsg(const QJsonObject& message) {
         //点击开始匹配后的相应
 
     }
-    else if(type.compare("Matched") == 0)
-    {
-        //匹配成功
-
-        //获取对手名
-        QString enemyId = message["enemyId"].toString();
-
-    }
 }
 
 void ClientThread::onDisconnected() {
@@ -176,9 +169,11 @@ void ClientThread::receivedMessage(const QJsonObject& message)
     //匹配
     if(type=="Match")
     {
-        if(m_res==1)
+        if(m_res==1&&message.contains("enemyId"))
         {
+            m_ran=message["random"].toString();
             emit matchReceived(message["enemyId"].toString());
+
         }
     }
     //注册与登录
@@ -187,4 +182,5 @@ void ClientThread::receivedMessage(const QJsonObject& message)
         // 发射信号通知界面更新 UI
         emit resultReceived(m_res);
     }
+
 }
