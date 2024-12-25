@@ -1,6 +1,5 @@
 #include "board.h"
 #include "information.h"
-#include "ui_play.h"
 #include "music.h"
 #include "play.h"
 QString r="";
