@@ -23,6 +23,7 @@ public:
     music * m_mus;
     int m_combo;
     Board(QString r , QGraphicsScene *scene);
+    Board(int j[8][8] ,QGraphicsScene *scene);
     ~Board();
     void generateBoard();
     void generateBoard(QString &r);
@@ -42,6 +43,7 @@ private:
     QGridLayout *m_gridLayout;
 
     const std::vector<int> m_JewelType = {1,2,3,4,5,6,7}; //7种宝石
+
 
     int m_j[8][8];
 
