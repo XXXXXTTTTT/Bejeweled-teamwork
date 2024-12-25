@@ -9,15 +9,15 @@
 #include <QRandomGenerator>
 #include <QMessageBox>
 #include <QTimer>
+#include<information.h>
 using namespace std;
 QGraphicsScene *scene_3;
 float Play::m_soundVolume=0.5;
 Play::Play(QWidget *parent)
     : QMainWindow(parent)
     , m_ui(new Ui::Play)
-    , remainingTime(60)
     , m_score(0)
-    , m_oppscore(0)
+    , remainingTime(60)
 {
     this->setWindowTitle("宝石迷阵");
     m_ui->setupUi(this);
@@ -112,7 +112,8 @@ Play::Play(QWidget *parent)
     //timer->start(1000);  // 每1秒触发一次timeout信号
     connect(m_board, &Board::scoreUpdated, this, &Play::updateScoreGUI);
     m_ui->ziji->display(0);  // 初始化得分为
-
+    connect(&ClientThread::instance(), &ClientThread::scoreChanged, this, &Play::checkValue);
+    this->setWindowTitle("welcome "+information::instance().m_userName+"!");
 }
 
 Play::~Play()
@@ -153,6 +154,12 @@ void Play::updateScoreGUI(int score) {
     m_totalScore += score;  // 累加得分到总得分
     m_score = m_totalScore;
     m_ui->ziji->display(m_totalScore);  // 更新 LCD 显示器上的总得分
+
+    QJsonObject json;
+    json["type"] = "game";
+    json["score"]=m_totalScore;
+    qDebug()<<"clientThread.code= " <<ClientThread::instance().code;
+    ClientThread::instance().sendMsg(json);
 }
 
 void Play::updateCountdown() {
@@ -176,21 +183,32 @@ void Play::updateCountdown() {
 
 void Play::checkGameOver(){
     if (remainingTime <= 0) {
-        if(m_score > m_oppscore) {
+        QJsonObject json;
+        json["type"] = "end";
+        json["username"]=information::instance().m_userName;
+        json["score"]=m_totalScore;
+
+        ClientThread::instance().sendMsg(json);
+        if(m_score > information::instance().m_enemyScore) {
             qDebug() << "m_score is :" << m_score;
             //qDebug() << "m_oppscore is :" << m_oppscore;
             QMessageBox::information(this, "游戏结束", "时间到了！你赢了！");
+
             return;
-        }else if(m_score < m_oppscore) {
+        }else if(m_score < information::instance().m_enemyScore) {
             qDebug() << "m_score is :" << m_score;
             //qDebug() << "m_oppscore is :" << m_oppscore;
             QMessageBox::information(this, "游戏结束", "时间到了！你输了！");
             return;
-        }else if(m_score == m_oppscore) {
+        }else if(m_score == information::instance().m_enemyScore) {
             qDebug() << "m_score is :" << m_score;
             //qDebug() << "m_oppscore is :" << m_oppscore;
             QMessageBox::information(this, "游戏结束", "时间到了！平局！");
             return;
         }
     }
+}
+void Play::checkValue() {
+    // 定期检查 value 的变化
+    m_ui->lcdNumber_2->display(information::instance().m_enemyScore);
 }

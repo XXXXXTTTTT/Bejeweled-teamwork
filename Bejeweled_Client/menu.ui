@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/images/media/media/5.png</normaloff>:/images/media/media/5.png</iconset>
+  </property>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
@@ -89,6 +93,8 @@ QPushButton:hover {
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

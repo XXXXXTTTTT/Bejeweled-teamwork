@@ -6,7 +6,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 #include <play.h>
-
 //初始化静态变量
 Jewel* Jewel::m_currSelectedJewel = nullptr;
 

@@ -14,6 +14,8 @@ public:
     int m_LRange;
     //控制随机数右边界（启用）（仅针对单机模式）
     int m_RRange;
+    //对手得分
+    int m_enemyScore;
 private:
     information();
 

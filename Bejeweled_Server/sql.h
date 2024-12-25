@@ -33,7 +33,7 @@ public:
     //获取对局数据
 
     //保存玩家游戏记录
-    void savePlayerGameRecord();
+    void savePlayerGameRecord(QString name, int score);
 private:
     bool m_connectOrNot;
     //数据库

@@ -863,8 +863,6 @@ void Board::generateNewJewels() {
                         m_mus->sound("good.wav",Play::m_soundVolume);
                     }
                     m_combo=0;
-                }
-
                     qDebug() << "检测是否僵局";
                     //若无可消,判定是否僵局
                     if(!isAvailableOrNot()) {
@@ -875,6 +873,9 @@ void Board::generateNewJewels() {
                         // 在 2 秒后执行棋盘更新
                         QTimer::singleShot(2000, this, &Board::updateBoard);
                     }
+                }
+
+
             });
 
         });

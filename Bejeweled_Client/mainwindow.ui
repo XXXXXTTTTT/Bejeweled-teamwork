@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/images/media/media/5.png</normaloff>:/images/media/media/5.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLineEdit" name="username">
     <property name="geometry">
@@ -168,6 +172,8 @@ QPushButton:hover {
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

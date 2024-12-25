@@ -30,6 +30,7 @@ Menu::Menu(QWidget *parent) :
     // 连接按钮到槽函数
     // connect(m_ui->startGameButton, &QPushButton::clicked, this, &Menu::on_startGameButton_clicked);
     // connect(m_ui->startGameButton, &QPushButton::clicked, this, &Menu::on_seQuenceButton_clicked);
+    this->setWindowTitle("welcome "+information::instance().m_userName+"!");
 }
 
 Menu::~Menu()
@@ -68,20 +69,19 @@ void Menu::on_startGameButton_clicked()
 
     QJsonObject json;
     json["type"] = "Match";
-    ClientThread*clientThread=ClientThread::instance();
-    clientThread->sendMsg(json);
+    ClientThread::instance().sendMsg(json);
 
-    connect(clientThread, &ClientThread::matchReceived, this, &Menu::onResultReceived);
+    connect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
 }
 
 void Menu::on_seQuenceButton_clicked()
 {}
 void Menu::onResultReceived(QString enemyId)
 {
-    disconnect(ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
+    disconnect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
     // 处理服务器返回的结果
 
-        QMessageBox::information(this, "匹配成功", "对手："+enemyId);
+        // QMessageBox::information(this, "匹配成功", "对手："+enemyId);
         information::instance().m_enemyName=enemyId;
         Play * play = new Play();
         play -> show();

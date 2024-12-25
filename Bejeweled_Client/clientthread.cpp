@@ -1,22 +1,25 @@
 #include "clientthread.h"
+#include "information.h"
 ClientThread::ClientThread(const QString& host, quint16 port, QObject* parent)
-    : QThread(parent), m_socket(nullptr), m_host(host), m_port(port) {}
+    : QThread(parent), code(0), m_socket(nullptr), m_host(host),m_port(port)
+{
+    qDebug()<<"****************************\nconstructor called!";
+}
 
 QString ClientThread::m_ran="";
-ClientThread* ClientThread::m_instance = nullptr;
     ClientThread::~ClientThread() {
     if (m_socket) {
+            qDebug()<<"****************************\ndestructor called!";
         m_socket->disconnectFromHost();
         m_socket->waitForDisconnected();
         delete m_socket;
     }
 }
-    ClientThread *ClientThread::instance()
+    ClientThread &ClientThread::instance()
     {
-        if (!m_instance) {
-            m_instance = new ClientThread("127.0.0.1",12345,nullptr);
-        }
-        return m_instance;
+
+        static ClientThread instance("127.0.0.1", 12345, nullptr);
+        return instance;
     }
 void ClientThread::run(){
     m_socket = new QTcpSocket();
@@ -75,7 +78,7 @@ void ClientThread::sendMsg(const QJsonObject& message) {
         data.append("\n");
         // 发送响应
         qint64 bytesWritten = m_socket->write(data);
-        // qDebug() << "Bytes written:" << bytesWritten;
+        qDebug() << "Bytes written:" << bytesWritten;
 
 
         m_socket->flush();
@@ -174,6 +177,15 @@ void ClientThread::receivedMessage(const QJsonObject& message)
             m_ran=message["random"].toString();
             emit matchReceived(message["enemyId"].toString());
 
+        }
+    }
+    else if(type=="game")
+    {
+        if(message["name"].toString().compare(information::instance().m_enemyName)==0)
+        {
+            qDebug()<<"message[name].toString()="<<message["name"].toString()<<" "<<"information::instance().m_enemyName)="<<information::instance().m_enemyName;
+            information::instance().m_enemyScore=message["score"].toInt();
+            emit scoreChanged(information::instance().m_enemyScore);
         }
     }
     //注册与登录

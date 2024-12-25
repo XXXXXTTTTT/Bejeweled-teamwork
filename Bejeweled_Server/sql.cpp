@@ -213,8 +213,29 @@ int sql::canLoginOrNot(QString name, QString password) {
 
 
 //保存玩家游戏记录
-void sql::savePlayerGameRecord() {
-    QWriteLocker locker(&m_lock); // 加写锁
+void sql::savePlayerGameRecord(QString username,int score) {
+    // QWriteLocker locker(&m_lock); // 加写锁
+    QSqlQuery query(m_db);
+    int highScore=-1;
+    query.prepare("select highScore from userList where username= :username");
+    query.bindValue(":username",username);
+    if (query.exec()) {
+        while (query.next()) {
+            highScore = query.value(0).toInt();      // 获取 score 列
+            qDebug() << "highScore:" << highScore;
+        }
+    }
+    if(score>highScore)
+    {
+        query.prepare("UPDATE userList SET highScore = :score WHERE username = :username");
+        query.bindValue(":score",score);
+        query.bindValue(":username",username);
+        if (query.exec()) {
+            qDebug() << "Record updated successfully!";
+        } else {
+            qDebug() << "Update failed:" << query.lastError();
+        }
+    }
 }
 
 //保存游戏记录
