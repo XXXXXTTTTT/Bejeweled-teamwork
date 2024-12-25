@@ -1,3 +1,4 @@
+#ifndef BOARD_H
 #define BOARD_H
 
 #include <QGraphicsScene>
@@ -16,6 +17,9 @@
 #include "Jewel.h"
 #include "logicworker.h"
 #include "music.h"
+#include "information.h"
+#include "music.h"
+
 
 class Board : public QObject{
     Q_OBJECT

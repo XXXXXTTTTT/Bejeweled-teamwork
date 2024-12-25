@@ -1,6 +1,4 @@
 #include "board.h"
-#include "information.h"
-#include "music.h"
 #include "play.h"
 QString r="";
 
@@ -33,7 +31,7 @@ Board::Board(QString r0, QGraphicsScene *sc)
     //     }
     //     m_grid.push_back(row);
     // }
-    generateBoard(r);  // 生成棋盘
+    // generateBoard(r);  // 生成棋盘
     // for (int i = 0; i < 8; ++i) {
     //     std::vector<int> row;
     //     for (int k = 0; k < 8; ++k) {
@@ -50,7 +48,7 @@ Board::Board(QString r0, QGraphicsScene *sc)
 
     // }
 
-    // generateBoard();  // 生成棋盘
+    generateBoard();  // 生成棋盘
 
     //若无可消,判定是否僵局
     if(!isAvailableOrNot()) {
