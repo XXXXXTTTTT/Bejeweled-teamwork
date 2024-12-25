@@ -20,6 +20,8 @@ SOURCES += \
     clientthread.cpp \
     Jewel.cpp \
     board.cpp \
+    information.cpp \
+    logicworker.cpp \
     play.cpp \
     dialog.cpp \
     main.cpp \
@@ -28,6 +30,8 @@ SOURCES += \
     menu.cpp
 
 HEADERS += \
+    information.h \
+    logicworker.h \
     mainwindow.h \
     music.h\
     clientthread.h \

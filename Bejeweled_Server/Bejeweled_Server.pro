@@ -15,6 +15,7 @@ CONFIG += console
 
 SOURCES += \
     clienttask.cpp \
+    information.cpp \
     main.cpp \
     mainwindow.cpp \
     server.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     clienttask.h \
+    information.h \
     mainwindow.h \
     server.h \
     sql.h
