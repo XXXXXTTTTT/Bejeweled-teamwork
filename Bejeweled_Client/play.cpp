@@ -1,6 +1,7 @@
 #include "play.h"
 #include "clientthread.h"
 #include "information.h"
+#include "menu.h"
 #include "music.h"
 #include "ui_play.h"
 #include <QHBoxLayout>
@@ -105,6 +106,8 @@ Play::Play(QWidget *parent)
     // 设置定时器的更新时间间隔（比如 1000 毫秒，即每秒）
     // timer->start(1000);  // 每1秒触发一次timeout信号
     m_mus = music::instance();
+    m_mus->start_random();
+
     // qDebug()<<m_ui->horizontalSlider->value();
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
     m_ui->label_3->setText(information::instance().m_userName+"'s score");
@@ -113,7 +116,7 @@ Play::Play(QWidget *parent)
     connect(m_board, &Board::scoreUpdated, this, &Play::updateScoreGUI);
     m_ui->ziji->display(0);  // 初始化得分为
     connect(&ClientThread::instance(), &ClientThread::scoreChanged, this, &Play::checkValue);
-    this->setWindowTitle("welcome "+information::instance().m_userName+"!");
+    this->setWindowTitle("WECOME PLAYER["+information::instance().m_userName+"]!");
 }
 
 Play::~Play()
@@ -192,20 +195,23 @@ void Play::checkGameOver(){
         if(m_score > information::instance().m_enemyScore) {
             qDebug() << "m_score is :" << m_score;
             //qDebug() << "m_oppscore is :" << m_oppscore;
+            music::instance()->sound("start.wav",m_soundVolume);
             QMessageBox::information(this, "游戏结束", "时间到了！你赢了！");
-
-            return;
         }else if(m_score < information::instance().m_enemyScore) {
             qDebug() << "m_score is :" << m_score;
             //qDebug() << "m_oppscore is :" << m_oppscore;
+            music::instance()->sound("fail.wav",m_soundVolume);
             QMessageBox::information(this, "游戏结束", "时间到了！你输了！");
-            return;
+
         }else if(m_score == information::instance().m_enemyScore) {
             qDebug() << "m_score is :" << m_score;
             //qDebug() << "m_oppscore is :" << m_oppscore;
+            music::instance()->sound("start.wav",m_soundVolume);
             QMessageBox::information(this, "游戏结束", "时间到了！平局！");
-            return;
         }
+        Menu *menu=new Menu();
+        menu->show();
+        this->close();
     }
 }
 void Play::checkValue() {

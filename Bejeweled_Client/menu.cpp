@@ -9,6 +9,7 @@
 #include <QMovie>
 #include <QLabel>
 #include <QPainter>
+#include <music.h>
 
 Menu::Menu(QWidget *parent) :
     QWidget(parent),
@@ -40,7 +41,7 @@ Menu::Menu(QWidget *parent) :
     hideUiComponents();
 
 
-    this->setWindowTitle("welcome "+information::instance().m_userName+"!");
+    this->setWindowTitle("WECOME PLAYER["+information::instance().m_userName+"]!");
 
     // 初始化顶部图片标签
     m_ui->topImageLabel->hide(); // 先隐藏顶部图片标签
@@ -98,6 +99,7 @@ void Menu::onGifFinished()
 
 void Menu::on_startGameButton_clicked()
 {
+    music::instance()->sound("click.wav",1);
     hideUiComponents();
     m_ui->topImageLabel->hide();
 
@@ -122,6 +124,7 @@ void Menu::on_startGameButton_clicked()
         qWarning() << "Failed to load start game GIF";
     }
 
+
     // 匹配对手
     QMessageBox::information(this, "匹配中", "等待对手加入");
 
@@ -131,10 +134,13 @@ void Menu::on_startGameButton_clicked()
 
 
     connect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
+
+    // music::instance()->stop();
 }
 
 void Menu::on_seQuenceButton_clicked()
 {
+    music::instance()->sound("click.wav",1);
     // 排行榜按钮点击事件
     QMessageBox::information(this, "排行榜", "排行榜功能暂未实现");
 }
@@ -155,15 +161,20 @@ void Menu::onResultReceived(QString enemyId)
 void Menu::onStartGameGifFinished()
 {
     // 开始游戏 GIF 动画完成后，跳转到游戏界面
+
     Play *play = new Play();
     play->show();
     this->close();
+
 }
 
 void Menu::hideUiComponents()
 {
     m_ui->startGameButton->hide();
     m_ui->seQuenceButton->hide();
+    m_ui->seQuenceButton_2->hide();
+    m_ui->radioButton->hide();
+    m_ui->radioButton_2->hide();
     m_ui->label_2->hide();
 }
 
@@ -171,5 +182,44 @@ void Menu::showUiComponents()
 {
     m_ui->startGameButton->show();
     m_ui->seQuenceButton->show();
+    m_ui->seQuenceButton_2->show();
+    m_ui->radioButton->show();
+    m_ui->radioButton_2->show();
     m_ui->label_2->show();
 }
+
+
+
+
+void Menu::on_seQuenceButton_2_clicked()
+{
+    music::instance()->sound("click.wav",1);
+    this->close();
+}
+
+
+
+
+
+void Menu::on_radioButton_2_toggled(bool checked)
+{
+    music::instance()->sound("click.wav",1);
+    if(checked)
+    {
+        information::instance().m_RRange=8;
+    }
+    qDebug()<<information::instance().m_RRange;
+}
+
+
+void Menu::on_radioButton_toggled(bool checked)
+{
+    music::instance()->sound("click.wav",1);
+    if(checked)
+    {
+        information::instance().m_RRange=6;
+    }
+    qDebug()<<information::instance().m_RRange;
+
+}
+

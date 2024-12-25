@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "menu.h"
+#include "music.h"
+#include "play.h"
 #include "ui_mainwindow.h"
 #include "dialog.h"
 #include <QSqlDatabase>
@@ -106,6 +108,8 @@ void MainWindow::onResultReceived(int res)
     if (ClientThread::instance().m_res == 1) {
         QMessageBox::information(this, "登录成功", "登录成功");
         Menu *menu=new Menu();
+        music mus=*music::instance();
+        mus.sound("start.wav",1);
         menu->show();
         this->close();
     } else if (ClientThread::instance().m_res == 0) {

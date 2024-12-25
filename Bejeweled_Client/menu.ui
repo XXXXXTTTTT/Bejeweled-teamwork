@@ -10,6 +10,11 @@
     <height>704</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>48</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -40,56 +45,74 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>600</y>
+     <y>570</y>
      <width>431</width>
-     <height>41</height>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Impact</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="styleSheet">
     <string notr="true">QPushButton {
-    background: #ced1d8;
-    border-style: outset;
-    border-radius: 10px;
-    font-size: 18px;
-}
-QPushButton:pressed {
-    background-color: rgb(224, 0, 0);
-    border-style: inset;
+    background-color: #3498db;    /* 按钮背景色 */
+    color: white;                /* 字体颜色 */
+    border-radius: 10px;         /* 圆角 */
+    border: 2px solid #2980b9;   /* 边框 */
+    padding: 5px;                /* 内边距 */
 }
 QPushButton:hover {
-    background-color: rgba(198, 198, 220, 0.6);
+    background-color: #2980b9;   /* 鼠标悬停时背景色 */
+}
+QPushButton:pressed {
+    background-color: #1c5986;   /* 按下时背景色 */
 }</string>
    </property>
    <property name="text">
-    <string>开始游戏</string>
+    <string>START</string>
    </property>
   </widget>
   <widget class="QPushButton" name="seQuenceButton">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>650</y>
-     <width>411</width>
+     <x>200</x>
+     <y>610</y>
+     <width>431</width>
      <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Impact</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
    <property name="styleSheet">
     <string notr="true">QPushButton {
-    background: #ced1d8;
-    border-style: outset;
-    border-radius: 10px;
-    font-size: 18px;
-}
-QPushButton:pressed {
-    background-color: rgb(224, 0, 0);
-    border-style: inset;
+    background-color: #3498db;    /* 按钮背景色 */
+    color: white;                /* 字体颜色 */
+    border-radius: 10px;         /* 圆角 */
+    border: 2px solid #2980b9;   /* 边框 */
+    padding: 5px;                /* 内边距 */
 }
 QPushButton:hover {
-    background-color: rgba(198, 198, 220, 0.6);
+    background-color: #2980b9;   /* 鼠标悬停时背景色 */
+}
+QPushButton:pressed {
+    background-color: #1c5986;   /* 按下时背景色 */
 }</string>
    </property>
    <property name="text">
-    <string>排行榜</string>
+    <string>RANKING</string>
    </property>
   </widget>
   <widget class="QLabel" name="topImageLabel">
@@ -103,6 +126,110 @@ QPushButton:hover {
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>520</y>
+     <width>211</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Impact</family>
+     <pointsize>28</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:rgb(0, 255, 127)</string>
+   </property>
+   <property name="text">
+    <string>EASY MODE</string>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/media/media/4.png</normaloff>:/images/media/media/4.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="seQuenceButton_2">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>650</y>
+     <width>431</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Impact</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background-color: #3498db;    /* 按钮背景色 */
+    color: white;                /* 字体颜色 */
+    border-radius: 10px;         /* 圆角 */
+    border: 2px solid #2980b9;   /* 边框 */
+    padding: 5px;                /* 内边距 */
+}
+QPushButton:hover {
+    background-color: #2980b9;   /* 鼠标悬停时背景色 */
+}
+QPushButton:pressed {
+    background-color: #1c5986;   /* 按下时背景色 */
+}</string>
+   </property>
+   <property name="text">
+    <string>QUIT</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>520</y>
+     <width>271</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Impact</family>
+     <pointsize>28</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:rgb(255, 170, 0)</string>
+   </property>
+   <property name="text">
+    <string>NORMAL MODE</string>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/media/media/2.png</normaloff>:/images/media/media/2.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

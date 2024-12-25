@@ -176,7 +176,6 @@ void ClientThread::receivedMessage(const QJsonObject& message)
         {
             m_ran=message["random"].toString();
             emit matchReceived(message["enemyId"].toString());
-
         }
     }
     else if(type=="game")
