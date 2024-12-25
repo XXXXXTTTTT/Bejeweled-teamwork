@@ -1,4 +1,3 @@
-#ifndef BOARD_H
 #define BOARD_H
 
 #include <QGraphicsScene>
@@ -13,6 +12,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QMessageBox>
 #include "Jewel.h"
 #include "logicworker.h"
 #include "music.h"
@@ -25,12 +25,24 @@ public:
     Board(QString r , QGraphicsScene *scene);
     Board(int j[8][8] ,QGraphicsScene *scene);
     ~Board();
+    //产生棋盘
     void generateBoard();
     void generateBoard(QString &r);
+    //刷新棋盘
     void updateBoard();
+
+    //检测宝石位置是否不合法
     bool checkForInvalidPlacement(int x, int y, int gemType);
+    //获取宝石种类
     int getJewelType(int x, int y) const;
-    signals:
+
+    //检测当前是否还有可消除操作
+    bool isAvailableOrNot();
+
+    //给予提示
+    void giveHint();
+
+signals:
     // 添加任务信号
     void enqueueTask(const std::function<void()>& task);
 private:
@@ -59,8 +71,9 @@ private:
     //游戏逻辑任务分配
     LogicWorker* m_logicWorker;
 
+//私有函数部分
 
-    bool isBoardValid();
+    bool isBoardValid();  //棋盘是否合理
     void clearBoard();   // 清空棋盘
 
     bool checkHorizontal(int x, int y);
