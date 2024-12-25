@@ -23,7 +23,7 @@ public:
     static QMainWindow* getUI();                 // 动画制作提供 UI
     static float m_soundVolume;
     int weizhiX(int);
-    int weizhiY(int);                                     // 析构函数
+    int weizhiY(int);                            // 析构函数
 
 signals:
     void statusCursorCchanger(int c);            // 信号
@@ -34,7 +34,10 @@ private slots:
                //void onResetButtonClicked();  // 手动重置按钮
     void startButtonClicked();
     void updateButtonClicked();
-    void updateziji();
+    //void updateziji();
+
+    void updateCountdown();  // 更新倒计时
+    void checkGameOver();    // 检查游戏结束
 
     void on_horizontalSlider_valueChanged(int value);
 
@@ -48,11 +51,16 @@ private:
     int m_score;
     bool m_begin = false;
 
-
+    QVector<QVector<int>> m_board0; // 游戏网格
     Board *m_board;
     int m_jewel[8][8] = {{0}};      // 匹配检测
 
-    QTimer *timer; // 定时器，显示在lcdnumber上
-    int count;      // 显示的数字
+    //QTimer *timer; // 定时器，显示在lcdnumber上
+    //int count;      // 显示的数字
+
+    QTimer *m_timer;       // 定时器
+    int remainingTime;   // 剩余时间（秒）
+    bool hasValidMoves(const QVector<QVector<int>>& board); // 是否有可匹配的宝石
+    bool isPathValid(const QVector<QVector<int>>& board, int x1, int y1, int x2, int y2);
 };
 #endif // PLAY_H
