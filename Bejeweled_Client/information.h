@@ -2,7 +2,6 @@
 #define INFORMATION_H
 
 #include "qobject.h"
-#include "ui_play.h"
 class information
 {
 public:
@@ -15,8 +14,6 @@ public:
     int m_LRange;
     //控制随机数右边界（启用）（仅针对单机模式）
     int m_RRange;
-    //play ui
-    Ui::Play m_ui=*new Ui::Play;
 private:
     information();
 
