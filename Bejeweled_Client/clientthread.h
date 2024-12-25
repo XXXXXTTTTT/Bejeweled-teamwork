@@ -14,6 +14,7 @@ public:
     int m_res;
 QTcpSocket* m_socket;
     ~ClientThread();
+static QString m_ran;
 static ClientThread *instance();
 protected:
     void run() override;

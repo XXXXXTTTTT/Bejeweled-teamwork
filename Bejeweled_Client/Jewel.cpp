@@ -1,9 +1,11 @@
 #include "Jewel.h"
+#include "music.h"
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QPixmap>
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
+#include <play.h>
 
 //初始化静态变量
 Jewel* Jewel::m_currSelectedJewel = nullptr;
@@ -12,6 +14,8 @@ Jewel* Jewel::m_currSelectedJewel = nullptr;
 // 构造函数，初始化宝石的坐标、种类以及所在格子的位置
 Jewel::Jewel(int x, int y, int type,QGraphicsPixmapItem *parent)
     : QGraphicsPixmapItem(parent), m_type(type), m_x(x), m_y(y) {
+            m_mus=music::instance();
+
 
 
 
@@ -167,7 +171,7 @@ void Jewel::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
 
 void Jewel::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     if (!m_choosed) {
-
+        m_mus->sound("click.wav",Play::m_soundVolume);
         // 取消之前选中的宝石的状态
         if (m_currSelectedJewel && m_currSelectedJewel != this) {
             m_currSelectedJewel->setStaticDisplay();
@@ -211,6 +215,20 @@ void Jewel::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
 
 
+    }
+    else {
+
+
+        // // 更新选中的宝石
+        // m_currSelectedJewel = this;
+        // m_choosed = true;
+        // 更新选中的宝石
+        m_currSelectedJewel = this;
+        m_choosed = false;
+
+        // qDebug() << "selected：(" << m_currSelectedJewel->getX() << "," << m_currSelectedJewel->getY() << ")" << m_currSelectedJewel->getType();            // 设置动态显示
+        // setDynamicDisplay();
+        setStaticDisplay();
     }
 }
 
