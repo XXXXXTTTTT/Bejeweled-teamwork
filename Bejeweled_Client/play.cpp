@@ -15,7 +15,7 @@ float Play::m_soundVolume=0.5;
 Play::Play(QWidget *parent)
     : QMainWindow(parent)
     , m_ui(new Ui::Play)
-    , remainingTime(10)
+    , remainingTime(60)
     , m_score(0)
     , m_oppscore(0)
 {
@@ -103,7 +103,7 @@ Play::Play(QWidget *parent)
     // 连接定时器的timeout信号到updateLCD槽函数
     //connect(timer, &QTimer::timeout, this, &Play::updateziji);
     // 设置定时器的更新时间间隔（比如 1000 毫秒，即每秒）
-    timer->start(1000);  // 每1秒触发一次timeout信号
+    // timer->start(1000);  // 每1秒触发一次timeout信号
     m_mus = music::instance();
     // qDebug()<<m_ui->horizontalSlider->value();
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
@@ -141,12 +141,6 @@ void Play::on_horizontalSlider_valueChanged(int value)
 {
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
 }
-
-void Play::on_horizontalSlider_valueChanged(int value)
-{
-    m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
-}
-
 
 void Play::on_horizontalSlider_2_sliderMoved(int position)
 {

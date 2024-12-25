@@ -39,12 +39,6 @@ private slots:
 
     void on_horizontalSlider_2_sliderMoved(int position);
 
-
-    void on_horizontalSlider_valueChanged(int value);
-
-    void on_horizontalSlider_2_sliderMoved(int position);
-
-
 private:
     Ui::Play *m_ui;                 // 指向 UI 类的指针，确保使用完整类型
     static Play* m_widget;

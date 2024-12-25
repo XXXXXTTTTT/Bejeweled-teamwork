@@ -834,32 +834,36 @@ void Board::generateNewJewels() {
                 if (checkForMatches()) {
 
                     processMatches();
-                }             if(m_combo>=10)
-                {
-                    m_mus->sound("start_timi.wav",Play::m_soundVolume);
                 }
-                if(m_combo>=6&&m_combo<10)
+                else
                 {
-                    m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
-                }
-                else if(m_combo==5)
-                {
-                    m_mus->sound("amazing.wav",Play::m_soundVolume);
-                }
-                else if(m_combo==4)
-                {
-                    m_mus->sound("excellent.wav",Play::m_soundVolume);
-                }
+                    if(m_combo>=10)
+                    {
+                        m_mus->sound("start_timi.wav",Play::m_soundVolume);
+                    }
+                    else if(m_combo>=6&&m_combo<10)
+                    {
+                        m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
+                    }
+                    else if(m_combo==5)
+                    {
+                        m_mus->sound("amazing.wav",Play::m_soundVolume);
+                    }
+                    else if(m_combo==4)
+                    {
+                        m_mus->sound("excellent.wav",Play::m_soundVolume);
+                    }
 
-                else if(m_combo==3)
-                {
-                    m_mus->sound("great.mp3",Play::m_soundVolume);
+                    else if(m_combo==3)
+                    {
+                        m_mus->sound("great.mp3",Play::m_soundVolume);
+                    }
+                    else if(m_combo==2)
+                    {
+                        m_mus->sound("good.wav",Play::m_soundVolume);
+                    }
+                    m_combo=0;
                 }
-                else if(m_combo==2)
-                {
-                    m_mus->sound("good.wav",Play::m_soundVolume);
-                }
-                m_combo=0;
 
                     qDebug() << "检测是否僵局";
                     //若无可消,判定是否僵局
