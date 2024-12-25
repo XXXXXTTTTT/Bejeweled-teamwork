@@ -520,6 +520,8 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
     // 加锁范围，保护 m_grid 的一致性
     QMutexLocker locker(&m_mutex);
 
+//宝石交换
+void Board::swapJewels(int x1, int y1, int x2, int y2) {
 
     qDebug() << "接收到了";
 
@@ -535,7 +537,6 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
     qDebug() << "1: " << x1 << y1;
 
     qDebug() << "2: " << x2 << y2;
-
     if (!jewel1 || !jewel2) return;
 
     qDebug() << "动画来咯";
