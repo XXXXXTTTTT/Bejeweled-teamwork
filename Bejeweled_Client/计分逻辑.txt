@@ -1,20 +1,14 @@
 基本得分：每个宝石10分
 const int BASE_SCORE = 10;
 
-如果有连锁反应，一次5分
-const int CHAIN_BONUS = 5;
-
-特殊连续消除奖励
-const int FOUR_MATCH_BONUS = 50;  // 四连的奖励分数
-const int FIVE_MATCH_BONUS = 100;  // 五连的奖励分数
-
-// Combo奖励，每连续消除的次数加的分数
-const int COMBO_BONUS = 20;  // 每次连续消除增加的得分
+如果有连锁反应
+第二次反应时，每个宝石10*2=20分
+第三次反应时，每个宝石10*3=30分
+以此类推
 
 // 当前连锁次数和连续消除次数
 int currentChain = 0;  // 当前连锁次数
-int comboMultiplier = 1;  // Combo奖励倍数
 
-// 当前得分
-int totalScore = 0;
+// 客户端初始得分
+int m_score = 0;
 

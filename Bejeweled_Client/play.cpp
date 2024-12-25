@@ -15,11 +15,12 @@ float Play::m_soundVolume=0.5;
 Play::Play(QWidget *parent)
     : QMainWindow(parent)
     , m_ui(new Ui::Play)
-    , remainingTime(180)
+    , remainingTime(10)
+    , m_score(0)
+    , m_oppscore(0)
 {
 
     this->setWindowTitle("宝石迷阵");
-    //this->setWindowIcon(QIcon(":/new/prefix1/ICON/13369429051CA2411D99F227A90D19CB9BE4EA10C2.jpg"));
     m_ui->setupUi(this);
 
     QGraphicsView *view = m_ui->graphicsView;
@@ -50,7 +51,7 @@ Play::Play(QWidget *parent)
     m_hint = new QAction(this);
     m_hint->setText("提示");
 
-    m_score = 0;
+    //m_score = 0;
 
     //测试己方宝石
     scene_3 = new QGraphicsScene(m_ui->graphicsView);
@@ -70,8 +71,8 @@ Play::Play(QWidget *parent)
     };
 
     // 创建 Board 对象，传递初始化的数组和场景
-    m_board = new Board(ClientThread::m_ran, scene);
-
+    // m_board = new Board(ClientThread::m_ran, scene);
+    m_board = new Board(initialBoard, scene);
     // 设置 QGraphicsView 显示场景
     m_ui->graphicsView->setScene(scene);
 
@@ -84,7 +85,9 @@ Play::Play(QWidget *parent)
     connect(m_ui->pushButton, &QPushButton::clicked, m_board, &Board::updateBoard);
 
     m_ui->lcdNumber->setDigitCount(5);
-    m_ui->lcdNumber->display("03:00");
+    m_ui->lcdNumber->display("00:10");
+
+    //m_ui->ziji->display(m_score);
 
     m_timer = new QTimer(this);
 
@@ -107,6 +110,9 @@ Play::Play(QWidget *parent)
     m_ui->label_3->setText(information::instance().m_userName+"'s score");
     m_ui->label_4->setText(information::instance().m_enemyName+"'s score");
     //timer->start(1000);  // 每1秒触发一次timeout信号
+    connect(m_board, &Board::scoreUpdated, this, &Play::updateScoreGUI);
+    m_ui->ziji->display(0);  // 初始化得分为
+
 }
 
 Play::~Play()
@@ -140,6 +146,13 @@ void Play::on_horizontalSlider_valueChanged(int value)
 void Play::on_horizontalSlider_2_sliderMoved(int position)
 {
     m_soundVolume=float(position)/10000;
+
+}
+void Play::updateScoreGUI(int score) {
+    qDebug() << "score is :" << score;
+    m_totalScore += score;  // 累加得分到总得分
+    m_score = m_totalScore;
+    m_ui->ziji->display(m_totalScore);  // 更新 LCD 显示器上的总得分
 }
 
 void Play::updateCountdown() {
@@ -156,50 +169,30 @@ void Play::updateCountdown() {
     } else {
         m_timer->stop();
         m_ui->lcdNumber->display("00:00");
+
+        checkGameOver();
     }
 }
 
 void Play::checkGameOver(){
     if (remainingTime <= 0) {
-        QMessageBox::information(this, "游戏结束", "时间到了！游戏失败！");
-        //resetGame();
-        return;
-    }
-
-    if (!hasValidMoves(m_board0)) {
-        QMessageBox::information(this, "游戏结束", "没有可匹配的宝石了！");
-        //resetGame();
-        return;
-    }
-}
-
-bool Play::hasValidMoves(const QVector<QVector<int>>& board){
-    int rows = board.size();
-    int cols = board[0].size();
-
-    // 遍历所有非空宝石
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            if (board[i][j] != 0) { // 非空宝石
-                for (int x = 0; x < rows; ++x) {
-                    for (int y = 0; y < cols; ++y) {
-                        if ((i != x || j != y) && board[i][j] == board[x][y]) {
-                            if (isPathValid(board, i, j, x, y)) {
-                                return true; // 存在合法匹配
-                            }
-                        }
-                    }
-                }
-            }
+        if(m_score > m_oppscore) {
+            qDebug() << "m_score is :" << m_score;
+            //qDebug() << "m_oppscore is :" << m_oppscore;
+            QMessageBox::information(this, "游戏结束", "时间到了！你赢了！");
+            return;
+        }else if(m_score < m_oppscore) {
+            qDebug() << "m_score is :" << m_score;
+            //qDebug() << "m_oppscore is :" << m_oppscore;
+            QMessageBox::information(this, "游戏结束", "时间到了！你输了！");
+            return;
+        }else if(m_score == m_oppscore) {
+            qDebug() << "m_score is :" << m_score;
+            //qDebug() << "m_oppscore is :" << m_oppscore;
+            QMessageBox::information(this, "游戏结束", "时间到了！平局！");
+            return;
         }
     }
-    return false; // 没有合法匹配
-}
-
-bool Play::isPathValid(const QVector<QVector<int>>& board, int x1, int y1, int x2, int y2){
-    // 检查两颗宝石是否可以通过路径连接
-    // 此处可根据游戏规则具体实现，例如直线或两次拐角内可达
-    return true; // 示例中直接返回true
 }
 
 

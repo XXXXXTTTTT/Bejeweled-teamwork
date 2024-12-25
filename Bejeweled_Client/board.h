@@ -1,4 +1,4 @@
-#ifndef BOARD_H
+    #ifndef BOARD_H
 #define BOARD_H
 
 #include <QGraphicsScene>
@@ -47,9 +47,24 @@ public:
     void giveHint();
 
 signals:
+    //int getEli();
     // 添加任务信号
     void enqueueTask(const std::function<void()>& task);
+
+    void scoreUpdated(int score);  //发射得分信号
 private:
+
+    //const int BASE_SCORE = 10;      // 每个宝石的基本分数
+    //const int CHAIN_BONUS = 5;      // 每个连锁的奖励分数
+    //const int FOUR_MATCH_BONUS = 50;  // 四连消除的奖励
+    //const int FIVE_MATCH_BONUS = 100; // 五连消除的奖励
+
+    int currentChain = 0;  // 当前连锁次数
+    //int m_myscore = 0;       // 客户端得分
+
+    void calculateScore(int matchCount ,bool isChain);
+    int currentScore = 0; // 当前回合的得分
+
     std::vector<std::vector<int>> m_grid; //存储每个格子中宝石的类型
 
     QGraphicsScene *m_scene;              //管理和绘制所有宝石
@@ -62,6 +77,8 @@ private:
 
 
     int m_j[8][8];
+
+    //int Eli = 0;
 
     const int offsetX = 252;  // X轴偏移量
     const int offsetY = 45;   // Y轴偏移量
@@ -82,13 +99,15 @@ private:
 
     bool checkHorizontal(int x, int y);
     bool checkVertical(int x, int y);
-
+    QSet<std::pair<int, int>> matches;
 //游戏逻辑任务
     //宝石交换任务
     void swapJewels(int x1, int y1, int x2, int y2);
 
     //检查是否有可消除的宝石
     bool checkForMatches();
+
+    bool checkForChains();
 
     //删除匹配的宝石任务
     void processMatches();
@@ -102,14 +121,31 @@ private:
     //根据索引查找当前宝石items
     // Jewel* findJewelAt(int x, int y);
 
-
     //交换宝石位置信息
     void swapJewelsDestination(Jewel* j1,Jewel* j2);
+
+    //int currentScore = 0; // 当前回合的得分
 private slots:
     //任务完成后处理下一个
     void handleTaskFinished();
     //交换宝石动作
     void enqueueSwap(int x1, int y1, int x2, int y2);
+/*
+public:
+    // 假设有一个方法，用于消除宝石并计算得分
+    void eliminateGems(int numEliminated) {
+        int score = numEliminated * BASE_SCORE;
+        if (numEliminated == 4) {
+            score += FOUR_MATCH_BONUS;
+        }
+        else if (numEliminated == 5) {
+            score += FIVE_MATCH_BONUS;
+        }
+
+        // 发出得分更新信号
+        emit scoreUpdated(score);
+    }
+*/
 };
 
 

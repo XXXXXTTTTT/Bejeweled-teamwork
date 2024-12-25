@@ -83,8 +83,6 @@ int main(int argc, char *argv[])
     // loginWindow.show();
 
     //测试游戏页面
-
-
     Play w;
 
     w.show();
