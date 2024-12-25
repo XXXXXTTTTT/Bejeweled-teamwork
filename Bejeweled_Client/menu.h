@@ -2,7 +2,8 @@
 #define MENU_H
 
 #include <QWidget>
-#include <QResizeEvent> // 添加 QResizeEvent 的头文件
+#include <QResizeEvent>
+#include <QMovie>
 
 namespace Ui {
 class Menu;
@@ -17,18 +18,23 @@ public:
     ~Menu();
 
 protected:
-    // 声明 resizeEvent 方法
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 private slots:
     void on_startGameButton_clicked();
     void on_seQuenceButton_clicked();
+    void onGifFinished(); // 处理初始 GIF 动画完成信号
+    void onStartGameGifFinished(); // 处理开始游戏 GIF 动画完成信号
 
 private:
-    void onResultReceived(QString enemyId);
+    void onResultReceived(QString enemyId); // 处理匹配结果
+    void hideUiComponents(); // 隐藏 UI 组件
+    void showUiComponents(); // 显示 UI 组件
+
     Ui::Menu *m_ui;
-    QPixmap m_backgroundImage; // 背景图片
-    double m_aspectRatio;      // 背景图片的宽高比例
+    QMovie *m_movie;           // 初始 GIF 动画
+    QMovie *m_startGameMovie;  // 开始游戏 GIF 动画
 };
 
 #endif // MENU_H

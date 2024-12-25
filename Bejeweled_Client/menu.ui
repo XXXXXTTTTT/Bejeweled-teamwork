@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>766</width>
-    <height>462</height>
+    <width>956</width>
+    <height>704</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,15 +33,15 @@
 }</string>
    </property>
    <property name="text">
-    <string>START HERE</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="startGameButton">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>150</y>
-     <width>251</width>
+     <x>200</x>
+     <y>600</y>
+     <width>431</width>
      <height>41</height>
     </rect>
    </property>
@@ -67,9 +67,9 @@ QPushButton:hover {
   <widget class="QPushButton" name="seQuenceButton">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>200</y>
-     <width>221</width>
+     <x>210</x>
+     <y>650</y>
+     <width>411</width>
      <height>31</height>
     </rect>
    </property>
@@ -90,6 +90,19 @@ QPushButton:hover {
    </property>
    <property name="text">
     <string>排行榜</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="topImageLabel">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>20</y>
+     <width>531</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
