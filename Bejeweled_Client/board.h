@@ -79,6 +79,7 @@ private:
 
     const std::vector<int> m_JewelType = {1,2,3,4,5,6,7}; //7种宝石
 
+
     int m_j[8][8];
 
 
