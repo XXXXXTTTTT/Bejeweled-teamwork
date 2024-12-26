@@ -88,6 +88,7 @@ void MainWindow::customMessageHandler(QtMsgType type, const QMessageLogContext &
     QByteArray localMsg = msg.toLocal8Bit();
     fprintf(stderr, "%s\n", localMsg.constData());
     fflush(stderr);
+
 }
 
 // 清空 QTextEdit 内容的槽函数
