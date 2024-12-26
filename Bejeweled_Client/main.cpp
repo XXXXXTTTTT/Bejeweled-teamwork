@@ -81,6 +81,7 @@ int main(int argc, char *argv[])
     // // QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
 
 
+
     loginWindow.show();
 
     //测试游戏页面
