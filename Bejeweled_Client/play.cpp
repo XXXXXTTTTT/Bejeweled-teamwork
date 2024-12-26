@@ -1,24 +1,28 @@
 #include "play.h"
 #include "clientthread.h"
 #include "information.h"
+#include "menu.h"
 #include "music.h"
 #include "ui_play.h"
 #include <QHBoxLayout>
 #include <QMenuBar>
 #include <QApplication>
 #include <QRandomGenerator>
+#include <QMessageBox>
 #include <QTimer>
+#include<information.h>
 using namespace std;
 QGraphicsScene *scene_3;
 float Play::m_soundVolume=0.5;
 Play::Play(QWidget *parent)
     : QMainWindow(parent)
     , m_ui(new Ui::Play)
+    , m_score(0)
+    , remainingTime(60)
 {
-
     this->setWindowTitle("宝石迷阵");
-    //this->setWindowIcon(QIcon(":/new/prefix1/ICON/13369429051CA2411D99F227A90D19CB9BE4EA10C2.jpg"));
     m_ui->setupUi(this);
+
 
     QGraphicsView *view = m_ui->graphicsView;
 
@@ -48,7 +52,7 @@ Play::Play(QWidget *parent)
     m_hint = new QAction(this);
     m_hint->setText("提示");
 
-    m_score = 0;
+    //m_score = 0;
 
     //测试己方宝石
     scene_3 = new QGraphicsScene(m_ui->graphicsView);
@@ -69,8 +73,7 @@ Play::Play(QWidget *parent)
 
     // 创建 Board 对象，传递初始化的数组和场景
     m_board = new Board(ClientThread::m_ran, scene);
-
-    // 设置 QGraphicsView 显示场景
+   // 设置 QGraphicsView 显示场景
     m_ui->graphicsView->setScene(scene);
 
     // 设置 QGraphicsView 的视图选项
@@ -81,20 +84,39 @@ Play::Play(QWidget *parent)
     //connect(m_ui->start, &QPushButton::clicked, m_board, &Board::generateBoard);
     connect(m_ui->pushButton, &QPushButton::clicked, m_board, &Board::updateBoard);
 
+    m_ui->lcdNumber->setDigitCount(5);
+    m_ui->lcdNumber->display("00:10");
+
+    //m_ui->ziji->display(m_score);
+
+    m_timer = new QTimer(this);
+
+    // 连接定时器信号到更新槽函数
+    connect(m_timer, &QTimer::timeout, this, &Play::updateCountdown);
+
+    // 界面加载后自动开始倒计时
+    m_timer->start(1000);  // 每秒触发一次
 
     // 初始化计数器
-    count = 0;
+    //count = 0;
     // 创建定时器
-    timer = new QTimer(this);
+    //timer = new QTimer(this);
     // 连接定时器的timeout信号到updateLCD槽函数
-    connect(timer, &QTimer::timeout, this, &Play::updateziji);
+    //connect(timer, &QTimer::timeout, this, &Play::updateziji);
     // 设置定时器的更新时间间隔（比如 1000 毫秒，即每秒）
-    timer->start(1000);  // 每1秒触发一次timeout信号
+    // timer->start(1000);  // 每1秒触发一次timeout信号
     m_mus = music::instance();
+    m_mus->start_random();
+
     // qDebug()<<m_ui->horizontalSlider->value();
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
     m_ui->label_3->setText(information::instance().m_userName+"'s score");
     m_ui->label_4->setText(information::instance().m_enemyName+"'s score");
+    //timer->start(1000);  // 每1秒触发一次timeout信号
+    connect(m_board, &Board::scoreUpdated, this, &Play::updateScoreGUI);
+    m_ui->ziji->display(0);  // 初始化得分为
+    connect(&ClientThread::instance(), &ClientThread::scoreChanged, this, &Play::checkValue);
+    this->setWindowTitle("WECOME PLAYER["+information::instance().m_userName+"]!");
 }
 
 Play::~Play()
@@ -113,19 +135,93 @@ void Play::updateButtonClicked() {
     m_board->updateBoard();
 }
 
-void Play::updateziji()
-{
-    count++;  // 增加数字
-    m_ui->ziji->display(count); // 更新显示的数字
-}
+// void Play::updateziji()
+// {
+//     count++;  // 增加数字
+//     m_ui->ziji->display(count); // 更新显示的数字
+// }
 
 void Play::on_horizontalSlider_valueChanged(int value)
 {
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
 }
 
-
 void Play::on_horizontalSlider_2_sliderMoved(int position)
 {
     m_soundVolume=float(position)/10000;
+
+
+}
+void Play::updateScoreGUI(int score) {
+    qDebug() << "score is :" << score;
+    m_totalScore += score;  // 累加得分到总得分
+    m_score = m_totalScore;
+    m_ui->ziji->display(m_totalScore);  // 更新 LCD 显示器上的总得分
+
+    QJsonObject json;
+    json["type"] = "game";
+    json["score"]=m_totalScore;
+    qDebug()<<"clientThread.code= " <<ClientThread::instance().code;
+    ClientThread::instance().sendMsg(json);
+}
+
+void Play::updateCountdown() {
+    if (remainingTime > 0) {
+        --remainingTime;
+
+        // 格式化时间为 mm:ss
+        int minutes = remainingTime / 60;
+        int seconds = remainingTime % 60;
+        QString timeText = QString("%1:%2")
+                               .arg(minutes, 2, 10, QChar('0'))
+                               .arg(seconds, 2, 10, QChar('0'));
+        m_ui->lcdNumber->display(timeText);
+    } else {
+        m_timer->stop();
+        m_ui->lcdNumber->display("00:00");
+
+        checkGameOver();
+    }
+}
+
+void Play::checkGameOver(){
+    if (remainingTime <= 0) {
+        QJsonObject json;
+        json["type"] = "end";
+        json["username"]=information::instance().m_userName;
+        json["score"]=m_totalScore;
+
+        ClientThread::instance().sendMsg(json);
+        if(m_score > information::instance().m_enemyScore) {
+            qDebug() << "m_score is :" << m_score;
+            //qDebug() << "m_oppscore is :" << m_oppscore;
+            music::instance()->sound("start.wav",m_soundVolume);
+            QMessageBox::information(this, "游戏结束", "时间到了！你赢了！");
+        }else if(m_score < information::instance().m_enemyScore) {
+            qDebug() << "m_score is :" << m_score;
+            //qDebug() << "m_oppscore is :" << m_oppscore;
+            music::instance()->sound("fail.wav",m_soundVolume);
+            QMessageBox::information(this, "游戏结束", "时间到了！你输了！");
+
+        }else if(m_score == information::instance().m_enemyScore) {
+            qDebug() << "m_score is :" << m_score;
+            //qDebug() << "m_oppscore is :" << m_oppscore;
+            music::instance()->sound("start.wav",m_soundVolume);
+            QMessageBox::information(this, "游戏结束", "时间到了！平局！");
+        }
+        // music::instance()->m_audioOutput->setVolume(0);
+        music::instance()->m_mediaPlayer->stop();
+        QJsonObject json0;
+        json0["type"] = "LogIn";
+        json0["name"] = information::instance().m_userName;
+        json0["password"] =information::instance().m_password;
+        ClientThread::instance().sendMsg(json0);
+        Menu *menu=new Menu();
+        menu->show();
+        this->close();
+    }
+}
+void Play::checkValue() {
+    // 定期检查 value 的变化
+    m_ui->lcdNumber_2->display(information::instance().m_enemyScore);
 }

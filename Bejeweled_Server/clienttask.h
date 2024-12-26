@@ -63,8 +63,7 @@ private:
     QMap<QString, QMetaObject::Connection> m_playerConnections;
 
 
-    //当前对手名称
-    QString m_enemyId;
+
 
 
     // 静态变量：所有 ClientTask 共享

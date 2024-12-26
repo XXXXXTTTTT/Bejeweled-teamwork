@@ -6,7 +6,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 #include <play.h>
-
 //初始化静态变量
 Jewel* Jewel::m_currSelectedJewel = nullptr;
 
@@ -15,7 +14,6 @@ Jewel* Jewel::m_currSelectedJewel = nullptr;
 Jewel::Jewel(int x, int y, int type,QGraphicsPixmapItem *parent)
     : QGraphicsPixmapItem(parent), m_type(type), m_x(x), m_y(y) {
             m_mus=music::instance();
-
 
 
 
