@@ -37,6 +37,7 @@ Board::Board(QString r0, QGraphicsScene *sc)
 
     generateBoard(information::instance().m_r);  // 生成棋盘
 
+
     // generateBoard(r);  // 生成棋盘
     // for (int i = 0; i < 8; ++i) {
     //     std::vector<int> row;

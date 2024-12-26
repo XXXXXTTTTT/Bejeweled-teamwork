@@ -293,7 +293,7 @@ QPushButton:pressed {
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>230</x>
@@ -346,7 +346,7 @@ QPushButton:pressed {
        <string notr="true">color:rgb(170, 255, 255)</string>
       </property>
       <property name="text">
-       <string>RANKING</string>
+       <string>ranking</string>
       </property>
       <property name="pixmap">
        <pixmap resource="resource.qrc">:/images/media/media/3.png</pixmap>
