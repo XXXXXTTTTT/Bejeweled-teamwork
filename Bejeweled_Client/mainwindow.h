@@ -8,6 +8,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+//主界面链接登入,主界面链接
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

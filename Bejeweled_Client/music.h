@@ -6,6 +6,8 @@
 #include <QAudioOutput>
 #include <QUrl>
 #include <iostream>
+
+//音乐播放类
 class music
 {
 

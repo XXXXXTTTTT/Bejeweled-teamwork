@@ -21,6 +21,7 @@ public:
     ~Server();
     //启动Server端
     void startServer(quint16 port);
+
 protected:
     //用户端连接
     void incomingConnection(qintptr socketDescriptor) override;
@@ -29,6 +30,7 @@ private:
 
     //客户端连接线程池
     QThreadPool m_threadPool;
+
 
 };
 

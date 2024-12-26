@@ -2,6 +2,7 @@
 #define INFORMATION_H
 
 #include "qobject.h"
+//全局变量类
 class information
 {
 public:
@@ -22,6 +23,7 @@ public:
     QString rankingUserName="";
 
     QString highScore="";
+        QString m_r="";
 private:
     information();
 

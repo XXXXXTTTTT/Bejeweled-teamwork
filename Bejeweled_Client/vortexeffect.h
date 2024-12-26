@@ -4,6 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QMovie>
 
+//特效类
 class VortexEffect : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 

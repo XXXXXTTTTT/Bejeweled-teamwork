@@ -45,10 +45,6 @@ Play::Play(QWidget *parent)
     view->setScene(scene);
 
 
-    //auto layout = new QHBoxLayout(this);
-    //QMenuBar *menubar = new QMenuBar(this);
-    //layout->setMenuBar(menubar);
-
     m_hint = new QAction(this);
     m_hint->setText("提示");
 
@@ -58,18 +54,6 @@ Play::Play(QWidget *parent)
     scene_3 = new QGraphicsScene(m_ui->graphicsView);
     scene_3->setSceneRect(0,67,830,620);
     m_ui->graphicsView->setScene(scene_3);
-
-    //to do后序需要网络生成一个然后传使得双方初始棋盘内容一致
-    int initialBoard[8][8] = {
-        {1, 2, 3, 4, 5, 6, 7, 1},
-        {2, 3, 4, 5, 6, 7, 1, 2},
-        {3, 4, 5, 6, 7, 1, 2, 3},
-        {4, 5, 6, 7, 1, 2, 3, 4},
-        {5, 6, 7, 1, 2, 3, 4, 5},
-        {6, 7, 1, 2, 3, 4, 5, 6},
-        {7, 1, 2, 3, 4, 5, 6, 7},
-        {1, 2, 3, 4, 5, 6, 7, 1}
-    };
 
     // 创建 Board 对象，传递初始化的数组和场景
     m_board = new Board(ClientThread::m_ran, scene);
@@ -84,7 +68,7 @@ Play::Play(QWidget *parent)
     //connect(m_ui->start, &QPushButton::clicked, m_board, &Board::generateBoard);
 
     m_ui->lcdNumber->setDigitCount(5);
-    m_ui->lcdNumber->display("00:10");
+    m_ui->lcdNumber->display("01:00");
 
     //m_ui->ziji->display(m_score);
 
@@ -99,22 +83,17 @@ Play::Play(QWidget *parent)
     connect(m_ui->update, &QPushButton::clicked, m_board, &Board::updateBoard);
     connect(m_ui->hint, &QPushButton::clicked, m_board, &Board::giveHint);
 
-    // 初始化计数器
-    //count = 0;
-    // 创建定时器
-    //timer = new QTimer(this);
-    // 连接定时器的timeout信号到updateLCD槽函数
-    //connect(timer, &QTimer::timeout, this, &Play::updateziji);
-    // 设置定时器的更新时间间隔（比如 1000 毫秒，即每秒）
-    // timer->start(1000);  // 每1秒触发一次timeout信号
     m_mus = music::instance();
     m_mus->start_random();
 
-    // qDebug()<<m_ui->horizontalSlider->value();
+
     m_mus->m_audioOutput->setVolume(float(m_ui->horizontalSlider->value())/10000);
+
+
     m_ui->label_3->setText(information::instance().m_userName+"'s score");
     m_ui->label_4->setText(information::instance().m_enemyName+"'s score");
-    //timer->start(1000);  // 每1秒触发一次timeout信号
+
+
     connect(m_board, &Board::scoreUpdated, this, &Play::updateScoreGUI);
     m_ui->ziji->display(0);  // 初始化得分为
     connect(&ClientThread::instance(), &ClientThread::scoreChanged, this, &Play::checkValue);
@@ -198,11 +177,14 @@ void Play::checkGameOver(){
         }
         // music::instance()->m_audioOutput->setVolume(0);
         music::instance()->m_mediaPlayer->stop();
-        QJsonObject json0;
-        json0["type"] = "LogIn";
-        json0["name"] = information::instance().m_userName;
-        json0["password"] =information::instance().m_password;
-        ClientThread::instance().sendMsg(json0);
+        if(information::instance().m_RRange==8)
+        {
+            QJsonObject json0;
+            json0["type"] = "LogIn";
+            json0["name"] = information::instance().m_userName;
+            json0["password"] =information::instance().m_password;
+            ClientThread::instance().sendMsg(json0);
+        }
         Menu *menu=new Menu();
         menu->show();
         this->close();

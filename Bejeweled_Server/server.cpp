@@ -1,6 +1,7 @@
 #include "server.h"
 
 
+
 Server::Server(QObject *parent) : QTcpServer(parent)  {
     m_threadPool.setMaxThreadCount(10); // 设置线程池最大线程数
 }
@@ -25,7 +26,9 @@ void Server::startServer(quint16 port) {
 
 //新客户端连接
 void Server::incomingConnection(qintptr socketDescriptor){
+
     qDebug() << "New connection received";
+
     auto *task = new ClientTask(socketDescriptor);
 
 

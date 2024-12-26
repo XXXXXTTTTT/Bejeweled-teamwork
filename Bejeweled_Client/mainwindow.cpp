@@ -28,21 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
     QPalette palette;
     palette.setBrush(QPalette::Window, m_backgroundImage);
     this->setPalette(palette);
-
-    // // 初始化数据库
-    // QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    // db.setDatabaseName("users.db");
-    // if (!db.open()) {
-    //     QMessageBox::critical(this, "错误", "无法连接到数据库");
-    // }
-
-    // // 创建用户表
-    // QSqlQuery query;
-    // query.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
-
-    // 手动连接槽函数
-    // connect(m_ui->loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
-    // connect(m_ui->registerButton, &QPushButton::clicked, this, &MainWindow::on_registerButton_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -99,6 +84,7 @@ void MainWindow::on_registerButton_clicked()
     Dialog *dialog = new Dialog(this);
     dialog->show();
 }
+
 void MainWindow::onResultReceived(int res)
 {
     disconnect(&ClientThread::instance(), &ClientThread::resultReceived, this, &MainWindow::onResultReceived);
