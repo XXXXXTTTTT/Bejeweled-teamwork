@@ -16,7 +16,6 @@ Jewel::Jewel(int x, int y, int type,QGraphicsPixmapItem *parent)
             m_mus=music::instance();
 
 
-
     //初始化图片文件
 
     // 根据宝石类型选择静态图片
