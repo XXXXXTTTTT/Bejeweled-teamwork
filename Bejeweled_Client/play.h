@@ -16,20 +16,19 @@ class Play : public QMainWindow
 
 public:
     Play(QWidget *parent = nullptr);
-    ~Play();
+    ~Play();// 析构函数
 
-    music*m_mus;
+
 
     static QMainWindow* getUI();                 // 动画制作提供 UI
-    static float m_soundVolume;
+    
     int weizhiX(int);
-    int weizhiY(int);                            // 析构函数
+    int weizhiY(int);
+
 
     void statusCursorCchanger(int c);            // 信号
 
 private slots:
-    void startButtonClicked();
-    void updateButtonClicked();
     //void updateScore(int score);      //更新得分
     void updateScoreGUI(int score);    //将更新的得分输出在ui
     void updateCountdown();  // 更新倒计时
@@ -39,7 +38,10 @@ private slots:
 
     void on_horizontalSlider_2_sliderMoved(int position);
 
-
+    void checkValue() ;
+public:
+    music* m_mus;
+    static float m_soundVolume;
 private:
     Ui::Play *m_ui;                 // 指向 UI 类的指针，确保使用完整类型
     static Play* m_widget;
@@ -48,7 +50,6 @@ private:
     //int m_currentChain = 0;           // 当前连锁反应次数
     //int m_roundScore = 0;             // 当前回合的得分
     int m_score;                    //自己得分
-    int m_oppscore;                 //对面的得分
     int m_totalScore = 0;  // 总得分
     bool m_begin = false;
 

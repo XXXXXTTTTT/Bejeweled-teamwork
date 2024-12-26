@@ -71,21 +71,24 @@ int main(int argc, char *argv[])
     
     //测试登入注册页面
 
-    // ClientThread* clientThread =ClientThread::instance();
-    // clientThread->start();
-    // qDebug() << "客户端已启动";
 
-    // MainWindow loginWindow=MainWindow();
-    // Menu mainMenu;
+    ClientThread::instance().start();
+    qDebug() << "客户端已启动";
 
-    // QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
+    MainWindow loginWindow=MainWindow();
+    Menu mainMenu;
 
-    // loginWindow.show();
+    // // QObject::connect(&loginWindow, &MainWindow::loginSuccess, &mainMenu, &Menu::show);
+
+
+    loginWindow.show();
 
     //测试游戏页面
-    Play w;
 
-    w.show();
+
+    // Play w;
+
+    // w.show();
 
     return a.exec();
 }

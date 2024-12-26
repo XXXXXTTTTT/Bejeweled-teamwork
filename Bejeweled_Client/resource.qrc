@@ -19,20 +19,19 @@
         <file>resources/1.jpg</file>
         <file>resources/2.jpg</file>
         <file>media/media/selector.png</file>
-        <file>resources/8.gif</file>
         <file>resources/10.png</file>
         <file>resources/11.gif</file>
         <file>resources/12.gif</file>
-        <file>resources/sound/good.wav</file>
-        <file>resources/sound/excellent.wav</file>
-        <file>resources/sound/amazing.wav</file>
+        <file>media/media/8.gif</file>
+        <file>media/media/8.png</file>
+        <file>media/media/spiral.gif</file>
+        <file>media/media/hint.gif</file>
     </qresource>
     <qresource prefix="/music">
         <file>resources/sound/1.mp3</file>
         <file>resources/sound/2.mp3</file>
         <file>resources/sound/3.mp3</file>
         <file>resources/sound/3counts.mp3</file>
-        <file>resources/sound/bgm.mp3</file>
         <file>resources/sound/click.wav</file>
         <file>resources/sound/combo_2.wav</file>
         <file>resources/sound/combo_3.wav</file>
@@ -52,5 +51,7 @@
         <file>resources/sound/good.wav</file>
         <file>resources/sound/amazing.wav</file>
         <file>resources/sound/excellent.wav</file>
+        <file>resources/sound/4.mp3</file>
+        <file>resources/sound/start.wav</file>
     </qresource>
 </RCC>
