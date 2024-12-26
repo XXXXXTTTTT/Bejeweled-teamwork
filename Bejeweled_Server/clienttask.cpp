@@ -131,6 +131,7 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
             m_sql->getTopScores();
             response["rankName"]=information::instance().rankingUserName;
             response["rankScore"]=information::instance().highScore;
+            information::instance().m_easyPlayerName="";
         } else {
             //登入失败
 
@@ -141,7 +142,6 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
         QString password = message["password"].toString();
         int res =m_sql->canRegisterOrNot(name,password);
         response["type"] = "Register";
-
         response["res"] = res;
 
         if(res == 1) {
@@ -151,7 +151,6 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
         else if(res==0)
         {
             // 用户名已存在
-
         }
     } else if(type.compare("Match") == 0) {
         int res =matchPlayer(m_currUuid);
@@ -180,6 +179,27 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
         response["type"] = "end";
         response["score"] = message["score"];
         response["username"]= message["username"];
+    }
+    else if(type.compare("mode") == 0) {
+        //改模式
+        response["type"] = "mode";
+        response["mode"] = message["mode"];
+        information::instance().m_RRange= message["mode"].toInt();
+        QString r;
+        for(int i=0;i<1000;i++)
+        {
+            r+=QString::number(QRandomGenerator::global()->bounded(1, information::instance().m_RRange));
+        }
+        if(information::instance().m_easyPlayerName=="")
+        {
+            information::instance().m_easyPlayerName=message["name"].toString();
+            information::instance().m_saveOrNot++;
+        }
+        else if(information::instance().m_saveOrNot>0)
+        {
+            information::instance().m_saveOrNot=2;
+        }
+        response["random"]=r;
     }
 
 

@@ -18,6 +18,10 @@ public:
     QString rankingUserName="";
 
     QString highScore="";
+
+    QString m_easyPlayerName="";
+
+    int m_saveOrNot=0;
 private:
     information();
 
