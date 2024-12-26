@@ -11,7 +11,7 @@
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
-    m_ui(new Ui::Dialog) // 初始化成员变量
+    m_ui(new Ui::Dialog)
 {
     m_ui->setupUi(this);
     this->setWindowTitle("注册");
@@ -53,30 +53,33 @@ void Dialog::resizeEvent(QResizeEvent *event)
     QPalette palette;
     palette.setBrush(QPalette::Window, scaledBackground);
     this->setPalette(palette);
-    QDialog::resizeEvent(event); // 调用基类的 resizeEvent
+    QDialog::resizeEvent(event);
 }
 
-void Dialog::on_buttonBox_accepted()
+void Dialog::on_registerButton_clicked()
 {
     QString username = m_ui->username->text();
     QString password = m_ui->password->text();
-
 
     if (username.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "错误", "用户名或密码不能为空");
         return;
     }
+
     QJsonObject json1;
     json1["type"] = "Register";
     json1["name"] = username;
     json1["password"] = password;
     ClientThread::instance().sendMsg(json1);
 
-
-    // 不使用 QEventLoop，改用信号与槽机制
     connect(&ClientThread::instance(), &ClientThread::resultReceived, this, &Dialog::onResultReceived);
-
 }
+
+void Dialog::on_cancelButton_clicked()
+{
+    this->reject(); // 关闭对话框
+}
+
 void Dialog::onResultReceived(int res)
 {
     disconnect(&ClientThread::instance(), &ClientThread::resultReceived, this, &Dialog::onResultReceived);
@@ -89,7 +92,5 @@ void Dialog::onResultReceived(int res)
         this->accept();  // 注册成功后关闭对话框
     } else if (ClientThread::instance().m_res == 0) {
         QMessageBox::warning(this, "注册失败", "用户名已被占用");
-        this->accept();
     }
-
 }

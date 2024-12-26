@@ -3,7 +3,7 @@
 
 #include "clientThread.h"
 #include <QDialog>
-#include <QResizeEvent> // 添加 QResizeEvent 的头文件
+#include <QResizeEvent>
 
 namespace Ui {
 class Dialog;
@@ -11,7 +11,6 @@ class Dialog;
 
 class Dialog : public QDialog
 {
-
     Q_OBJECT
 
 public:
@@ -19,17 +18,17 @@ public:
     ~Dialog();
 
 protected:
-    // 声明 resizeEvent 方法
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-    void on_buttonBox_accepted();
+    void on_registerButton_clicked(); // 处理“注册”按钮点击事件
+    void on_cancelButton_clicked();   // 处理“取消”按钮点击事件
     void onResultReceived(int res);
 
 private:
     Ui::Dialog *m_ui;
-    QPixmap m_backgroundImage; // 背景图片
-    double m_aspectRatio;      // 背景图片的宽高比例
+    QPixmap m_backgroundImage;
+    double m_aspectRatio;
 };
 
 #endif // DIALOG_H
