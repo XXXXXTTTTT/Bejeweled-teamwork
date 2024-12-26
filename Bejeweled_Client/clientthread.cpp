@@ -1,4 +1,5 @@
 #include "clientthread.h"
+#include "board.h"
 #include "information.h"
 ClientThread::ClientThread(const QString& host, quint16 port, QObject* parent)
     : QThread(parent), code(0), m_socket(nullptr), m_host(host),m_port(port)
@@ -186,6 +187,11 @@ void ClientThread::receivedMessage(const QJsonObject& message)
             information::instance().m_enemyScore=message["score"].toInt();
             emit scoreChanged(information::instance().m_enemyScore);
         }
+    }
+    else if(type=="mode")
+    {
+        information::instance().m_r=message["random"].toString();
+        emit matchReceived("robot");
     }
     //注册与登录
     else

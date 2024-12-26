@@ -4,11 +4,10 @@
 
 #include "music.h"
 #include "play.h"
-QString r="";
 
 Board::Board(QString r0, QGraphicsScene *sc)
     : m_scene(sc) {
-    r=r0;
+    information::instance().m_r=r0;
     m_combo=0;
     m_mus =music::instance();
     m_grid.resize(8, std::vector<int>(8));
@@ -36,7 +35,7 @@ Board::Board(QString r0, QGraphicsScene *sc)
     //     m_grid.push_back(row);
     // }
 
-    generateBoard(r);  // 生成棋盘
+    generateBoard(information::instance().m_r);  // 生成棋盘
 
     // generateBoard(r);  // 生成棋盘
     // for (int i = 0; i < 8; ++i) {
@@ -120,10 +119,10 @@ void Board::generateBoard() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             int gemType;
-            if(!r.isEmpty())
+            if(!information::instance().m_r.isEmpty())
             {
-                gemType = r.at(0).digitValue();
-                r.remove(0,1);
+                gemType = information::instance().m_r.at(0).digitValue();
+                information::instance().m_r.remove(0,1);
             }
             else
             {
@@ -132,10 +131,10 @@ void Board::generateBoard() {
             }
             // 需要检查该宝石是否符合规则
             while (checkForInvalidPlacement(i, j, gemType)) {
-                if(!r.isEmpty())
+                if(!information::instance().m_r.isEmpty())
                 {
-                    gemType = r.at(0).digitValue();
-                    r.remove(0,1);
+                    gemType = information::instance().m_r.at(0).digitValue();
+                    information::instance().m_r.remove(0,1);
                 }
                 else
                 {
@@ -196,10 +195,10 @@ void Board::updateBoard() {
             for (int j = 0; j < 8; ++j) {
                 // m_grid[i][j] = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
 
-                if(!r.isEmpty())
+                if(!information::instance().m_r.isEmpty())
                 {
-                    m_grid[i][j] = r.at(0).digitValue();
-                    r.remove(0,1);
+                    m_grid[i][j] = information::instance().m_r.at(0).digitValue();
+                    information::instance().m_r.remove(0,1);
                 }
                 else
                 {
@@ -789,10 +788,10 @@ void Board::generateNewJewels() {
 
                 // qDebug() << "OK";
                 int gemType;
-                if(!r.isEmpty())
+                if(!information::instance().m_r.isEmpty())
                 {
-                    gemType = r.at(0).digitValue();
-                    r.remove(0,1);
+                    gemType = information::instance().m_r.at(0).digitValue();
+                    information::instance().m_r.remove(0,1);
                 }
                 else
                 {

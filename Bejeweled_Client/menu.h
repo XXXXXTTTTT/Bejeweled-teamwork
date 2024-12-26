@@ -33,6 +33,8 @@ private slots:
 
     void on_radioButton_toggled(bool checked);
 
+    void on_num_valueChanged(int arg1);
+
 private:
     void onResultReceived(QString enemyId); // 处理匹配结果
     void hideUiComponents(); // 隐藏 UI 组件
