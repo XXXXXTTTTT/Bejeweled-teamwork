@@ -22,6 +22,7 @@ public:
     QString rankingUserName="";
 
     QString highScore="";
+        QString m_r="";
 private:
     information();
 

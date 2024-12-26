@@ -84,7 +84,7 @@ Play::Play(QWidget *parent)
     //connect(m_ui->start, &QPushButton::clicked, m_board, &Board::generateBoard);
 
     m_ui->lcdNumber->setDigitCount(5);
-    m_ui->lcdNumber->display("00:10");
+    m_ui->lcdNumber->display("01:00");
 
     //m_ui->ziji->display(m_score);
 
@@ -198,11 +198,14 @@ void Play::checkGameOver(){
         }
         // music::instance()->m_audioOutput->setVolume(0);
         music::instance()->m_mediaPlayer->stop();
-        QJsonObject json0;
-        json0["type"] = "LogIn";
-        json0["name"] = information::instance().m_userName;
-        json0["password"] =information::instance().m_password;
-        ClientThread::instance().sendMsg(json0);
+        if(information::instance().m_RRange==8)
+        {
+            QJsonObject json0;
+            json0["type"] = "LogIn";
+            json0["name"] = information::instance().m_userName;
+            json0["password"] =information::instance().m_password;
+            ClientThread::instance().sendMsg(json0);
+        }
         Menu *menu=new Menu();
         menu->show();
         this->close();
