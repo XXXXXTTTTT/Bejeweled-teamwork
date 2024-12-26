@@ -26,6 +26,9 @@
         <file>media/media/8.png</file>
         <file>media/media/spiral.gif</file>
         <file>media/media/hint.gif</file>
+        <file>media/media/hint.png</file>
+        <file>media/media/iconRestart(1).png</file>
+        <file>media/media/iconRestart.png</file>
     </qresource>
     <qresource prefix="/music">
         <file>resources/sound/1.mp3</file>
