@@ -82,7 +82,6 @@ Play::Play(QWidget *parent)
     m_ui->graphicsView->setRenderHint(QPainter::SmoothPixmapTransform);
 
     //connect(m_ui->start, &QPushButton::clicked, m_board, &Board::generateBoard);
-    connect(m_ui->pushButton, &QPushButton::clicked, m_board, &Board::updateBoard);
 
     m_ui->lcdNumber->setDigitCount(5);
     m_ui->lcdNumber->display("00:10");
@@ -96,6 +95,9 @@ Play::Play(QWidget *parent)
 
     // 界面加载后自动开始倒计时
     m_timer->start(1000);  // 每秒触发一次
+    
+    connect(m_ui->update, &QPushButton::clicked, m_board, &Board::updateBoard);
+    connect(m_ui->hint, &QPushButton::clicked, m_board, &Board::giveHint);
 
     // 初始化计数器
     //count = 0;
@@ -124,16 +126,21 @@ Play::~Play()
     delete m_ui;
 }
 
-void Play::startButtonClicked()
-{
-    // 处理点击事件，例如调用 board 的生成宝石方法
-    m_board->generateBoard();
-}
+// void Play::startButtonClicked()
+// {
+//     // 处理点击事件，例如调用 board 的生成宝石方法
+//     m_board->generateBoard();
+// }
 
-void Play::updateButtonClicked() {
-    // 触发 Board 类的 updateBoard 方法，更新棋盘
-    m_board->updateBoard();
-}
+// void Play::updateButtonClicked() {
+//     // 触发 Board 类的 updateBoard 方法，更新棋盘
+//     m_board->updateBoard();
+// }
+
+// void Play::giveHintButtonClicked() {
+//     // 触发 Board 类的 giveHint 方法，给出提示
+//     m_board->giveHint();
+// }
 
 // void Play::updateziji()
 // {
