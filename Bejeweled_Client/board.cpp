@@ -37,6 +37,33 @@ Board::Board(QString r0, QGraphicsScene *sc)
     // }
 
     generateBoard(r);  // 生成棋盘
+    // for (int i = 0; i < 8; ++i) {
+    //     std::vector<int> row;
+    //     for (int k = 0; k < 8; ++k) {
+    //         row.push_back(j[i][k]);
+    //         // 创建宝石对象并设置坐标
+    //         Jewel* gem = new Jewel(i, k, j[i][k]);
+    //         connect(gem, &Jewel::jewelSwap, this, &Board::enqueueSwap);
+    //         gem->setPos(QPointF(i * 67 + offsetX, k * 68 + offsetY));
+    //         m_scene->addItem(gem);  // 将宝石添加到场景中
+    //         m_allJewelItems[i][k] = gem;
+
+    //     }
+    //     m_grid.push_back(row);
+
+    // }
+
+    // generateBoard();  // 生成棋盘
+
+    //若无可消,判定是否僵局
+    if(!isAvailableOrNot()) {
+
+        // 弹出提示框告诉玩家棋盘进入僵局
+        QMessageBox::information(nullptr, "游戏提示", "棋盘已进入僵局！请等待片刻...", QMessageBox::Ok);
+
+        // 在 2 秒后执行棋盘更新
+        QTimer::singleShot(2000, this, &Board::updateBoard);
+    }
 
     // generateBoard(r);  // 生成棋盘
     // for (int i = 0; i < 8; ++i) {
@@ -798,20 +825,16 @@ void Board::generateNewJewels() {
 
     connect(generateNewGroup, &QParallelAnimationGroup::finished, this, [=]() {
         qDebug() << "生成完毕";
+
             //若有可消
             emit enqueueTask([=]() {
 
                 if (checkForMatches()) {
 
                     processMatches();
-                }
-                else
-                {
-                    if(m_combo>=10)
-                    {
-                        m_mus->sound("start_timi.wav",Play::m_soundVolume);
-                    }
-                    else if(m_combo>=6&&m_combo<10)
+                } else {
+                    //根据连击播放音效
+                    if(m_combo==6)
                     {
                         m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
                     }
@@ -833,6 +856,7 @@ void Board::generateNewJewels() {
                         m_mus->sound("good.wav",Play::m_soundVolume);
                     }
                     m_combo=0;
+
                     qDebug() << "检测是否僵局";
                     //若无可消,判定是否僵局
                     if(!isAvailableOrNot()) {
@@ -844,13 +868,14 @@ void Board::generateNewJewels() {
                         QTimer::singleShot(2000, this, &Board::updateBoard);
                     }
                 }
+            });
+
 
 
         });
 
     generateNewGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
-        });
 }
 
 //交换宝石位置信息
