@@ -871,6 +871,7 @@ void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
         m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 
@@ -893,6 +894,14 @@ void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
     qDebug() << "消除个数：" << matches.size();
 
 >>>>>>> a92616b (:ipdate: 游戏逻辑(任务管理版))
+=======
+
+
+
+    qDebug() << "消除个数：" << matches.size();
+
+
+>>>>>>> c24bfa3 (add: 提示功能,特殊宝石逻辑，重置改为从当前棋盘中打乱)
     QParallelAnimationGroup* deleteGroup = new QParallelAnimationGroup(this);
 
     // 加锁范围，保护 m_grid 的一致性
@@ -1113,6 +1122,12 @@ void Board::generateNewJewels() {
                 QPropertyAnimation* dropAnim = new QPropertyAnimation(gem, "pos");
                 dropAnim->setDuration(300);
                 dropAnim->setEndValue(QPointF(x * 67 + 252, y * 68 + 45));
+                // //生成宝石
+                // Jewel* gem = setNewJewelInformation(x,y,gemType, 1);
+
+                // QPropertyAnimation* dropAnim = new QPropertyAnimation(gem, "pos");
+                // dropAnim->setDuration(300);
+                // dropAnim->setEndValue(QPointF(x * 67 + 252, y * 68 + 45));
 
                 generateNewGroup->addAnimation(dropAnim);
                     //处理消除
@@ -1174,11 +1189,6 @@ void Board::generateNewJewels() {
                     }
                 }
             });
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 30b93aa (add: 僵局自动重置功能)
 
         });
 
