@@ -103,9 +103,7 @@ void Menu::on_startGameButton_clicked()
     music::instance()->sound("click.wav",1);
     hideUiComponents();
     m_ui->topImageLabel->hide();
-
-    // 加载开始游戏 GIF 动画
-    m_startGameMovie = new QMovie(":/images/resources/11.gif"); // 替换为你的开始游戏 GIF 路径
+    m_startGameMovie = new QMovie(":/images/resources/11.gif");
     if (m_startGameMovie->isValid()) {
         m_startGameMovie->setCacheMode(QMovie::CacheAll);
         connect(m_startGameMovie, &QMovie::frameChanged, this, [this]() {
