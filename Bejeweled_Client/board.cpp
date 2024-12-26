@@ -107,7 +107,7 @@ Board::~Board() {
 }
 
 void Board::generateBoard(QString &r){
-        for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             int gemType;
             if(!r.isEmpty())
@@ -870,38 +870,22 @@ void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
 
         m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 
 
     qDebug() << "消除个数：" << matches.size();
 
 
-=======
-    if(m_combo<6&&matches.size()>=9)
-    {
-        m_combo++;
-    }
-    if(m_combo<6)
-    {
-        m_combo++;
-    }
-    m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
-<<<<<<< HEAD
-*/
+    // if(m_combo<6&&matches.size()>=9)
+    // {
+    //     m_combo++;
+    // }
+    // if(m_combo<6)
+    // {
+    //     m_combo++;
+    // }
+    // m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
 
-    qDebug() << "消除个数：" << matches.size();
-
->>>>>>> a92616b (:ipdate: 游戏逻辑(任务管理版))
-=======
-
-
-
-    qDebug() << "消除个数：" << matches.size();
-
-
->>>>>>> c24bfa3 (add: 提示功能,特殊宝石逻辑，重置改为从当前棋盘中打乱)
     QParallelAnimationGroup* deleteGroup = new QParallelAnimationGroup(this);
 
     // 加锁范围，保护 m_grid 的一致性
