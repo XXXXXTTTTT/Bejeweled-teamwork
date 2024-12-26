@@ -70,24 +70,24 @@ void Dialog::on_buttonBox_accepted()
     json1["type"] = "Register";
     json1["name"] = username;
     json1["password"] = password;
-    ClientThread*clientThread=ClientThread::instance();
-    clientThread->sendMsg(json1);
+    ClientThread::instance().sendMsg(json1);
+
 
     // 不使用 QEventLoop，改用信号与槽机制
-    connect(clientThread, &ClientThread::resultReceived, this, &Dialog::onResultReceived);
+    connect(&ClientThread::instance(), &ClientThread::resultReceived, this, &Dialog::onResultReceived);
 
 }
 void Dialog::onResultReceived(int res)
 {
-    disconnect(ClientThread::instance(), &ClientThread::resultReceived, this, &Dialog::onResultReceived);
+    disconnect(&ClientThread::instance(), &ClientThread::resultReceived, this, &Dialog::onResultReceived);
 
     // 处理服务器返回的结果，接收到信号后退出事件循环
-    ClientThread::instance()->m_res = res;
+    ClientThread::instance().m_res = res;
     // 根据 m_res 判断注册是否成功
-    if (ClientThread::instance()->m_res == 1) {
+    if (ClientThread::instance().m_res == 1) {
         QMessageBox::information(this, "注册成功", "注册成功");
         this->accept();  // 注册成功后关闭对话框
-    } else if (ClientThread::instance()->m_res == 0) {
+    } else if (ClientThread::instance().m_res == 0) {
         QMessageBox::warning(this, "注册失败", "用户名已被占用");
         this->accept();
     }

@@ -27,6 +27,12 @@ private slots:
     void onGifFinished(); // 处理初始 GIF 动画完成信号
     void onStartGameGifFinished(); // 处理开始游戏 GIF 动画完成信号
 
+    void on_seQuenceButton_2_clicked();
+
+    void on_radioButton_2_toggled(bool checked);
+
+    void on_radioButton_toggled(bool checked);
+
 private:
     void onResultReceived(QString enemyId); // 处理匹配结果
     void hideUiComponents(); // 隐藏 UI 组件

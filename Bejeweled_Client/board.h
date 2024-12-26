@@ -20,14 +20,12 @@
 #include "information.h"
 #include "music.h"
 
-
 class Board : public QObject{
     Q_OBJECT
 public:
     music * m_mus;
     int m_combo;
     Board(QString r , QGraphicsScene *scene);
-    Board(int j[8][8] ,QGraphicsScene *scene);
     ~Board();
     //产生棋盘
     void generateBoard();

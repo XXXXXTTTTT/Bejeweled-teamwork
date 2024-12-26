@@ -9,6 +9,7 @@
 #include <QMovie>
 #include <QLabel>
 #include <QPainter>
+#include <music.h>
 
 Menu::Menu(QWidget *parent) :
     QWidget(parent),
@@ -39,8 +40,12 @@ Menu::Menu(QWidget *parent) :
     // 隐藏所有 UI 组件，直到初始 GIF 动画完成
     hideUiComponents();
 
+
+    this->setWindowTitle("WECOME PLAYER["+information::instance().m_userName+"]!");
+
     // 初始化顶部图片标签
     m_ui->topImageLabel->hide(); // 先隐藏顶部图片标签
+
 }
 
 Menu::~Menu()
@@ -94,6 +99,7 @@ void Menu::onGifFinished()
 
 void Menu::on_startGameButton_clicked()
 {
+    music::instance()->sound("click.wav",1);
     hideUiComponents();
     m_ui->topImageLabel->hide();
 
@@ -118,37 +124,67 @@ void Menu::on_startGameButton_clicked()
         qWarning() << "Failed to load start game GIF";
     }
 
+
     // 匹配对手
     QMessageBox::information(this, "匹配中", "等待对手加入");
 
     QJsonObject json;
     json["type"] = "Match";
-    ClientThread* clientThread = ClientThread::instance();
-    clientThread->sendMsg(json);
+    ClientThread::instance().sendMsg(json);
+    connect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
 
-    connect(clientThread, &ClientThread::matchReceived, this, &Menu::onResultReceived);
+    // music::instance()->stop();
 }
 
 void Menu::on_seQuenceButton_clicked()
 {
+    music::instance()->sound("click.wav",1);
+    QStringList nameParts = information::instance().rankingUserName.split(" ", Qt::SkipEmptyParts); // 按空格分割
+
+    // 输出每个分割后的部分
+    for (const QString &part : nameParts) {
+        qDebug() << part;
+    }
+    QStringList scoreParts = information::instance().highScore.split(" ", Qt::SkipEmptyParts); // 按空格分割
+
+    // 输出每个分割后的部分
+    for (const QString &part : scoreParts) {
+        qDebug() << part;
+    }
+    m_ui->ranking->show();
+    m_ui->rank0->setText("rank:\tid\t\tscore");
+    m_ui->rank0->show();
+    m_ui->rank1->setText("1:\t"+nameParts[0]+"\t\t"+scoreParts[0]);
+    m_ui->rank1->show();
+    m_ui->rank2->setText("2:\t"+nameParts[1]+"\t\t"+scoreParts[1]);
+    m_ui->rank2->show();
+    m_ui->rank3->setText("3:\t"+nameParts[2]+"\t\t"+scoreParts[2]);
+    m_ui->rank3->show();
+    m_ui->rank4->setText("4:\t"+nameParts[3]+"\t\t"+scoreParts[3]);
+    m_ui->rank4->show();
+    m_ui->rank5->setText("5:\t"+nameParts[4]+"\t\t"+scoreParts[4]);
+    m_ui->rank5->show();
     // 排行榜按钮点击事件
-    QMessageBox::information(this, "排行榜", "排行榜功能暂未实现");
+    // QMessageBox::information(this, "排行榜", "排行榜功能暂未实现");
 }
 
 void Menu::onResultReceived(QString enemyId)
 {
-    disconnect(ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
+    disconnect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
     // 处理服务器返回的结果
 
-    QMessageBox::information(this, "匹配成功", "对手：" + enemyId);
-    Play *play = new Play();
-    play->show();
-    this->close();
+
+        // QMessageBox::information(this, "匹配成功", "对手："+enemyId);
+        information::instance().m_enemyName=enemyId;
+        Play * play = new Play();
+        play -> show();
+        this->close();
 }
 
 void Menu::onStartGameGifFinished()
 {
     // 开始游戏 GIF 动画完成后，跳转到游戏界面
+
     Play *play = new Play();
     play->show();
     this->close();
@@ -158,12 +194,62 @@ void Menu::hideUiComponents()
 {
     m_ui->startGameButton->hide();
     m_ui->seQuenceButton->hide();
+    m_ui->seQuenceButton_2->hide();
+    m_ui->radioButton->hide();
+    m_ui->radioButton_2->hide();
     m_ui->label_2->hide();
+    m_ui->ranking->hide();
+    m_ui->rank1->hide();
+    m_ui->rank2->hide();
+    m_ui->rank3->hide();
+    m_ui->rank4->hide();
+    m_ui->rank5->hide();
+    m_ui->rank0->hide();
+
 }
 
 void Menu::showUiComponents()
 {
     m_ui->startGameButton->show();
     m_ui->seQuenceButton->show();
+    m_ui->seQuenceButton_2->show();
+    m_ui->radioButton->show();
+    m_ui->radioButton_2->show();
     m_ui->label_2->show();
 }
+
+
+
+
+void Menu::on_seQuenceButton_2_clicked()
+{
+    music::instance()->sound("click.wav",1);
+    this->close();
+}
+
+
+
+
+
+void Menu::on_radioButton_2_toggled(bool checked)
+{
+    music::instance()->sound("click.wav",1);
+    if(checked)
+    {
+        information::instance().m_RRange=8;
+    }
+    qDebug()<<information::instance().m_RRange;
+}
+
+
+void Menu::on_radioButton_toggled(bool checked)
+{
+    music::instance()->sound("click.wav",1);
+    if(checked)
+    {
+        information::instance().m_RRange=6;
+    }
+    qDebug()<<information::instance().m_RRange;
+
+}
+

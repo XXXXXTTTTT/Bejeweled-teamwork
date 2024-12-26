@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "menu.h"
+#include "music.h"
+#include "play.h"
 #include "ui_mainwindow.h"
 #include "dialog.h"
 #include <QSqlDatabase>
@@ -83,10 +85,12 @@ void MainWindow::on_loginButton_clicked()
     json["name"] = username;
     json["password"] = password;
     information::instance().m_userName=username;
-    ClientThread*clientThread=ClientThread::instance();
-    clientThread->sendMsg(json);
+    information::instance().m_password=password;
+    ClientThread::instance().sendMsg(json);
+    ClientThread::instance().code=1;
+    qDebug()<<"ClientThread::instance().code= "<<ClientThread::instance().code;
 
-    connect(clientThread, &ClientThread::resultReceived, this, &MainWindow::onResultReceived);
+    connect(&ClientThread::instance(), &ClientThread::resultReceived, this, &MainWindow::onResultReceived);
 
 }
 
@@ -97,17 +101,19 @@ void MainWindow::on_registerButton_clicked()
 }
 void MainWindow::onResultReceived(int res)
 {
-    disconnect(ClientThread::instance(), &ClientThread::resultReceived, this, &MainWindow::onResultReceived);
+    disconnect(&ClientThread::instance(), &ClientThread::resultReceived, this, &MainWindow::onResultReceived);
 
     // 处理服务器返回的结果，接收到信号后退出事件循环
-    ClientThread::instance()->m_res = res;
+    ClientThread::instance().m_res = res;
     // 根据 m_res 判断注册是否成功
-    if (ClientThread::instance()->m_res == 1) {
+    if (ClientThread::instance().m_res == 1) {
         QMessageBox::information(this, "登录成功", "登录成功");
         Menu *menu=new Menu();
+        music mus=*music::instance();
+        mus.sound("start.wav",1);
         menu->show();
         this->close();
-    } else if (ClientThread::instance()->m_res == 0) {
+    } else if (ClientThread::instance().m_res == 0) {
         QMessageBox::warning(this, "登录失败", "用户名或密码错误");
     }
     else

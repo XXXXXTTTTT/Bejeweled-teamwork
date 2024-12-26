@@ -12,10 +12,11 @@ class ClientThread : public QThread {
 
 public:
     int m_res;
+    int code;
 QTcpSocket* m_socket;
     ~ClientThread();
 static QString m_ran;
-static ClientThread *instance();
+static ClientThread &instance();
 protected:
     void run() override;
 
@@ -24,6 +25,8 @@ public slots:
 
     void dealWithMsg(const QJsonObject& message);
 signals:
+signals:
+    void scoreChanged(int newValue);
     void resultReceived(int res);
     void matchReceived(QString name);
 
@@ -38,8 +41,7 @@ private slots:
 
 private:
     void receivedMessage(const QJsonObject& message);
-    explicit ClientThread(const QString& host, quint16 port, QObject* parent = nullptr);
-    static ClientThread * m_instance;
+    ClientThread(const QString& host, quint16 port, QObject* parent = nullptr);
     QString m_host;
     quint16 m_port;
 

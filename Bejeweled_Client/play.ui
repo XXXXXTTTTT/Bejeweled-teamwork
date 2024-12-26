@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/images/media/media/5.png</normaloff>:/images/media/media/5.png</iconset>
+  </property>
   <widget class="QGraphicsView" name="graphicsView">
    <property name="geometry">
     <rect>

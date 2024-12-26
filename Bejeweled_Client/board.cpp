@@ -1,4 +1,7 @@
 #include "board.h"
+
+#include "information.h"
+
 #include "music.h"
 #include "play.h"
 QString r="";
@@ -8,7 +11,6 @@ Board::Board(QString r0, QGraphicsScene *sc)
     r=r0;
     m_combo=0;
     m_mus =music::instance();
-
     m_grid.resize(8, std::vector<int>(8));
 
     //初始化
@@ -33,6 +35,9 @@ Board::Board(QString r0, QGraphicsScene *sc)
     //     }
     //     m_grid.push_back(row);
     // }
+
+    generateBoard(r);  // 生成棋盘
+
     // generateBoard(r);  // 生成棋盘
     // for (int i = 0; i < 8; ++i) {
     //     std::vector<int> row;
@@ -49,8 +54,8 @@ Board::Board(QString r0, QGraphicsScene *sc)
     //     m_grid.push_back(row);
 
     // }
+    // generateBoard();  // 生成棋盘
 
-    generateBoard();  // 生成棋盘
 
     //若无可消,判定是否僵局
     if(!isAvailableOrNot()) {
@@ -71,9 +76,44 @@ Board::~Board() {
 }
 
 void Board::generateBoard(QString &r){
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            int gemType;
+            if(!r.isEmpty())
+            {
+                gemType = r.at(0).digitValue();
+                r.remove(0,1);
+            }
+            else
+            {
+                // 随机生成一个宝石类型
+                gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+            }
+            // 需要检查该宝石是否符合规则
+            while (checkForInvalidPlacement(i, j, gemType)) {
+                if(!r.isEmpty())
+                {
+                    gemType = r.at(0).digitValue();
+                    r.remove(0,1);
+                }
+                else
+                {
+                    // 随机生成一个宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+                }
+            }
 
+            m_grid[i][j] = gemType;  // 更新 m_grid 中的宝石类型
+
+            // 创建宝石对象并设置坐标
+            Jewel* gem = new Jewel(i, j, gemType);
+            connect(gem, &Jewel::jewelSwap, this, &Board::enqueueSwap);
+            gem->setPos(QPointF(i * 67 + offsetX, j * 68 + offsetY));
+            m_scene->addItem(gem);  // 将宝石添加到场景中
+            m_allJewelItems[i][j] = gem;
+        }
+    }
 }
-
 void Board::generateBoard() {
 
 
@@ -115,7 +155,6 @@ void Board::generateBoard() {
         }
     }
 }
-
 bool Board::checkForInvalidPlacement(int x, int y, int gemType) {
     // 检查横向
     int count = 1;
@@ -529,17 +568,23 @@ void Board::processMatches() {
     qDebug() << "消除个数：" << matches.size();
     if(m_combo<6&&matches.size()>=6)
     {
-        m_combo++;
+        // m_combo++;
     }
     if(m_combo<6&&matches.size()>=9)
     {
-        m_combo++;
+        // m_combo++;
     }
     if(m_combo<6)
     {
         m_combo++;
+        m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
     }
-    m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
+    else
+    {
+        m_combo++;
+        m_mus->sound("combo_"+ QString::number(6)+".wav",Play::m_soundVolume);
+    }
+
 
     qDebug() << "消除个数：" << matches.size();
     int matchCount = matches.size();  // 获取当前匹配的宝石数量
@@ -754,7 +799,6 @@ void Board::generateNewJewels() {
                     // 随机生成一个宝石类型
                     gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
                 }
-
                 m_grid[x][y] = gemType;
 
                     Jewel* gem = new Jewel(x, y, gemType);
@@ -784,16 +828,20 @@ void Board::generateNewJewels() {
 
     connect(generateNewGroup, &QParallelAnimationGroup::finished, this, [=]() {
         qDebug() << "生成完毕";
-
             //若有可消
             emit enqueueTask([=]() {
 
                 if (checkForMatches()) {
 
                     processMatches();
-                } else {
-                    //根据连击播放音效
-                    if(m_combo==6)
+                }
+                else
+                {
+                    if(m_combo>=10)
+                    {
+                        m_mus->sound("start_timi.wav",Play::m_soundVolume);
+                    }
+                    else if(m_combo>=6&&m_combo<10)
                     {
                         m_mus->sound("unbelievable.mp3",Play::m_soundVolume);
                     }
@@ -815,7 +863,6 @@ void Board::generateNewJewels() {
                         m_mus->sound("good.wav",Play::m_soundVolume);
                     }
                     m_combo=0;
-
                     qDebug() << "检测是否僵局";
                     //若无可消,判定是否僵局
                     if(!isAvailableOrNot()) {
@@ -827,9 +874,11 @@ void Board::generateNewJewels() {
                         QTimer::singleShot(2000, this, &Board::updateBoard);
                     }
                 }
+
+
             });
 
-    });
+        });
 
     generateNewGroup->start(QAbstractAnimation::DeleteWhenStopped);
 

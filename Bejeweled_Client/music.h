@@ -16,6 +16,7 @@ public:
 
     void sound(QString string, float volume);
     void stop();
+    void start_random();
     ~music();
 private:
     explicit music();

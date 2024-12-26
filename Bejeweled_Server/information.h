@@ -10,6 +10,18 @@ public:
     int m_LRange;
     //控制随机数右边界（启用）（仅针对联机模式）
     int m_RRange;
+    //对手id
+    QString m_enemyId;
+    //当前用户id
+    QString m_userId;
+
+    QString rankingUserName="";
+
+    QString highScore="";
+
+    QString m_easyPlayerName="";
+
+    int m_saveOrNot=0;
 private:
     information();
 

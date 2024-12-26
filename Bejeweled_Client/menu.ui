@@ -10,8 +10,20 @@
     <height>704</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>48</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/images/media/media/5.png</normaloff>:/images/media/media/5.png</iconset>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LayoutDirection::LeftToRight</enum>
   </property>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
@@ -32,62 +44,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="startGameButton">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>600</y>
-     <width>431</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton {
-    background: #ced1d8;
-    border-style: outset;
-    border-radius: 10px;
-    font-size: 18px;
-}
-QPushButton:pressed {
-    background-color: rgb(224, 0, 0);
-    border-style: inset;
-}
-QPushButton:hover {
-    background-color: rgba(198, 198, 220, 0.6);
-}</string>
-   </property>
-   <property name="text">
-    <string>开始游戏</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="seQuenceButton">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>650</y>
-     <width>411</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton {
-    background: #ced1d8;
-    border-style: outset;
-    border-radius: 10px;
-    font-size: 18px;
-}
-QPushButton:pressed {
-    background-color: rgb(224, 0, 0);
-    border-style: inset;
-}
-QPushButton:hover {
-    background-color: rgba(198, 198, 220, 0.6);
-}</string>
-   </property>
-   <property name="text">
-    <string>排行榜</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="topImageLabel">
    <property name="geometry">
     <rect>
@@ -101,7 +57,329 @@ QPushButton:hover {
     <string/>
    </property>
   </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>460</y>
+     <width>371</width>
+     <height>228</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <item>
+     <widget class="QRadioButton" name="radioButton_2">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>28</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(255, 170, 0)</string>
+      </property>
+      <property name="text">
+       <string>Competitive mode</string>
+      </property>
+      <property name="icon">
+       <iconset resource="resource.qrc">
+        <normaloff>:/images/media/media/2.png</normaloff>:/images/media/media/2.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="radioButton">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>28</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(0, 255, 127)</string>
+      </property>
+      <property name="text">
+       <string>Entertainment mode</string>
+      </property>
+      <property name="icon">
+       <iconset resource="resource.qrc">
+        <normaloff>:/images/media/media/4.png</normaloff>:/images/media/media/4.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="startGameButton">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>18</pointsize>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: #3498db;    /* 按钮背景色 */
+    color: white;                /* 字体颜色 */
+    border-radius: 10px;         /* 圆角 */
+    border: 2px solid #2980b9;   /* 边框 */
+    padding: 5px;                /* 内边距 */
+}
+QPushButton:hover {
+    background-color: #2980b9;   /* 鼠标悬停时背景色 */
+}
+QPushButton:pressed {
+    background-color: #1c5986;   /* 按下时背景色 */
+}</string>
+      </property>
+      <property name="text">
+       <string>START</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="seQuenceButton">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>18</pointsize>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: #3498db;    /* 按钮背景色 */
+    color: white;                /* 字体颜色 */
+    border-radius: 10px;         /* 圆角 */
+    border: 2px solid #2980b9;   /* 边框 */
+    padding: 5px;                /* 内边距 */
+}
+QPushButton:hover {
+    background-color: #2980b9;   /* 鼠标悬停时背景色 */
+}
+QPushButton:pressed {
+    background-color: #1c5986;   /* 按下时背景色 */
+}</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="seQuenceButton_2">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>18</pointsize>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: #3498db;    /* 按钮背景色 */
+    color: white;                /* 字体颜色 */
+    border-radius: 10px;         /* 圆角 */
+    border: 2px solid #2980b9;   /* 边框 */
+    padding: 5px;                /* 内边距 */
+}
+QPushButton:hover {
+    background-color: #2980b9;   /* 鼠标悬停时背景色 */
+}
+QPushButton:pressed {
+    background-color: #1c5986;   /* 按下时背景色 */
+}</string>
+      </property>
+      <property name="text">
+       <string>QUIT</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>140</y>
+     <width>371</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Impact</family>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:rgb(170, 255, 255)</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>4</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="ranking">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>36</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(170, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="rank0">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(170, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="rank1">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(170, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="rank2">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(170, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="rank3">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(170, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="rank4">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(170, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="rank5">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(170, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string>RANKING</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

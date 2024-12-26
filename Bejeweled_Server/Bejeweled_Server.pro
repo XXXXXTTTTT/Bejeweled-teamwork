@@ -40,4 +40,6 @@ RESOURCES += \
     resource.qrc
 
 DISTFILES += \
+
     resources/database.db
+    QMAKE_CXXFLAGS += -fno-inline -fno-builtin
