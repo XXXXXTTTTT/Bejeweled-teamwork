@@ -22,7 +22,10 @@
         <file>resources/10.png</file>
         <file>resources/11.gif</file>
         <file>resources/12.gif</file>
-        
+        <file>media/media/8.gif</file>
+        <file>media/media/8.png</file>
+        <file>media/media/spiral.gif</file>
+        <file>media/media/hint.gif</file>
     </qresource>
     <qresource prefix="/music">
         <file>resources/sound/1.mp3</file>
