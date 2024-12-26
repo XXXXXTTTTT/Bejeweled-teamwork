@@ -190,6 +190,11 @@ void ClientThread::receivedMessage(const QJsonObject& message)
     //注册与登录
     else
     {
+        if(type=="LogIn")
+        {
+            information::instance().rankingUserName = message["rankName"].toString();
+            information::instance().highScore = message["rankScore"].toString();
+        }
         // 发射信号通知界面更新 UI
         emit resultReceived(m_res);
     }

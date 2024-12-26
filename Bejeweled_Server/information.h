@@ -14,6 +14,10 @@ public:
     QString m_enemyId;
     //当前用户id
     QString m_userId;
+
+    QString rankingUserName="";
+
+    QString highScore="";
 private:
     information();
 

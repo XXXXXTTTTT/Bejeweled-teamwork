@@ -10,12 +10,18 @@ public:
     QString m_userName;
     //对手名
     QString m_enemyName;
+    //password
+    QString m_password="";
     //控制随机数左边界（未启用）
     int m_LRange;
     //控制随机数右边界（启用）（仅针对单机模式）
     int m_RRange;
     //对手得分
     int m_enemyScore;
+
+    QString rankingUserName="";
+
+    QString highScore="";
 private:
     information();
 

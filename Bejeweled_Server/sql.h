@@ -34,6 +34,8 @@ public:
 
     //保存玩家游戏记录
     void savePlayerGameRecord(QString name, int score);
+
+    void getTopScores();
 private:
     bool m_connectOrNot;
     //数据库

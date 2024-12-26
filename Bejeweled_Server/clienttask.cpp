@@ -127,6 +127,10 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
 
             //状态改为空闲中
             m_status = 0;
+
+            m_sql->getTopScores();
+            response["rankName"]=information::instance().rankingUserName;
+            response["rankScore"]=information::instance().highScore;
         } else {
             //登入失败
 
@@ -272,6 +276,7 @@ bool ClientTask::matchPlayer(const QString &clientId) {
         json0["res"]=1;
         json0["random"]=r;
 
+
         sendMsg(json0, player1);
         //向对手发送当前匹配到了玩家并传递玩家id
         QJsonObject json;
@@ -279,6 +284,7 @@ bool ClientTask::matchPlayer(const QString &clientId) {
         json["enemyId"] = m_userName;
         json["res"]=1;
         json["random"]=r;
+
 
         sendMsg(json, player2);
 

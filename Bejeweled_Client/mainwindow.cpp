@@ -85,6 +85,7 @@ void MainWindow::on_loginButton_clicked()
     json["name"] = username;
     json["password"] = password;
     information::instance().m_userName=username;
+    information::instance().m_password=password;
     ClientThread::instance().sendMsg(json);
     ClientThread::instance().code=1;
     qDebug()<<"ClientThread::instance().code= "<<ClientThread::instance().code;

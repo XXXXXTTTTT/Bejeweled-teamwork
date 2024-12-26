@@ -1,4 +1,5 @@
 #include "sql.h"
+#include "information.h"
 
 //初始化静态变量
 QReadWriteLock sql::m_lock;
@@ -214,7 +215,7 @@ int sql::canLoginOrNot(QString name, QString password) {
 
 //保存玩家游戏记录
 void sql::savePlayerGameRecord(QString username,int score) {
-    // QWriteLocker locker(&m_lock); // 加写锁
+    QWriteLocker locker(&m_lock); // 加写锁
     QSqlQuery query(m_db);
     int highScore=-1;
     query.prepare("select highScore from userList where username= :username");
@@ -236,6 +237,23 @@ void sql::savePlayerGameRecord(QString username,int score) {
             qDebug() << "Update failed:" << query.lastError();
         }
     }
+}
+void sql::getTopScores()
+{
+    QSqlQuery query(m_db);
+    query.exec("SELECT * FROM userList ORDER BY highScore DESC LIMIT 5");
+    QString username="";
+    QString highScore="";
+    while (query.next()) {
+
+        username += query.value("username").toString();
+        highScore += query.value("highScore").toString();  // 假设有 score 列
+        username += " ";
+        highScore += " ";
+        qDebug() << "ID:" << username << " Score:" << highScore;
+    }
+    information::instance().highScore=highScore;
+    information::instance().rankingUserName=username;
 }
 
 //保存游戏记录

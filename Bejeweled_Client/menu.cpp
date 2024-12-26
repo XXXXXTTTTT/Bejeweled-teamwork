@@ -131,8 +131,6 @@ void Menu::on_startGameButton_clicked()
     QJsonObject json;
     json["type"] = "Match";
     ClientThread::instance().sendMsg(json);
-
-
     connect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
 
     // music::instance()->stop();
@@ -141,8 +139,33 @@ void Menu::on_startGameButton_clicked()
 void Menu::on_seQuenceButton_clicked()
 {
     music::instance()->sound("click.wav",1);
+    QStringList nameParts = information::instance().rankingUserName.split(" ", Qt::SkipEmptyParts); // 按空格分割
+
+    // 输出每个分割后的部分
+    for (const QString &part : nameParts) {
+        qDebug() << part;
+    }
+    QStringList scoreParts = information::instance().highScore.split(" ", Qt::SkipEmptyParts); // 按空格分割
+
+    // 输出每个分割后的部分
+    for (const QString &part : scoreParts) {
+        qDebug() << part;
+    }
+    m_ui->ranking->show();
+    m_ui->rank0->setText("rank:\tid\t\tscore");
+    m_ui->rank0->show();
+    m_ui->rank1->setText("1:\t"+nameParts[0]+"\t\t"+scoreParts[0]);
+    m_ui->rank1->show();
+    m_ui->rank2->setText("2:\t"+nameParts[1]+"\t\t"+scoreParts[1]);
+    m_ui->rank2->show();
+    m_ui->rank3->setText("3:\t"+nameParts[2]+"\t\t"+scoreParts[2]);
+    m_ui->rank3->show();
+    m_ui->rank4->setText("4:\t"+nameParts[3]+"\t\t"+scoreParts[3]);
+    m_ui->rank4->show();
+    m_ui->rank5->setText("5:\t"+nameParts[4]+"\t\t"+scoreParts[4]);
+    m_ui->rank5->show();
     // 排行榜按钮点击事件
-    QMessageBox::information(this, "排行榜", "排行榜功能暂未实现");
+    // QMessageBox::information(this, "排行榜", "排行榜功能暂未实现");
 }
 
 void Menu::onResultReceived(QString enemyId)
@@ -176,6 +199,14 @@ void Menu::hideUiComponents()
     m_ui->radioButton->hide();
     m_ui->radioButton_2->hide();
     m_ui->label_2->hide();
+    m_ui->ranking->hide();
+    m_ui->rank1->hide();
+    m_ui->rank2->hide();
+    m_ui->rank3->hide();
+    m_ui->rank4->hide();
+    m_ui->rank5->hide();
+    m_ui->rank0->hide();
+
 }
 
 void Menu::showUiComponents()

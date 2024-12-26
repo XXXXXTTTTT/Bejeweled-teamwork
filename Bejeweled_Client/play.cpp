@@ -209,6 +209,13 @@ void Play::checkGameOver(){
             music::instance()->sound("start.wav",m_soundVolume);
             QMessageBox::information(this, "游戏结束", "时间到了！平局！");
         }
+        // music::instance()->m_audioOutput->setVolume(0);
+        music::instance()->m_mediaPlayer->stop();
+        QJsonObject json0;
+        json0["type"] = "LogIn";
+        json0["name"] = information::instance().m_userName;
+        json0["password"] =information::instance().m_password;
+        ClientThread::instance().sendMsg(json0);
         Menu *menu=new Menu();
         menu->show();
         this->close();
