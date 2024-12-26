@@ -5,7 +5,7 @@
 #include <QTextEdit>
 #include <QMutex>
 
-QT_BEGIN_NAMESPACE
+    QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
@@ -19,14 +19,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     static void setText(const QString &msg);
-
+    // void myMsgOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 private slots:
     void on_clearButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     static QTextEdit *debugTextEdit;
-    static QMutex mutex;
+    static QMutex m_mutex;
 };
 
 #endif // MAINWINDOW_H

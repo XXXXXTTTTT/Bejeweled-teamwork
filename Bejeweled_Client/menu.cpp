@@ -11,6 +11,7 @@
 #include <QPainter>
 #include <music.h>
 
+
 Menu::Menu(QWidget *parent) :
     QWidget(parent),
     m_ui(new Ui::Menu),
@@ -126,13 +127,25 @@ void Menu::on_startGameButton_clicked()
 
 
     // 匹配对手
+    if(information::instance().m_RRange==8)
     QMessageBox::information(this, "匹配中", "等待对手加入");
 
-    QJsonObject json;
-    json["type"] = "Match";
-    ClientThread::instance().sendMsg(json);
-    connect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
-
+    if(information::instance().m_RRange==8)
+    {
+        QJsonObject json;
+        json["type"] = "Match";
+        ClientThread::instance().sendMsg(json);
+        connect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
+    }
+    else
+    {
+        QJsonObject json;
+        json["type"] = "mode";
+        json["name"]=information::instance().m_userName;
+        json["mode"]=information::instance().m_RRange;
+        ClientThread::instance().sendMsg(json);
+        connect(&ClientThread::instance(), &ClientThread::matchReceived, this, &Menu::onResultReceived);
+    }
     // music::instance()->stop();
 }
 
@@ -205,6 +218,7 @@ void Menu::hideUiComponents()
     m_ui->rank4->hide();
     m_ui->rank5->hide();
     m_ui->rank0->hide();
+    m_ui->num->hide();
 
 }
 
@@ -216,6 +230,7 @@ void Menu::showUiComponents()
     m_ui->radioButton->show();
     m_ui->radioButton_2->show();
     m_ui->label_2->show();
+    m_ui->num->show();
 }
 
 
@@ -247,9 +262,16 @@ void Menu::on_radioButton_toggled(bool checked)
     music::instance()->sound("click.wav",1);
     if(checked)
     {
-        information::instance().m_RRange=6;
+        information::instance().m_RRange=m_ui->num->value()+1;
     }
     qDebug()<<information::instance().m_RRange;
 
+}
+void Menu::on_num_valueChanged(int arg1)
+{
+    if(m_ui->radioButton->isChecked()==true)
+    {
+        information::instance().m_RRange=m_ui->num->value()+1;
+    }
 }
 

@@ -9,6 +9,7 @@ namespace Ui {
 class Menu;
 }
 
+//游戏主界面
 class Menu : public QWidget
 {
     Q_OBJECT
@@ -34,6 +35,7 @@ private slots:
     void on_radioButton_toggled(bool checked);
 
 private:
+    void on_num_valueChanged(int arg1);
     void onResultReceived(QString enemyId); // 处理匹配结果
     void hideUiComponents(); // 隐藏 UI 组件
     void showUiComponents(); // 显示 UI 组件

@@ -8,22 +8,17 @@
 #include <QDateTime>
 
 QTextEdit *MainWindow::debugTextEdit = nullptr;
-QMutex MainWindow::mutex;
+QMutex MainWindow::m_mutex;
 void myMsgOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    static QMutex mutex;
     Q_UNUSED(type);
     Q_UNUSED(context);
-
-    mutex.lock(); // 锁
 
     // 写入
     MainWindow::setText(msg);
     QByteArray localMsg = msg.toLocal8Bit();
     fprintf(stderr, "%s\n", localMsg.constData());
     fflush(stderr);
-
-    mutex.unlock();
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -81,7 +76,7 @@ MainWindow::~MainWindow()
 }
 void MainWindow::setText(const QString &msg)
 {
-    QMutexLocker locker(&mutex); // 加锁，确保线程安全
+    QMutexLocker locker(&m_mutex); // 加锁，确保线程安全
 
     if (debugTextEdit) {
         // 消息追加
@@ -89,6 +84,7 @@ void MainWindow::setText(const QString &msg)
         QScrollBar *scrollBar = debugTextEdit->verticalScrollBar();
         scrollBar->setValue(scrollBar->maximum());
     }
+
 }
 void MainWindow::on_clearButton_clicked()
 {

@@ -249,13 +249,13 @@ void ClientTask::sendMsg(const QJsonObject& message, QTcpSocket* targetSocket) {
 }
 
 //添加客户套件
- void ClientTask::addClient(const QString &clientId, QTcpSocket *socket) {
+void ClientTask::addClient(const QString &clientId, QTcpSocket *socket) {
     QMutexLocker locker(m_mutex);
     m_clients[clientId] = socket;
 }
 
 //移除客户套件
- void ClientTask::removeClient(const QString &clientId) {
+void ClientTask::removeClient(const QString &clientId) {
     QMutexLocker locker(m_mutex);
     m_clients.remove(clientId);
     if (m_waitingPlayer == clientId) {
@@ -308,24 +308,6 @@ bool ClientTask::matchPlayer(const QString &clientId) {
 
         sendMsg(json, player2);
 
-
-        // if (player1 && player2) {
-        //     qDebug() << "Matched players:" << clientId << "and" << m_enemyId;
-
-        //     // 创建双向信号连接并记录
-        //     QMetaObject::Connection conn1 = QObject::connect(player1, &QTcpSocket::readyRead, player2, [&]() {
-        //         qDebug() <<"player2->write(player1->readAll());";
-        //         player2->write(player1->readAll());
-        //     });
-        //     QMetaObject::Connection conn2 = QObject::connect(player2, &QTcpSocket::readyRead, player1, [&]() {
-        //         qDebug() <<"player1->write(player2->readAll());";
-        //         player1->write(player2->readAll());
-        //     });
-
-        //     // 保存连接信息
-        //     m_playerConnections[clientId] = conn1;
-        //     m_playerConnections[m_enemyId] = conn2;
-        // }
         return true;
     }
 }
@@ -349,5 +331,3 @@ void ClientTask::endGame(const QString &clientId, const QString &opponentId) {
 
     qDebug() << "Game ended between" << clientId << "and" << opponentId;
 }
-
-

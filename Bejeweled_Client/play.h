@@ -5,11 +5,13 @@
 #include "Jewel.h"
 #include "board.h"
 QT_BEGIN_NAMESPACE
+
 namespace Ui {
 class Play;
 }
 QT_END_NAMESPACE
 
+//游戏游玩界面
 class Play : public QMainWindow
 {
     Q_OBJECT
@@ -29,7 +31,6 @@ public:
     void statusCursorCchanger(int c);            // 信号
 
 private slots:
-    //void updateScore(int score);      //更新得分
     void updateScoreGUI(int score);    //将更新的得分输出在ui
     void updateCountdown();  // 更新倒计时
     void checkGameOver();    // 检查游戏结束
@@ -47,8 +48,6 @@ private:
     static Play* m_widget;
     QAction *m_hint;
 
-    //int m_currentChain = 0;           // 当前连锁反应次数
-    //int m_roundScore = 0;             // 当前回合的得分
     int m_score;                    //自己得分
     int m_totalScore = 0;  // 总得分
     bool m_begin = false;
@@ -59,9 +58,5 @@ private:
 
     QTimer *m_timer;       // 定时器
     int remainingTime;   // 剩余时间（秒）
-    // 基本得分和奖励
-    //const int BASE_SCORE = 10;
-    //const int FOUR_MATCH_BONUS = 50;  // 四连的奖励分数
-    //const int FIVE_MATCH_BONUS = 100;  // 五连的奖励分数
 };
 #endif // PLAY_H
