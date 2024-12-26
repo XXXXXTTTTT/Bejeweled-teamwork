@@ -188,7 +188,6 @@ void Menu::onStartGameGifFinished()
     Play *play = new Play();
     play->show();
     this->close();
-
 }
 
 void Menu::hideUiComponents()
