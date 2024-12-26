@@ -126,27 +126,6 @@ Play::~Play()
     delete m_ui;
 }
 
-// void Play::startButtonClicked()
-// {
-//     // 处理点击事件，例如调用 board 的生成宝石方法
-//     m_board->generateBoard();
-// }
-
-// void Play::updateButtonClicked() {
-//     // 触发 Board 类的 updateBoard 方法，更新棋盘
-//     m_board->updateBoard();
-// }
-
-// void Play::giveHintButtonClicked() {
-//     // 触发 Board 类的 giveHint 方法，给出提示
-//     m_board->giveHint();
-// }
-
-// void Play::updateziji()
-// {
-//     count++;  // 增加数字
-//     m_ui->ziji->display(count); // 更新显示的数字
-// }
 
 void Play::on_horizontalSlider_valueChanged(int value)
 {
@@ -159,6 +138,7 @@ void Play::on_horizontalSlider_2_sliderMoved(int position)
 
 
 }
+
 void Play::updateScoreGUI(int score) {
     qDebug() << "score is :" << score;
     m_totalScore += score;  // 累加得分到总得分

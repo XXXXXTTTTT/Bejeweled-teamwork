@@ -29,8 +29,6 @@ public:
     void statusCursorCchanger(int c);            // 信号
 
 private slots:
-    void startButtonClicked();
-    void updateButtonClicked();
     //void updateScore(int score);      //更新得分
     void updateScoreGUI(int score);    //将更新的得分输出在ui
     void updateCountdown();  // 更新倒计时

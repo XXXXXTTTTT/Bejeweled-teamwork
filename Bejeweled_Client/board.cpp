@@ -42,6 +42,7 @@ Board::Board(QString r0, QGraphicsScene *sc)
     // }
 
     generateBoard(r);  // 生成棋盘
+    // generateBoard();
     // for (int i = 0; i < 8; ++i) {
     //     std::vector<int> row;
     //     for (int k = 0; k < 8; ++k) {
@@ -59,14 +60,14 @@ Board::Board(QString r0, QGraphicsScene *sc)
     // }
 
     //若无可消,判定是否僵局
-    if(!isAvailableOrNot()) {
+    // if(!isAvailableOrNot()) {
 
-        // 弹出提示框告诉玩家棋盘进入僵局
-        QMessageBox::information(nullptr, "游戏提示", "棋盘已进入僵局！请等待片刻...", QMessageBox::Ok);
+    //     // 弹出提示框告诉玩家棋盘进入僵局
+    //     QMessageBox::information(nullptr, "游戏提示", "棋盘已进入僵局！请等待片刻...", QMessageBox::Ok);
 
-        // 在 2 秒后执行棋盘更新
-        QTimer::singleShot(2000, this, &Board::updateBoard);
-    }
+    //     // 在 2 秒后执行棋盘更新
+    //     QTimer::singleShot(2000, this, &Board::updateBoard);
+    // }
 
 }
 
@@ -77,7 +78,36 @@ Board::~Board() {
 }
 
 void Board::generateBoard(QString &r){
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            int gemType;
+            if(!r.isEmpty())
+            {
+                gemType = r.at(0).digitValue();
+                r.remove(0,1);
+            }
+            else
+            {
+                // 随机生成一个宝石类型
+                gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+            }
+            // 需要检查该宝石是否符合规则
+            while (checkForInvalidPlacement(i, j, gemType)) {
+                if(!r.isEmpty())
+                {
+                    gemType = r.at(0).digitValue();
+                    r.remove(0,1);
+                }
+                else
+                {
+                    // 随机生成一个宝石类型
+                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
+                }
+            }
 
+            setNewJewelInformation(i,j,gemType, 0);
+        }
+    }
 }
 
 
