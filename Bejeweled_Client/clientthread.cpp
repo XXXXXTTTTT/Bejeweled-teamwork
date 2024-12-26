@@ -41,32 +41,6 @@ void ClientThread::run(){
 
     qDebug() << "Connected to server";
 
-    // //测试
-
-
-    // QJsonObject json1;
-    // json1["type"] = "MSG";
-
-    // json1["content"] = "你好";
-    // sendMsg(json1);
-
-    // QJsonObject json2;
-    // json2["type"] = "LogIn";
-
-    // json2["name"] = "wyq";
-
-    // json2["password"] = "111";
-    // sendMsg(json2);
-
-    // QJsonObject json3;
-    // json3["type"] = "LogIn";
-
-    // json3["name"] = "XXXTTT";
-
-    // json3["password"] = "345678";
-    // sendMsg(json3);
-
-    // 进入事件循环
     exec();
 }
 

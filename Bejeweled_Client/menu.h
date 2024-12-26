@@ -9,6 +9,7 @@ namespace Ui {
 class Menu;
 }
 
+//游戏主界面
 class Menu : public QWidget
 {
     Q_OBJECT

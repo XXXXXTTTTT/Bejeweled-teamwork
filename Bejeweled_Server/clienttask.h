@@ -10,7 +10,7 @@
 #include <QMutex>
 #include <QDebug>
 #include <QThread>
-#include "sql.h"
+#include <sql.h>
 
 //处理客户端任务
 class ClientTask : public QRunnable

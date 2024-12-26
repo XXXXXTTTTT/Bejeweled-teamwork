@@ -9,6 +9,7 @@ namespace Ui {
 class Dialog;
 }
 
+//注册登入
 class Dialog : public QDialog
 {
     Q_OBJECT

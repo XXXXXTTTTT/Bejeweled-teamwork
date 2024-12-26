@@ -7,17 +7,23 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    //有bug弃用
+
     // MainWindow w;
 
 
-
+    // w.show();
 
 
 
     Server server;
+
+
+
     server.startServer(12345);
 
 
-    // w.show();
+
     return a.exec();
 }

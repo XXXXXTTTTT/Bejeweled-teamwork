@@ -19,22 +19,6 @@ Jewel::Jewel(int x, int y, int type,QGraphicsPixmapItem *parent)
     // 根据宝石类型选择静态图片
     m_pixmap = QPixmap(":/images/media/media/" + QString::number(m_type) + ".png");
 
-    //若之前已经初始化过则先删除之前的
-    // if (m_movie) {
-    //     m_movie->stop();
-    //     disconnect(m_movie, &QMovie::frameChanged, this, nullptr);
-    //     disconnect(m_movie, &QMovie::finished, this, nullptr);
-    //     delete m_movie;  // 确保删除动画对象
-    // }
-
-    // if(m_hint) {
-    //     m_hint->stop();
-    //     disconnect(m_hint, &QMovie::frameChanged, this, nullptr);
-    //     disconnect(m_hint, &QMovie::finished, this, nullptr);
-    //     delete m_hint;  // 确保删除动画对象
-    // }
-
-
     //图片选择时播放的.gif
     m_movie = new QMovie(":/images/media/media/" + QString::number(m_type) + ".gif");
     // m_movie = new QMovie(":/images/media/media/blueR.gif");
@@ -84,23 +68,10 @@ Jewel::Jewel(int x, int y, int type,QGraphicsPixmapItem *parent)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable, false);  // 禁止移动宝石
 
-    // 计算宝石的位置
-    // if (where == 1) {
-    //     setPos(67 * (y + 1) + 175, 67 * (x + 1) + 36);
-    // } else {
-    //     setPos(67 * (y + 1) + 879, 67 * (x + 1) + 36);
-    // }
-
-
-    // 连接信号：每次 GIF 动画的帧变化时，调用 onFrameChanged
-    // connect(m_movie, &QMovie::frameChanged, this, &Jewel::onFrameChanged);
-
 
     // 设置初始为静态显示
     setStaticDisplay();
 
-    //初始化
-    // initValue();
     // 设置变换原点为中心
     setTransformOriginPoint(boundingRect().center());
 }
@@ -130,7 +101,6 @@ void Jewel::initValue(){
 
     //图片选择时播放的.gif
     m_movie = new QMovie(":/images/media/media/" + QString::number(m_type) + ".gif");
-    // m_movie = new QMovie(":/images/media/media/blueR.gif");
 
     //图片被选择时的框体
     m_selector = QPixmap(":/images/media/media/selector.png");
@@ -176,17 +146,6 @@ void Jewel::initValue(){
     // 设置宝石为可选状态并可以接收鼠标点击事件
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable, false);  // 禁止移动宝石
-
-    // 计算宝石的位置
-    // if (where == 1) {
-    //     setPos(67 * (y + 1) + 175, 67 * (x + 1) + 36);
-    // } else {
-    //     setPos(67 * (y + 1) + 879, 67 * (x + 1) + 36);
-    // }
-
-
-    // 连接信号：每次 GIF 动画的帧变化时，调用 onFrameChanged
-    // connect(m_movie, &QMovie::frameChanged, this, &Jewel::onFrameChanged);
 
 
     // 设置初始为静态显示

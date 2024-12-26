@@ -4,9 +4,22 @@
 #include <QScrollBar>
 #include <QPalette>
 #include <QPixmap>
+#include <QMutex>
+#include <QDateTime>
 
-// 初始化静态成员
 QTextEdit *MainWindow::debugTextEdit = nullptr;
+QMutex MainWindow::m_mutex;
+void myMsgOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    Q_UNUSED(type);
+    Q_UNUSED(context);
+
+    // 写入
+    MainWindow::setText(msg);
+    QByteArray localMsg = msg.toLocal8Bit();
+    fprintf(stderr, "%s\n", localMsg.constData());
+    fflush(stderr);
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,23 +27,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 设置背景图片
-    QPixmap background(":/image/resources/image/2.jpg"); // 替换为你的图片路径
-    background = background.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation); // 缩放图片以覆盖整个窗口
+    // 设置背景
+    QPixmap background(":/image/resources/image/2.jpg");
+    background = background.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QPalette palette;
     palette.setBrush(QPalette::Window, background);
     this->setPalette(palette);
 
     // 获取 QTextEdit 控件
     debugTextEdit = ui->debugTextEdit;
+    qInstallMessageHandler(myMsgOutput);
 
-    // 安装自定义消息处理器
-    qInstallMessageHandler(customMessageHandler);
-
-    // 设置 QTextEdit 的滚动条始终可见
-    debugTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-    // 设置 QTextEdit 的样式表
+    // 设置样式表
     debugTextEdit->setStyleSheet(
         "QTextEdit {"
         "   color: white;" // 文字颜色为白色
@@ -43,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
         "}"
         );
 
-
+    // 设置按钮的样式表
     ui->clearButton->setStyleSheet(
         "QPushButton {"
         "   color: white;" // 文字颜色为白色
@@ -59,8 +67,6 @@ MainWindow::MainWindow(QWidget *parent)
         "   background: rgba(255, 255, 255, 0.2);" // 按钮按下时的背景颜色
         "}"
         );
-
-    // 连接按钮的点击事件
     connect(ui->clearButton, &QPushButton::clicked, this, &MainWindow::on_clearButton_clicked);
 }
 
@@ -68,30 +74,18 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-// 自定义消息处理器实现
-void MainWindow::customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void MainWindow::setText(const QString &msg)
 {
-    Q_UNUSED(type);
-    Q_UNUSED(context);
+    QMutexLocker locker(&m_mutex); // 加锁，确保线程安全
 
     if (debugTextEdit) {
-        // 将消息追加到 QTextEdit 中
+        // 消息追加
         debugTextEdit->append(msg);
-
-        // 自动滚动到底部
         QScrollBar *scrollBar = debugTextEdit->verticalScrollBar();
         scrollBar->setValue(scrollBar->maximum());
     }
 
-    // 保留默认的 qDebug 输出到控制台
-    QByteArray localMsg = msg.toLocal8Bit();
-    fprintf(stderr, "%s\n", localMsg.constData());
-    fflush(stderr);
-
 }
-
-// 清空 QTextEdit 内容的槽函数
 void MainWindow::on_clearButton_clicked()
 {
     if (debugTextEdit) {

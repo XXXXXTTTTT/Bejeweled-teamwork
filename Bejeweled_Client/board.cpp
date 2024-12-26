@@ -26,38 +26,10 @@ Board::Board(QString r0, QGraphicsScene *sc)
 
     //连接对应信号和槽函数
     connect(this, &Board::enqueueTask, m_logicWorker, &LogicWorker::addTask);
-    // connect(m_logicWorker, &LogicWorker::taskFinished, this, &Board::handleTaskFinished);
 
     m_logicThread->start();
 
-    // 将传入的数组转换为vector
-    // for (int i = 0; i < 8; ++i) {
-    //     std::vector<int> row;
-    //     for (int k = 0; k < 8; ++k) {
-    //         row.push_back(j[i][k]);
-    //     }
-    //     m_grid.push_back(row);
-    // }
-
     generateBoard(information::instance().m_r);  // 生成棋盘
-    // generateBoard();
-    // for (int i = 0; i < 8; ++i) {
-    //     std::vector<int> row;
-    //     for (int k = 0; k < 8; ++k) {
-    //         row.push_back(j[i][k]);
-    //         // 创建宝石对象并设置坐标
-    //         Jewel* gem = new Jewel(i, k, j[i][k]);
-    //         connect(gem, &Jewel::jewelSwap, this, &Board::enqueueSwap);
-    //         gem->setPos(QPointF(i * 67 + offsetX, k * 68 + offsetY));
-    //         m_scene->addItem(gem);  // 将宝石添加到场景中
-    //         m_allJewelItems[i][k] = gem;
-
-    //     }
-    //     m_grid.push_back(row);
-
-    // }
-
-    // generateBoard();  // 生成棋盘
 
     //若无可消,判定是否僵局
     if(!isAvailableOrNot()) {
@@ -68,33 +40,6 @@ Board::Board(QString r0, QGraphicsScene *sc)
         // 在 2 秒后执行棋盘更新
         QTimer::singleShot(2000, this, &Board::updateBoard);
     }
-
-    // generateBoard(r);  // 生成棋盘
-    // for (int i = 0; i < 8; ++i) {
-    //     std::vector<int> row;
-    //     for (int k = 0; k < 8; ++k) {
-    //         row.push_back(j[i][k]);
-    //         // 创建宝石对象并设置坐标
-    //         Jewel* gem = new Jewel(i, k, j[i][k]);
-    //         connect(gem, &Jewel::jewelSwap, this, &Board::enqueueSwap);
-    //         gem->setPos(QPointF(i * 67 + offsetX, k * 68 + offsetY));
-    //         m_scene->addItem(gem);  // 将宝石添加到场景中
-    //         m_allJewelItems[i][k] = gem;
-
-    //     }
-    //     m_grid.push_back(row);
-
-    // }
-
-    //若无可消,判定是否僵局
-    // if(!isAvailableOrNot()) {
-
-    //     // 弹出提示框告诉玩家棋盘进入僵局
-    //     QMessageBox::information(nullptr, "游戏提示", "棋盘已进入僵局！请等待片刻...", QMessageBox::Ok);
-
-    //     // 在 2 秒后执行棋盘更新
-    //     QTimer::singleShot(2000, this, &Board::updateBoard);
-    // }
 
 }
 
@@ -124,42 +69,6 @@ void Board::generateBoard(QString &r){
                 {
                     gemType = r.at(0).digitValue();
                     r.remove(0,1);
-                }
-                else
-                {
-                    // 随机生成一个宝石类型
-                    gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
-                }
-            }
-
-            setNewJewelInformation(i,j,gemType, 0);
-        }
-    }
-}
-
-
-void Board::generateBoard() {
-
-
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            int gemType;
-            if(!information::instance().m_r.isEmpty())
-            {
-                gemType = information::instance().m_r.at(0).digitValue();
-                information::instance().m_r.remove(0,1);
-            }
-            else
-            {
-                // 随机生成一个宝石类型
-                gemType = QRandomGenerator::global()->bounded(1, information::instance().m_RRange);  // 随机生成1到7之间的宝石类型
-            }
-            // 需要检查该宝石是否符合规则
-            while (checkForInvalidPlacement(i, j, gemType)) {
-                if(!information::instance().m_r.isEmpty())
-                {
-                    gemType = information::instance().m_r.at(0).digitValue();
-                    information::instance().m_r.remove(0,1);
                 }
                 else
                 {
@@ -225,6 +134,10 @@ void Board::updateBoard() {
         qDebug() << "任务队列未完成，阻止手动重置操作";
         return;
     }
+
+    //消耗100分来强制重置棋盘
+    emit scoreUpdated(-100);
+
 
     // 加锁范围，保护 m_grid 的一致性
     QMutexLocker locker(&m_mutex);
@@ -877,15 +790,6 @@ void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
     qDebug() << "消除个数：" << matches.size();
 
 
-    // if(m_combo<6&&matches.size()>=9)
-    // {
-    //     m_combo++;
-    // }
-    // if(m_combo<6)
-    // {
-    //     m_combo++;
-    // }
-    // m_mus->sound("combo_"+ QString::number(m_combo)+".wav",Play::m_soundVolume);
 
     QParallelAnimationGroup* deleteGroup = new QParallelAnimationGroup(this);
 
@@ -1210,49 +1114,15 @@ void Board::giveHint() {
     }
 
     if(isAvailableOrNot()) {
+        //若成功则消耗50分来换取提示
+        emit scoreUpdated(-50);
+
         m_allJewelItems[m_currAvailablePos.first][m_currAvailablePos.second]->DrawHint();
     }
 
 }
-//int Board::getEli(){
-//    return matches.size();
-//}
-/*
-void Board::updateScore(int matchCount) {
-    matchCount = Eli;
-    qDebug() << "Eli is " << Eli;
-    // 调用分数计算函数来更新得分
-    calculateScore(matchCount);
-}
 
-void Board::calculateScore(int matchCount) {
-    matchCount = getEli();
-    int scoreIncrement = 0;
-
-    // 每消除一个宝石加基本得分
-    scoreIncrement += matchCount * BASE_SCORE;
-
-    // 如果有连锁反应，额外加分
-    if (currentChain > 0) {
-        scoreIncrement += currentChain * CHAIN_BONUS;
-    }
-
-    // 如果是四连或五连消除，加上特殊奖励
-    if (matchCount == 4) {
-        scoreIncrement += FOUR_MATCH_BONUS;
-    } else if (matchCount == 5) {
-        scoreIncrement += FIVE_MATCH_BONUS;
-    }
-
-    // 更新总得分
-    m_myscore += scoreIncrement;
-
-    qDebug() << "myscore is " << m_myscore;
-
-    // 发射分数更新信号
-    emit scoreUpdated(m_myscore);
-}
-*/
+//计算得分
 void Board::calculateScore(int matchCount, bool isChain) {
     const int BASE_SCORE = 10;  // 每个宝石的基本分数
     int score = 0;

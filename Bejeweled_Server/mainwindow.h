@@ -3,8 +3,9 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
+#include <QMutex>
 
-QT_BEGIN_NAMESPACE
+    QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
@@ -17,16 +18,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    // 自定义消息处理器
-    static void customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-
+    static void setText(const QString &msg);
+    // void myMsgOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 private slots:
-    void on_clearButton_clicked(); // 清空 QTextEdit 内容的槽函数
+    void on_clearButton_clicked();
 
 private:
     Ui::MainWindow *ui;
-    static QTextEdit *debugTextEdit; // 用于显示调试信息的 QTextEdit
+    static QTextEdit *debugTextEdit;
+    static QMutex m_mutex;
 };
 
 #endif // MAINWINDOW_H

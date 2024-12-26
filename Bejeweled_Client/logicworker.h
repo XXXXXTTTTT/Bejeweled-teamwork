@@ -6,6 +6,7 @@
 #include <functional>
 #include <QTimer>
 
+//游戏处理逻辑管理类
 class LogicWorker : public QObject {
     Q_OBJECT
 public:
