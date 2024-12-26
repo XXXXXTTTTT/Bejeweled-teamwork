@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>956</width>
-    <height>790</height>
+    <height>704</height>
    </rect>
   </property>
   <property name="font">
@@ -62,8 +62,8 @@
     <rect>
      <x>230</x>
      <y>460</y>
-     <width>353</width>
-     <height>304</height>
+     <width>371</width>
+     <height>228</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -75,11 +75,8 @@
       <property name="font">
        <font>
         <family>Impact</family>
-        <pointsize>24</pointsize>
+        <pointsize>28</pointsize>
        </font>
-      </property>
-      <property name="cursor">
-       <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="styleSheet">
        <string notr="true">color:rgb(255, 170, 0)</string>
@@ -103,88 +100,30 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="spacing">
-       <number>1</number>
+     <widget class="QRadioButton" name="radioButton">
+      <property name="font">
+       <font>
+        <family>Impact</family>
+        <pointsize>28</pointsize>
+       </font>
       </property>
-      <item>
-       <widget class="QRadioButton" name="radioButton">
-        <property name="font">
-         <font>
-          <family>Impact</family>
-          <pointsize>24</pointsize>
-         </font>
-        </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color:rgb(0, 255, 127)</string>
-        </property>
-        <property name="text">
-         <string>user-defined mode</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resource.qrc">
-          <normaloff>:/images/media/media/4.png</normaloff>:/images/media/media/4.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="num">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QSpinBox: {
-    background-color: #3498db;    /* 按钮背景色 */
-    color: white;                /* 字体颜色 */
-    border-radius: 10px;         /* 圆角 */
-    border: 2px solid #2980b9;   /* 边框 */
-    padding: 5px;                /* 内边距 */
-}
-QSpinBox:hover {
-    background-color: #2980b9;   /* 鼠标悬停时背景色 */
-}
-QSpinBox:pressed {
-    background-color: #1c5986;   /* 按下时背景色 */
-}</string>
-        </property>
-        <property name="minimum">
-         <number>3</number>
-        </property>
-        <property name="maximum">
-         <number>7</number>
-        </property>
-        <property name="value">
-         <number>6</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+      <property name="styleSheet">
+       <string notr="true">color:rgb(0, 255, 127)</string>
+      </property>
+      <property name="text">
+       <string>Entertainment mode</string>
+      </property>
+      <property name="icon">
+       <iconset resource="resource.qrc">
+        <normaloff>:/images/media/media/4.png</normaloff>:/images/media/media/4.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="startGameButton">
@@ -214,10 +153,6 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>START</string>
-      </property>
-      <property name="icon">
-       <iconset resource="resource.qrc">
-        <normaloff>:/images/media/media/3.png</normaloff>:/images/media/media/3.png</iconset>
       </property>
      </widget>
     </item>
@@ -250,10 +185,6 @@ QPushButton:pressed {
       <property name="text">
        <string>RANKING</string>
       </property>
-      <property name="icon">
-       <iconset resource="resource.qrc">
-        <normaloff>:/images/media/media/3.png</normaloff>:/images/media/media/3.png</iconset>
-      </property>
      </widget>
     </item>
     <item>
@@ -284,10 +215,6 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>QUIT</string>
-      </property>
-      <property name="icon">
-       <iconset resource="resource.qrc">
-        <normaloff>:/images/media/media/3.png</normaloff>:/images/media/media/3.png</iconset>
       </property>
      </widget>
     </item>
@@ -347,9 +274,6 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>ranking</string>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="resource.qrc">:/images/media/media/3.png</pixmap>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>

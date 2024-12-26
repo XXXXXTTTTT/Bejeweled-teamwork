@@ -146,13 +146,13 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
 
         if(res == 1) {
             //注册成功
+
         }
         else if(res==0)
         {
             // 用户名已存在
         }
     } else if(type.compare("Match") == 0) {
-        information::instance().m_RRange= 8;
         int res =matchPlayer(m_currUuid);
         response["type"] = "Match";
         response["res"] = res;
@@ -183,12 +183,21 @@ void ClientTask::dealWithMsg(const QJsonObject& message) {
     else if(type.compare("mode") == 0) {
         //改模式
         response["type"] = "mode";
-
+        response["mode"] = message["mode"];
         information::instance().m_RRange= message["mode"].toInt();
         QString r;
         for(int i=0;i<1000;i++)
         {
             r+=QString::number(QRandomGenerator::global()->bounded(1, information::instance().m_RRange));
+        }
+        if(information::instance().m_easyPlayerName=="")
+        {
+            information::instance().m_easyPlayerName=message["name"].toString();
+            information::instance().m_saveOrNot++;
+        }
+        else if(information::instance().m_saveOrNot>0)
+        {
+            information::instance().m_saveOrNot=2;
         }
         response["random"]=r;
     }

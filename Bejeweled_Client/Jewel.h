@@ -32,9 +32,11 @@ private:
     int m_x;        //当前宝石的x坐标
     int m_y;        //当前宝石的y坐标
     bool m_choosed; // 是否被选中
+    bool m_removing; //是否在被消除
     QPixmap m_pixmap; // 宝石静态图像
     QMovie *m_movie;  // 用于显示gif动图
     QPixmap m_selector; //宝石被选中时显示的框体
+    QMovie *m_hint; //提示时显示的.gif
     qreal m_opacity = 1.0; // 默认完全不透明
 
     //当前被选中的宝石
@@ -57,6 +59,8 @@ public:
     int getY(){return m_y;}
 
     void setXY(int x, int y) {m_x = x, m_y = y;}
+
+
     //实现动画所需函数
 
     //返回位置
@@ -78,6 +82,8 @@ public:
     void setScale(qreal scaleFactor); // 设置
 
 
+    //属性设置
+    void initValue();
     //设置为静态图片显示
     void setStaticDisplay();
     //设置为动态图片显示
@@ -92,12 +98,16 @@ public:
     // QGraphicsItem 的纯虚函数：返回项目的边界矩形
     QRectF boundingRect() const override;
 
+    //设置选中区域为整个矩形
+    QPainterPath shape() const override;
     // 自定义绘制函数，用于绘制宝石
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     // 鼠标点击事件处理函数
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
+    //显示提示
+    void DrawHint();
     //判断当前操作是否为交换操作(两点是否满足交换)
     // static bool isSwapOrNot(int x1, int y1, int x2, int y2);
 signals:
@@ -106,9 +116,7 @@ signals:
     void opacityChanged();//动画修改透明度需要使用
 
     void scaleChanged(); // 缩放变化时发射的信号
-private slots:
-    // void setButtonIcon(){setIconForGem(m_type);}
-    //void sendPosInfo_onclicked();
+
 
 
 
