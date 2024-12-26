@@ -3,7 +3,9 @@
 #include "information.h"
 
 #include "music.h"
+
 #include "play.h"
+
 QString r="";
 
 Board::Board(QString r0, QGraphicsScene *sc)
