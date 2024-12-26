@@ -27,7 +27,8 @@ SOURCES += \
     main.cpp \
     music.cpp\
     mainwindow.cpp \
-    menu.cpp
+    menu.cpp \
+    vortexeffect.cpp
 
 HEADERS += \
     information.h \
@@ -40,7 +41,8 @@ HEADERS += \
     dialog.h \
     mainwindow.h \
     menu.h \
-    play.h
+    play.h \
+    vortexeffect.h
 
 FORMS += \
     dialog.ui \

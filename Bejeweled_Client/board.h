@@ -1,4 +1,4 @@
-    #ifndef BOARD_H
+#ifndef BOARD_H
 #define BOARD_H
 
 #include <QGraphicsScene>
@@ -10,6 +10,7 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include <QRandomGenerator>// 用于 time()
+#include <algorithm>
 #include <QThread>
 #include <QMutex>
 #include <QMutexLocker>
@@ -17,6 +18,7 @@
 #include "Jewel.h"
 #include "logicworker.h"
 #include "music.h"
+#include "vortexeffect.h"
 #include "information.h"
 #include "music.h"
 
@@ -26,12 +28,16 @@ public:
     music * m_mus;
     int m_combo;
     Board(QString r , QGraphicsScene *scene);
+    Board(int j[8][8] ,QGraphicsScene *scene);
     ~Board();
     //产生棋盘
     void generateBoard();
     void generateBoard(QString &r);
     //刷新棋盘
     void updateBoard();
+
+    //生成新宝石并设置到对应位置(x,y表其在棋盘中的位置,gemType表宝石种类,state表示宝石是什么状态:0表示直接出现在棋盘相应位置,1表示从上落下)
+    Jewel* setNewJewelInformation(int x, int y, int gemType, int state);
 
     //检测宝石位置是否不合法
     bool checkForInvalidPlacement(int x, int y, int gemType);
@@ -76,7 +82,8 @@ private:
 
     int m_j[8][8];
 
-    //int Eli = 0;
+
+    QPair<int,int> m_currAvailablePos; // 当前可交换位置
 
     const int offsetX = 252;  // X轴偏移量
     const int offsetY = 45;   // Y轴偏移量
@@ -93,11 +100,14 @@ private:
 //私有函数部分
 
     bool isBoardValid();  //棋盘是否合理
+
     void clearBoard();   // 清空棋盘
 
-    bool checkHorizontal(int x, int y);
-    bool checkVertical(int x, int y);
     QSet<std::pair<int, int>> matches;
+    int checkHorizontal(int x, int y);//检查水平
+
+    int checkVertical(int x, int y);//检查竖直
+
 //游戏逻辑任务
     //宝石交换任务
     void swapJewels(int x1, int y1, int x2, int y2);
@@ -108,7 +118,7 @@ private:
     bool checkForChains();
 
     //删除匹配的宝石任务
-    void processMatches();
+    void processMatches(Jewel *magicJewel = nullptr, Jewel *normalSwappedJewel = nullptr);
 
     //匹配后的宝石下落任务
     void dropJewels();
