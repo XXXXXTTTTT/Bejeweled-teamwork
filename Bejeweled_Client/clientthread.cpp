@@ -20,6 +20,7 @@ QString ClientThread::m_ran="";
     {
 
         static ClientThread instance("127.0.0.1", 12345, nullptr);
+        // static ClientThread instance("172.20.10.7", 12345, nullptr);
         return instance;
     }
 void ClientThread::run(){

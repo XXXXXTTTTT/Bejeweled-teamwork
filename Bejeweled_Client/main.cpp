@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
 
 
     ClientThread::instance().start();
-    qDebug() << "客户端已启动";
 
     MainWindow loginWindow=MainWindow();
 
