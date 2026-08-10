@@ -2,6 +2,7 @@
 /build/
 /dist/
 /docs/docx_extract_*/
+/docs/merge-db/
 /docs/assets/runtime-login.png
 *.pro.user
 *.pro.user.*
