@@ -8,6 +8,7 @@ ClientThread::ClientThread(const QString& host, quint16 port, QObject* parent)
 }
 
 QString ClientThread::m_ran="";
+bool ClientThread::m_started = false;
     ClientThread::~ClientThread() {
     if (m_socket) {
             qDebug()<<"****************************\ndestructor called!";
@@ -20,9 +21,24 @@ QString ClientThread::m_ran="";
     {
 
         static ClientThread instance("127.0.0.1", 12345, nullptr);
+        // static ClientThread instance("172.20.10.7", 12345, nullptr);
         return instance;
     }
+
+bool ClientThread::configure(const QString& host, quint16 port)
+{
+    if (m_started || host.trimmed().isEmpty() || port == 0) {
+        return false;
+    }
+
+    ClientThread& client = instance();
+    client.m_host = host.trimmed();
+    client.m_port = port;
+    return true;
+}
+
 void ClientThread::run(){
+    m_started = true;
     m_socket = new QTcpSocket();
 
     //连接信号与槽函数
