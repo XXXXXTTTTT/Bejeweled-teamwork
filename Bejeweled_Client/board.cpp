@@ -1076,6 +1076,12 @@ void Board::generateNewJewels() {
                 QPropertyAnimation* dropAnim = new QPropertyAnimation(gem, "pos");
                 dropAnim->setDuration(300);
                 dropAnim->setEndValue(QPointF(x * 67 + 252, y * 68 + 45));
+                // //生成宝石
+                // Jewel* gem = setNewJewelInformation(x,y,gemType, 1);
+
+                // QPropertyAnimation* dropAnim = new QPropertyAnimation(gem, "pos");
+                // dropAnim->setDuration(300);
+                // dropAnim->setEndValue(QPointF(x * 67 + 252, y * 68 + 45));
 
                 generateNewGroup->addAnimation(dropAnim);
                 }
