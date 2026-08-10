@@ -76,8 +76,8 @@ private:
 
     bool checkForChains();
 
-    //删除匹配的宝石任务
-    void processMatches(Jewel *magicJewel = nullptr, Jewel *normalSwappedJewel = nullptr);
+    //删除匹配的宝石任务(第一个参数若交换时有用魔力宝石则为魔力宝石,第二个参数为另一个交换的宝石)
+    void processMatches(Jewel *mightMagicJewel = nullptr, Jewel *normalSwappedJewel = nullptr);
 
     //匹配后的宝石下落任务
     void dropJewels();

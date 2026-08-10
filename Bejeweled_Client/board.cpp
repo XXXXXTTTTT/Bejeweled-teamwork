@@ -468,17 +468,12 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
         return; // 只有相邻的宝石才允许交换
     }
 
-    qDebug() << "222";
     Jewel* jewel1 = m_allJewelItems[x1][y1];
     Jewel* jewel2 = m_allJewelItems[x2][y2];
 
-    qDebug() << "1: " << x1 << y1;
-
-    qDebug() << "2: " << x2 << y2;
 
     if (!jewel1 || !jewel2) return;
 
-    qDebug() << "动画来咯";
 
     // 创建动画组(并行,保证两个动画同时进行)
     QParallelAnimationGroup* animationGroup = new QParallelAnimationGroup(this);
@@ -505,22 +500,12 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
         // 交换数据
         std::swap(m_grid[x1][y1], m_grid[x2][y2]);
 
-        qDebug() << "交换前";
-        qDebug() << "x1y1:" << m_allJewelItems[x1][y1]->getType();
-
-        qDebug()<< "x2y2:" << m_allJewelItems[x2][y2]->getType();
 
         // 检查是否形成了有效的消除或有魔力宝石
         if (jewel1->getType() == 8 || jewel2->getType() == 8 || checkForMatches()) {
 
 
             //交换后宝石信息更新
-
-            swapJewelsDestination(jewel1, jewel2);
-            qDebug() << "交换完后";
-            qDebug() << "x1y1:" << m_allJewelItems[x1][y1]->getType();
-
-            qDebug()<< "x2y2:" << m_allJewelItems[x2][y2]->getType();
 
 
 
@@ -536,7 +521,7 @@ void Board::swapJewels(int x1, int y1, int x2, int y2) {
                     processMatches(jewel2, jewel1);
                 } else  {
                     //普通消除
-                    processMatches();
+                    processMatches(jewel1, jewel2);
                 }
 
             });
@@ -611,11 +596,11 @@ bool Board::checkForChains(){
 }
 
 //删除匹配的宝石
-void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
+void Board::processMatches(Jewel *mightMagicJewel, Jewel *normalSwappedJewel) {
 
     //魔力宝石对应移除的宝石种类,若为0表无魔力宝石,若为1-7表相应宝石,若为8表示消除全部宝石
     int removeJewelType = 0;
-    if(magicJewel != nullptr) {
+    if(mightMagicJewel != nullptr && mightMagicJewel->getType() == 8) {
         //若是魔法宝石
         if(normalSwappedJewel != nullptr) {
             //若交换宝石为普通宝石则
@@ -630,12 +615,103 @@ void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
     QSet<std::pair<int, int>> matches;
 
     //若魔力宝石存在则加入消除集合中
-    if(magicJewel) {
-        matches.insert({magicJewel->getX(), magicJewel->getY()});
+    if(mightMagicJewel && mightMagicJewel->getType() == 8) {
+        matches.insert({mightMagicJewel->getX(), mightMagicJewel->getY()});
     }
 
     //生成的魔力宝石位置
     QSet<std::pair<int,int>> magicJewels;
+
+    //优先判断当前交换的匹配(这里先判断能更精确的判定是否生成魔力宝石)
+    if(mightMagicJewel && normalSwappedJewel) {
+        for(int n = 0; n < 2; n++) {
+            int i,j;
+            if(n == 0) {
+                i = mightMagicJewel->getX();
+                j = mightMagicJewel->getY();
+            } else {
+                i = normalSwappedJewel->getX();
+                j = normalSwappedJewel->getY();
+            }
+
+            int horizonalNum = checkHorizontal(i, j);
+            if (horizonalNum) {
+
+
+                //右
+                for (int k = j; k < 8 && m_grid[i][k] == m_grid[i][j]; ++k) {
+                    if(!matches.contains({i, k})) {
+                        //若未添加则加入匹配集合
+                        matches.insert({i, k});
+
+                    } else {
+                        //反之则水平匹配数减减
+                        horizonalNum--;
+                    }
+                }
+
+                //左
+                for (int k = j - 1; k > 0 && m_grid[i][k] == m_grid[i][j]; --k) {
+                    if(!matches.contains({i, k})) {
+                        //若未添加则加入匹配集合
+                        matches.insert({i, k});
+
+                    } else {
+                        //反之则水平匹配数减减
+                        horizonalNum--;
+                    }
+                }
+
+
+            }
+
+            int verticalNum = checkVertical(i, j);
+
+            if (verticalNum) {
+
+
+
+                //下
+                for (int k = i; k < 8 && m_grid[k][j] == m_grid[i][j]; ++k) {
+                    if(!matches.contains({k, j})) {
+                        //若未添加则加入匹配集合
+                        matches.insert({k, j});
+
+                    } else {
+                        //反之若已经加入则竖直匹配数减减
+                        verticalNum--;
+                    }
+
+                }
+
+                //上
+                for (int k = i-1; k > 0 && m_grid[k][j] == m_grid[i][j]; --k) {
+                    if(!matches.contains({k, j})) {
+                        //若未添加则加入匹配集合
+                        matches.insert({k, j});
+
+                    } else {
+                        //反之若已经加入则竖直匹配数减减
+                        verticalNum--;
+                    }
+
+                }
+
+            }
+
+            qDebug() << "水平:" << horizonalNum;
+
+            qDebug() << "竖直:" << verticalNum;
+            //若此处消除大于5个即可在此处生成一个魔力宝石
+            if(horizonalNum + verticalNum >= 5) {
+                if(!magicJewels.contains({i, j})) {
+                    magicJewels.insert({i, j});
+
+                }
+            }
+        }
+
+    }
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
@@ -855,7 +931,6 @@ void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
                 deleteGroup->addAnimation(scaleAnim);
                 connect(fadeAnim, &QPropertyAnimation::finished, this, [=]() {
 
-                    qDebug() << "BEFORE: JEWELSIZE: " << m_scene->items().size();
                     if(vortex) {
                         m_scene->removeItem(vortex);
 
@@ -869,9 +944,6 @@ void Board::processMatches(Jewel *magicJewel, Jewel *normalSwappedJewel) {
                         setNewJewelInformation(x,y,8, 0);
                     }
 
-                    // delete jewel;
-
-                    qDebug() << "AFTER: JEWELSIZE: " << m_scene->items().size();
 
 
 
@@ -937,13 +1009,6 @@ void Board::dropJewels() {
                                 dropGroup->addAnimation(dropAnim);
 
                                 num++;
-                                //处理消除
-                                // connect(dropAnim, &QPropertyAnimation::finished, [=]() {
-
-                                    //     if(checkForMatches()) {
-                                    //         processMatches();
-                                    //     }
-                                    // });
 
                             }
 
@@ -1011,21 +1076,8 @@ void Board::generateNewJewels() {
                 QPropertyAnimation* dropAnim = new QPropertyAnimation(gem, "pos");
                 dropAnim->setDuration(300);
                 dropAnim->setEndValue(QPointF(x * 67 + 252, y * 68 + 45));
-                // //生成宝石
-                // Jewel* gem = setNewJewelInformation(x,y,gemType, 1);
-
-                // QPropertyAnimation* dropAnim = new QPropertyAnimation(gem, "pos");
-                // dropAnim->setDuration(300);
-                // dropAnim->setEndValue(QPointF(x * 67 + 252, y * 68 + 45));
 
                 generateNewGroup->addAnimation(dropAnim);
-                    //处理消除
-                    // connect(dropAnim, &QPropertyAnimation::finished, [=]() {
-
-                    //     if(checkForMatches()) {
-                    //         processMatches();
-                    //     }
-                    // });
                 }
             }
         }
