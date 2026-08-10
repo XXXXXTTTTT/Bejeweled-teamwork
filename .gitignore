@@ -1,0 +1,36 @@
+# Qt 与本机工具链
+/build/
+/dist/
+/docs/docx_extract_*/
+/docs/assets/runtime-login.png
+*.pro.user
+*.pro.user.*
+
+# qmake / MinGW 生成物
+Makefile
+Makefile.*
+*.o
+*.obj
+*.exe
+*.dll
+*.a
+*.lib
+*.pdb
+*.ilk
+*.log
+/.qmake.stash
+
+# 本地 IDE 与系统文件
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+Thumbs.db
+Desktop.ini
+
+# 临时打包文件
+*.zip
+*.7z
+*.msi
+*.tmp

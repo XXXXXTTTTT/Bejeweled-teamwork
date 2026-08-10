@@ -1,5 +1,6 @@
 #include "sql.h"
 #include "information.h"
+#include <QCoreApplication>
 
 //初始化静态变量
 QReadWriteLock sql::m_lock;
@@ -27,22 +28,7 @@ bool sql::connectToDatabase() {
 
 
 
-    // 获取当前工作目录
-    QString currentDir = QDir::currentPath();
-
-    // 切换到项目目录
-    QDir dir1(currentDir);
-    if (dir1.cdUp()) {
-
-        if (dir1.cdUp()) {
-            QDir::setCurrent(dir1.path());
-            currentDir = QDir::currentPath();
-        } else {
-            qDebug() << "无法切换到上一级目录！";
-        }
-    } else {
-        qDebug() << "无法切换到上一级目录！";
-    }
+    const QString currentDir = QCoreApplication::applicationDirPath();
 
     // 生成唯一的连接名
     m_connectionName = QString("connection_%1").arg(QString::number(reinterpret_cast<quintptr>(QThread::currentThreadId())));
@@ -57,7 +43,7 @@ bool sql::connectToDatabase() {
 
     // 打开 SQLite 数据库
     m_db = QSqlDatabase::addDatabase("QSQLITE", m_connectionName); // 使用成员变量 m_db
-    m_db.setDatabaseName(currentDir + "/resources/database.db");
+    m_db.setDatabaseName(QDir(currentDir).filePath("resources/database.db"));
 
     bool ok = m_db.open();
     if (ok) {

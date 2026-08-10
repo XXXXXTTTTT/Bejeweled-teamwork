@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
 #include <QResizeEvent> // 添加 QResizeEvent 的头文件
 #include <clientthread.h>
 QT_BEGIN_NAMESPACE
@@ -33,6 +34,7 @@ private:
     Ui::MainWindow *m_ui;
     QPixmap m_backgroundImage; // 背景图片
     double m_aspectRatio;      // 背景图片的宽高比例
+    QPushButton *m_singlePlayerButton = nullptr;
 };
 
 #endif // MAINWINDOW_H

@@ -14,6 +14,7 @@ class ClientThread : public QThread {
 public:
     //获取线程单例
     static ClientThread &instance();
+    static bool configure(const QString& host, quint16 port);
 
     ~ClientThread();
 protected:
@@ -48,6 +49,7 @@ public:
 private:
     QString m_host;
     quint16 m_port;
+    static bool m_started;
 
 
 };

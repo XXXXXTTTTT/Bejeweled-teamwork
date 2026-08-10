@@ -124,6 +124,9 @@ void Play::updateScoreGUI(int score) {
     m_score = m_totalScore;
     m_ui->ziji->display(m_totalScore);  // 更新 LCD 显示器上的总得分
 
+    if (information::instance().m_singlePlayer) {
+        return;
+    }
     QJsonObject json;
     json["type"] = "game";
     json["score"]=m_totalScore;
@@ -152,6 +155,13 @@ void Play::updateCountdown() {
 
 void Play::checkGameOver(){
     if (remainingTime <= 0) {
+        if (information::instance().m_singlePlayer) {
+            QMessageBox::information(this, "游戏结束", QString("时间到了！本局得分：%1").arg(m_score));
+            Menu *menu = new Menu();
+            menu->show();
+            close();
+            return;
+        }
         QJsonObject json;
         json["type"] = "end";
         json["username"]=information::instance().m_userName;
@@ -185,6 +195,8 @@ void Play::checkGameOver(){
             json0["password"] =information::instance().m_password;
             ClientThread::instance().sendMsg(json0);
         }
+        information::instance().m_enemyScore = 0;
+
         Menu *menu=new Menu();
         menu->show();
         this->close();

@@ -16,6 +16,16 @@ MainWindow::MainWindow(QWidget *parent)
     , m_ui(new Ui::MainWindow) // 初始化成员变量
 {
     m_ui->setupUi(this);
+    m_singlePlayerButton = new QPushButton("Single Player", this);
+    m_singlePlayerButton->setGeometry(190, 300, 180, 42);
+    connect(m_singlePlayerButton, &QPushButton::clicked, this, [this]() {
+        information::instance().m_singlePlayer = true;
+        information::instance().m_userName = "SinglePlayer";
+        information::instance().m_RRange = 6;
+        auto *menu = new Menu();
+        menu->show();
+        close();
+    });
     this->setWindowTitle("登录");
 
     // 加载背景图片

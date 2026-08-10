@@ -19,6 +19,7 @@ public:
     int m_RRange;
     //对手得分
     int m_enemyScore;
+    bool m_singlePlayer = false;
 
     QString rankingUserName="";
 

@@ -126,6 +126,10 @@ void Menu::on_startGameButton_clicked()
     }
 
 
+    if (information::instance().m_singlePlayer) {
+        return;
+    }
+
     // 匹配对手
     if(information::instance().m_RRange==8)
     QMessageBox::information(this, "匹配中", "等待对手加入");
@@ -275,3 +279,18 @@ void Menu::on_num_valueChanged(int arg1)
     }
 }
 
+
+void Menu::on_radioButton_clicked()
+{
+    music::instance()->sound("click.wav",1);
+    information::instance().m_RRange=m_ui->num->value()+1;
+    qDebug()<<information::instance().m_RRange;
+}
+
+
+void Menu::on_radioButton_2_clicked()
+{
+    music::instance()->sound("click.wav",1);
+    information::instance().m_RRange=8;
+    qDebug()<<information::instance().m_RRange;
+}
